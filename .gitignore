@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/TekRemittance/FileContentIndex
+/.vs/TekRemittance/DesignTimeBuild/.dtbcache.v2
+/TekRemittance.Repository/obj/project.assets.json
+/TekRemittance.Repository/obj/project.nuget.cache
+/TekRemittance.Service/obj/project.assets.json
+/TekRemittance.Service/obj/project.nuget.cache
+/TekRemittance.Service/obj/TekRemittance.Service.csproj.nuget.dgspec.json
+/TekRemittance.Repository/obj/TekRemittance.Repository.csproj.nuget.dgspec.json
