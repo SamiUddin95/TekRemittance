@@ -19,6 +19,7 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
+        #region Country
         public async Task<IEnumerable<Country>> GetAllAsync()
         {
             return await _context.Countries.AsNoTracking().ToListAsync();
@@ -65,5 +66,107 @@ namespace TekRemittance.Repository.Implementations
 
             return true;
         }
+        #endregion
+
+        #region Province
+        public async Task<IEnumerable<Province>> GetAllProvinceAsync()
+        {
+            return await _context.Provinces.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Province> GetProvinceByIdAsync(Guid id)
+        {
+            return await _context.Provinces.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<Province> AddProvinceAsync(Province province)
+        {
+            province.Id = Guid.NewGuid();
+            province.CreatedOn = DateTime.UtcNow;
+
+            await _context.Provinces.AddAsync(province);
+            await _context.SaveChangesAsync();
+
+            return province;
+        }
+
+        public async Task<Province?> UpdateProvinceAsync(Province province)
+        {
+            var existing = await _context.Provinces.FirstOrDefaultAsync(c => c.Id == province.Id);
+            if (existing == null) return null;
+
+            existing.ProvinceCode = province.ProvinceCode;
+            existing.ProvinceName = province.ProvinceName;
+            existing.CountryId = province.CountryId;
+            existing.IsActive = province.IsActive;
+            existing.UpdatedBy = province.UpdatedBy;
+            existing.UpdatedOn = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return existing;
+        }
+
+        public async Task<bool> DeleteProvinceAsync(Guid id)
+        {
+            var existing = await _context.Provinces.FirstOrDefaultAsync(c => c.Id == id);
+            if (existing == null) return false;
+
+            _context.Provinces.Remove(existing);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        #endregion
+
+        #region City
+        public async Task<IEnumerable<City>> GetAllCityAsync()
+        {
+            return await _context.Cities.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<City> GetCityByIdAsync(Guid id)
+        {
+            return await _context.Cities.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<City> AddCityAsync(City city)
+        {
+            city.Id = Guid.NewGuid();
+            city.CreatedOn = DateTime.UtcNow;
+
+            await _context.Cities.AddAsync(city);
+            await _context.SaveChangesAsync();
+
+            return city;
+        }
+
+        public async Task<City?> UpdateCityAsync(City city)
+        {
+            var existing = await _context.Cities.FirstOrDefaultAsync(c => c.Id == city.Id);
+            if (existing == null) return null;
+
+            existing.CityCode = city.CityCode;
+            existing.CityName = city.CityName;
+            existing.CountryId = city.CountryId;
+            existing.ProvinceId = city.ProvinceId;
+            existing.IsActive = city.IsActive;
+            existing.UpdatedBy = city.UpdatedBy;
+            existing.UpdatedOn = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return existing;
+        }
+
+        public async Task<bool> DeleteCityAsync(Guid id)
+        {
+            var existing = await _context.Provinces.FirstOrDefaultAsync(c => c.Id == id);
+            if (existing == null) return false;
+
+            _context.Provinces.Remove(existing);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        #endregion
     }
 }
