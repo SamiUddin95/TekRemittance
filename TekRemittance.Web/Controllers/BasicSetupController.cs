@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Service.Implementations;
 using TekRemittance.Service.Interfaces;
@@ -6,6 +7,7 @@ using TekRemittance.Web.Models;
 
 namespace TekRemittance.Web.Controllers
 {
+    [EnableCors("AllowFrontend")]
     [ApiController]
     [Route("api/[controller]")]
     public class BasicSetupController : ControllerBase
