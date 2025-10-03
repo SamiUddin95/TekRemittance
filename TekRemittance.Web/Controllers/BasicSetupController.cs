@@ -36,7 +36,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         // ✅ GET: api/country/{id}
-        [HttpGet("{id:guid}")]
+        [HttpGet("countrybyId/{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
             try
@@ -125,12 +125,12 @@ namespace TekRemittance.Web.Controllers
         }
 
         // ✅ GET: api/country/{id}
-        [HttpGet("{provinceId:guid}")]
-        public async Task<IActionResult> GetProvinceById(Guid provinceId)
+        [HttpGet("provincebyId/{Id:guid}")]
+        public async Task<IActionResult> GetProvinceById(Guid Id)
         {
             try
             {
-                var province = await _service.GetProvinceByIdAsync(provinceId);
+                var province = await _service.GetProvinceByIdAsync(Id);
                 if (province == null)
                     return NotFound(ApiResponse<string>.Error("Province not found", 404));
 
@@ -214,7 +214,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         // ✅ GET: api/country/{id}
-        [HttpGet("{cityId:guid}")]
+        [HttpGet("CitybyId/{cityId:guid}")]
         public async Task<IActionResult> GetCityById(Guid CityId)
         {
             try
