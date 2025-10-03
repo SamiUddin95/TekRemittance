@@ -1,0 +1,58 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "F:\\HomeRemittance\\HomeRemittex\\Backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{C8463C34-29CD-4209-99EB-A3CE3CC33E07}|TekRemittance.Web\\TekRemittance.Web.csproj|f:\\homeremittance\\homeremittex\\backend\\tekremittance.web\\controllers\\basicsetupcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8463C34-29CD-4209-99EB-A3CE3CC33E07}|TekRemittance.Web\\TekRemittance.Web.csproj|solutionrelative:tekremittance.web\\controllers\\basicsetupcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C8463C34-29CD-4209-99EB-A3CE3CC33E07}|TekRemittance.Web\\TekRemittance.Web.csproj|f:\\homeremittance\\homeremittex\\backend\\tekremittance.web\\models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C8463C34-29CD-4209-99EB-A3CE3CC33E07}|TekRemittance.Web\\TekRemittance.Web.csproj|solutionrelative:tekremittance.web\\models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{6324226f-61b6-4f28-92ee-18d4b5fe1e48}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApiResponse.cs",
+              "DocumentMoniker": "F:\\HomeRemittance\\HomeRemittex\\Backend\\TekRemittance.Web\\Models\\ApiResponse.cs",
+              "RelativeDocumentMoniker": "TekRemittance.Web\\Models\\ApiResponse.cs",
+              "ToolTip": "F:\\HomeRemittance\\HomeRemittex\\Backend\\TekRemittance.Web\\Models\\ApiResponse.cs",
+              "RelativeToolTip": "TekRemittance.Web\\Models\\ApiResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAiwA4AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T10:44:12.105Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BasicSetupController.cs",
+              "DocumentMoniker": "F:\\HomeRemittance\\HomeRemittex\\Backend\\TekRemittance.Web\\Controllers\\BasicSetupController.cs",
+              "RelativeDocumentMoniker": "TekRemittance.Web\\Controllers\\BasicSetupController.cs",
+              "ToolTip": "F:\\HomeRemittance\\HomeRemittex\\Backend\\TekRemittance.Web\\Controllers\\BasicSetupController.cs",
+              "RelativeToolTip": "TekRemittance.Web\\Controllers\\BasicSetupController.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAAAA8AAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-03T10:14:06.775Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
