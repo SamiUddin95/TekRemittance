@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Service.Implementations;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
+using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -27,7 +28,7 @@ namespace TekRemittance.Web.Controllers
             try
             {
                 var countries = await _service.GetAllCountriesAsync();
-                return Ok(ApiResponse<IEnumerable<Country>>.Success(countries, 200));
+                return Ok(ApiResponse<IEnumerable<countryDTO>>.Success(countries, 200));
             }
             catch (Exception ex)
             {
@@ -45,7 +46,7 @@ namespace TekRemittance.Web.Controllers
                 if (country == null)
                     return NotFound(ApiResponse<string>.Error("Country not found", 404));
 
-                return Ok(ApiResponse<Country>.Success(country, 200));
+                return Ok(ApiResponse<countryDTO>.Success(country, 200));
             }
             catch (Exception ex)
             {
@@ -55,12 +56,12 @@ namespace TekRemittance.Web.Controllers
 
         // ✅ POST: api/country/create
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] Country country)
+        public async Task<IActionResult> Create([FromBody] countryDTO country)
         {
             try
             {
                 var created = await _service.CreateCountryAsync(country);
-                return Ok(ApiResponse<Country>.Success(created, 201));
+                return Ok(ApiResponse<countryDTO>.Success(created, 201));
             }
             catch (Exception ex)
             {
@@ -70,17 +71,16 @@ namespace TekRemittance.Web.Controllers
 
         // ✅ PUT: api/country/update/{id}
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromBody] Country country)
+        public async Task<IActionResult> Update([FromBody] countryDTO country)
         {
             try
             {
-                country.Id = country.Id;
                 var updated = await _service.UpdateCountryAsync(country);
 
                 if (updated == null)
                     return NotFound(ApiResponse<string>.Error("Country not found", 404));
 
-                return Ok(ApiResponse<Country>.Success(updated, 200));
+                return Ok(ApiResponse<countryDTO>.Success(updated, 200));
             }
             catch (Exception ex)
             {
@@ -116,7 +116,7 @@ namespace TekRemittance.Web.Controllers
             try
             {
                 var province = await _service.GetAllProvinceAsync();
-                return Ok(ApiResponse<IEnumerable<Province>>.Success(province, 200));
+                return Ok(ApiResponse<IEnumerable<provinceDTO>>.Success(province, 200));
             }
             catch (Exception ex)
             {
@@ -124,7 +124,6 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ GET: api/country/{id}
         [HttpGet("provincebyId/{Id:guid}")]
         public async Task<IActionResult> GetProvinceById(Guid Id)
         {
@@ -134,7 +133,7 @@ namespace TekRemittance.Web.Controllers
                 if (province == null)
                     return NotFound(ApiResponse<string>.Error("Province not found", 404));
 
-                return Ok(ApiResponse<Province>.Success(province, 200));
+                return Ok(ApiResponse<provinceDTO>.Success(province, 200));
             }
             catch (Exception ex)
             {
@@ -142,14 +141,13 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ POST: api/country/create
         [HttpPost("CreateProvince")]
-        public async Task<IActionResult> CreateProvince([FromBody] Province province)
+        public async Task<IActionResult> CreateProvince([FromBody] provinceDTO dto)
         {
             try
             {
-                var created = await _service.CreateProvinceAsync(province);
-                return Ok(ApiResponse<Province>.Success(created, 201));
+                var created = await _service.CreateProvinceAsync(dto);
+                return Ok(ApiResponse<provinceDTO>.Success(created, 201));
             }
             catch (Exception ex)
             {
@@ -157,19 +155,17 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ PUT: api/country/update/{id}
         [HttpPut("updateProvince")]
-        public async Task<IActionResult> UpdateProvince([FromBody] Province province)
+        public async Task<IActionResult> UpdateProvince([FromBody] provinceDTO province)
         {
             try
             {
-                province.Id = province.Id;
                 var updated = await _service.UpdateProvinceAsync(province);
 
                 if (updated == null)
                     return NotFound(ApiResponse<string>.Error("Province not found", 404));
 
-                return Ok(ApiResponse<Province>.Success(updated, 200));
+                return Ok(ApiResponse<provinceDTO>.Success(updated, 200));
             }
             catch (Exception ex)
             {
@@ -177,7 +173,6 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ DELETE: api/country/delete/{id}
         [HttpDelete("deleteProvince/{id:guid}")]
         public async Task<IActionResult> DeleteProvince(Guid id)
         {
@@ -205,7 +200,7 @@ namespace TekRemittance.Web.Controllers
             try
             {
                 var city = await _service.GetAllCityAsync();
-                return Ok(ApiResponse<IEnumerable<City>>.Success(city, 200));
+                return Ok(ApiResponse<IEnumerable<cityDTO>>.Success(city, 200));
             }
             catch (Exception ex)
             {
@@ -213,17 +208,16 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ GET: api/country/{id}
-        [HttpGet("CitybyId/{cityId:guid}")]
-        public async Task<IActionResult> GetCityById(Guid CityId)
+        [HttpGet("CitybyId/{Id:guid}")]
+        public async Task<IActionResult> GetCityById([FromRoute] Guid Id)
         {
             try
             {
-                var city = await _service.GetCityByIdAsync(CityId);
+                var city = await _service.GetCityByIdAsync(Id);
                 if (city == null)
                     return NotFound(ApiResponse<string>.Error("City not found", 404));
 
-                return Ok(ApiResponse<City>.Success(city, 200));
+                return Ok(ApiResponse<cityDTO>.Success(city, 200));
             }
             catch (Exception ex)
             {
@@ -231,14 +225,13 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ POST: api/country/create
         [HttpPost("CreateCity")]
-        public async Task<IActionResult> CreateCity([FromBody] City city)
+        public async Task<IActionResult> CreateCity([FromBody] cityDTO city)
         {
             try
             {
                 var created = await _service.CreateCityAsync(city);
-                return Ok(ApiResponse<City>.Success(created, 201));
+                return Ok(ApiResponse<cityDTO>.Success(created, 201));
             }
             catch (Exception ex)
             {
@@ -246,19 +239,17 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ PUT: api/country/update/{id}
         [HttpPut("updateCity")]
-        public async Task<IActionResult> UpdateCity([FromBody] City city)
+        public async Task<IActionResult> UpdateCity([FromBody] cityDTO city)
         {
             try
             {
-                city.Id = city.Id;
                 var updated = await _service.UpdateCityAsync(city);
 
                 if (updated == null)
                     return NotFound(ApiResponse<string>.Error("City not found", 404));
 
-                return Ok(ApiResponse<City>.Success(updated, 200));
+                return Ok(ApiResponse<cityDTO>.Success(updated, 200));
             }
             catch (Exception ex)
             {
@@ -266,7 +257,6 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ DELETE: api/country/delete/{id}
         [HttpDelete("deleteCity/{id:guid}")]
         public async Task<IActionResult> DeleteCity(Guid id)
         {
@@ -277,6 +267,90 @@ namespace TekRemittance.Web.Controllers
                     return NotFound(ApiResponse<string>.Error("City not found", 404));
 
                 return Ok(ApiResponse<string>.Success("City deleted successfully", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        #endregion
+
+        #region Bank
+
+        [HttpGet("Bank")]
+        public async Task<IActionResult> GetAllBank()
+        {
+            try
+            {
+                var banks = await _service.GetAllBankAsync();
+                return Ok(ApiResponse<IEnumerable<bankDTO>>.Success(banks, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpGet("BankbyId/{bankId:guid}")]
+        public async Task<IActionResult> GetBankById(Guid bankId)
+        {
+            try
+            {
+                var bank = await _service.GetBankByIdAsync(bankId);
+                if (bank == null)
+                    return NotFound(ApiResponse<string>.Error("Bank not found", 404));
+
+                return Ok(ApiResponse<bankDTO>.Success(bank, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPost("CreateBank")]
+        public async Task<IActionResult> CreateBank([FromBody] bankDTO bank)
+        {
+            try
+            {
+                var created = await _service.CreateBankAsync(bank);
+                return Ok(ApiResponse<bankDTO>.Success(created, 201));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPut("updateBank")]
+        public async Task<IActionResult> UpdateBank([FromBody] bankDTO bank)
+        {
+            try
+            {
+                var updated = await _service.UpdateBankAsync(bank);
+
+                if (updated == null)
+                    return NotFound(ApiResponse<string>.Error("Bank not found", 404));
+
+                return Ok(ApiResponse<bankDTO>.Success(updated, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpDelete("deleteBank/{id:guid}")]
+        public async Task<IActionResult> DeleteBank(Guid id)
+        {
+            try
+            {
+                var result = await _service.DeleteBankAsync(id);
+                if (!result)
+                    return NotFound(ApiResponse<string>.Error("Bank not found", 404));
+
+                return Ok(ApiResponse<string>.Success("Bank deleted successfully", 200));
             }
             catch (Exception ex)
             {

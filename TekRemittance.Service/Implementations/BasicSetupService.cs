@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Service.Implementations
 {
@@ -19,24 +20,37 @@ namespace TekRemittance.Service.Implementations
         }
 
         #region Country
-        public async Task<IEnumerable<Country>> GetAllCountriesAsync()
+        public async Task<IEnumerable<countryDTO>> GetAllCountriesAsync()
         {
             return await _repository.GetAllAsync();
         }
 
-        public async Task<Country?> GetCountryByIdAsync(Guid id)
+        public async Task<countryDTO?> GetCountryByIdAsync(Guid id)
         {
             return await _repository.GetByIdAsync(id);
         }
 
-        public async Task<Country> CreateCountryAsync(Country country)
+        public async Task<countryDTO> CreateCountryAsync(countryDTO country)
         {
             return await _repository.AddAsync(country);
         }
 
-        public async Task<Country?> UpdateCountryAsync(Country country)
+        public async Task<countryDTO?> UpdateCountryAsync(countryDTO country)
         {
-            return await _repository.UpdateAsync(country);
+            var updated = await _repository.UpdateAsync(country);
+            if (updated == null) return null;
+
+            return new countryDTO
+            {
+                Id = updated.Id,
+                CountryCode = updated.CountryCode,
+                CountryName = updated.CountryName,
+                IsActive = updated.IsActive,
+                CreatedBy = updated.CreatedBy,
+                CreatedOn = updated.CreatedOn,
+                UpdatedBy = updated.UpdatedBy,
+                UpdatedOn = updated.UpdatedOn
+            };
         }
 
         public async Task<bool> DeleteCountryAsync(Guid id)
@@ -45,25 +59,82 @@ namespace TekRemittance.Service.Implementations
         }
         #endregion
 
+        #region Bank
+        public async Task<IEnumerable<bankDTO>> GetAllBankAsync()
+        {
+            return await _repository.GetAllBankAsync();
+        }
+
+        public async Task<bankDTO?> GetBankByIdAsync(Guid id)
+        {
+            return await _repository.GetBankByIdAsync(id);
+        }
+
+        public async Task<bankDTO> CreateBankAsync(bankDTO bank)
+        {
+            return await _repository.AddBankAsync(bank);
+        }
+
+        public async Task<bankDTO?> UpdateBankAsync(bankDTO bank)
+        {
+            var updated = await _repository.UpdateBankAsync(bank);
+            if (updated == null) return null;
+
+            return new bankDTO
+            {
+                Id = updated.Id,
+                BankCode = updated.BankCode,
+                BankName = updated.BankName,
+                IMD = updated.IMD,
+                Website = updated.Website,
+                Allases = updated.Allases,
+                PhoneNo = updated.PhoneNo,
+                Description = updated.Description,
+                IsActive = updated.IsActive,
+                CreatedBy = updated.CreatedBy,
+                CreatedOn = updated.CreatedOn,
+                UpdatedBy = updated.UpdatedBy,
+                UpdatedOn = updated.UpdatedOn
+            };
+        }
+
+        public async Task<bool> DeleteBankAsync(Guid id)
+        {
+            return await _repository.DeleteBankAsync(id);
+        }
+        #endregion
         #region Province
-        public async Task<IEnumerable<Province>> GetAllProvinceAsync()
+        public async Task<IEnumerable<provinceDTO>> GetAllProvinceAsync()
         {
             return await _repository.GetAllProvinceAsync();
         }
 
-        public async Task<Province?> GetProvinceByIdAsync(Guid id)
+        public async Task<provinceDTO?> GetProvinceByIdAsync(Guid id)
         {
             return await _repository.GetProvinceByIdAsync(id);
         }
 
-        public async Task<Province> CreateProvinceAsync(Province province)
+        public async Task<provinceDTO> CreateProvinceAsync(provinceDTO province)
         {
             return await _repository.AddProvinceAsync(province);
         }
 
-        public async Task<Province?> UpdateProvinceAsync(Province province)
+        public async Task<provinceDTO?> UpdateProvinceAsync(provinceDTO province)
         {
-            return await _repository.UpdateProvinceAsync(province);
+            var updated = await _repository.UpdateProvinceAsync(province);
+            if (updated == null) return null;
+
+            // Map entity -> DTO
+            return new provinceDTO
+            {
+                Id = updated.Id,
+                ProvinceCode = updated.ProvinceCode,
+                ProvinceName = updated.ProvinceName,
+                CountryId = updated.CountryId,
+                IsActive = updated.IsActive,
+                UpdatedBy = updated.UpdatedBy,
+                UpdatedOn = updated.UpdatedOn
+            };
         }
 
         public async Task<bool> DeleteProvinceAsync(Guid id)
@@ -73,24 +144,39 @@ namespace TekRemittance.Service.Implementations
         #endregion
 
         #region City
-        public async Task<IEnumerable<City>> GetAllCityAsync()
+        public async Task<IEnumerable<cityDTO>> GetAllCityAsync()
         {
             return await _repository.GetAllCityAsync();
         }
 
-        public async Task<City?> GetCityByIdAsync(Guid id)
+        public async Task<cityDTO?> GetCityByIdAsync(Guid id)
         {
             return await _repository.GetCityByIdAsync(id);
         }
 
-        public async Task<City> CreateCityAsync(City city)
+        public async Task<cityDTO> CreateCityAsync(cityDTO city)
         {
             return await _repository.AddCityAsync(city);
         }
 
-        public async Task<City?> UpdateCityAsync(City city)
+        public async Task<cityDTO?> UpdateCityAsync(cityDTO city)
         {
-            return await _repository.UpdateCityAsync(city);
+            var updated = await _repository.UpdateCityAsync(city);
+            if (updated == null) return null;
+
+            return new cityDTO
+            {
+                Id = updated.Id,
+                CityCode = updated.CityCode,
+                CityName = updated.CityName,
+                CountryId = updated.CountryId,
+                ProvinceId = updated.ProvinceId,
+                IsActive = updated.IsActive,
+                UpdatedBy = updated.UpdatedBy,
+                UpdatedOn = updated.UpdatedOn,
+                CreatedBy = updated.CreatedBy,
+                CreatedOn = updated.CreatedOn
+            };
         }
 
         public async Task<bool> DeleteCityAsync(Guid id)

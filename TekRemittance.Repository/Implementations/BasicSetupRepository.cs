@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Interfaces;
+using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -20,28 +21,74 @@ namespace TekRemittance.Repository.Implementations
         }
 
         #region Country
-        public async Task<IEnumerable<Country>> GetAllAsync()
+        public async Task<IEnumerable<countryDTO>> GetAllAsync()
         {
-            return await _context.Countries.AsNoTracking().ToListAsync();
+            return await _context.Countries
+                .AsNoTracking()
+                .Select(c => new countryDTO
+                {
+                    Id = c.Id,
+                    CountryCode = c.CountryCode,
+                    CountryName = c.CountryName,
+                    IsActive = c.IsActive,
+                    CreatedBy = c.CreatedBy,
+                    CreatedOn = c.CreatedOn,
+                    UpdatedBy = c.UpdatedBy,
+                    UpdatedOn = c.UpdatedOn
+                })
+                .ToListAsync();
         }
 
-        public async Task<Country> GetByIdAsync(Guid id)
+        public async Task<countryDTO?> GetByIdAsync(Guid id)
         {
-            return await _context.Countries.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Countries
+                .AsNoTracking()
+                .Where(c => c.Id == id)
+                .Select(c => new countryDTO
+                {
+                    Id = c.Id,
+                    CountryCode = c.CountryCode,
+                    CountryName = c.CountryName,
+                    IsActive = c.IsActive,
+                    CreatedBy = c.CreatedBy,
+                    CreatedOn = c.CreatedOn,
+                    UpdatedBy = c.UpdatedBy,
+                    UpdatedOn = c.UpdatedOn
+                })
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<Country> AddAsync(Country country)
+        public async Task<countryDTO> AddAsync(countryDTO country)
         {
-            country.Id = Guid.NewGuid();
-            country.CreatedOn = DateTime.UtcNow;
+            var entity = new Country
+            {
+                Id = Guid.NewGuid(),
+                CountryCode = country.CountryCode,
+                CountryName = country.CountryName,
+                IsActive = country.IsActive,
+                CreatedOn = DateTime.UtcNow,
+                CreatedBy = "sami",
+                UpdatedOn = DateTime.UtcNow,
+                UpdatedBy = "sami"
+            };
 
-            await _context.Countries.AddAsync(country);
+            await _context.Countries.AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            return country;
+            return new countryDTO
+            {
+                Id = entity.Id,
+                CountryCode = entity.CountryCode,
+                CountryName = entity.CountryName,
+                IsActive = entity.IsActive,
+                CreatedBy = entity.CreatedBy,
+                CreatedOn = entity.CreatedOn,
+                UpdatedBy = entity.UpdatedBy,
+                UpdatedOn = entity.UpdatedOn
+            };
         }
 
-        public async Task<Country?> UpdateAsync(Country country)
+        public async Task<Country?> UpdateAsync(countryDTO country)
         {
             var existing = await _context.Countries.FirstOrDefaultAsync(c => c.Id == country.Id);
             if (existing == null) return null;
@@ -69,28 +116,72 @@ namespace TekRemittance.Repository.Implementations
         #endregion
 
         #region Province
-        public async Task<IEnumerable<Province>> GetAllProvinceAsync()
+        public async Task<IEnumerable<provinceDTO>> GetAllProvinceAsync()
         {
-            return await _context.Provinces.AsNoTracking().ToListAsync();
+            return await _context.Provinces
+                .AsNoTracking()
+                .Select(p => new provinceDTO
+                {
+                    Id = p.Id,
+                    ProvinceCode = p.ProvinceCode,
+                    ProvinceName = p.ProvinceName,
+                    CountryId = p.CountryId,
+                    IsActive = p.IsActive,
+                    CreatedBy = p.CreatedBy,
+                    CreatedOn = p.CreatedOn,
+                    UpdatedBy = p.UpdatedBy,
+                    UpdatedOn = p.UpdatedOn
+                })
+                .ToListAsync();
         }
 
-        public async Task<Province> GetProvinceByIdAsync(Guid id)
+        public async Task<provinceDTO> GetProvinceByIdAsync(Guid id)
         {
-            return await _context.Provinces.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Provinces
+                .AsNoTracking()
+                .Where(c => c.Id == id)
+                .Select(c => new provinceDTO
+                {
+                    Id = c.Id,
+                    ProvinceCode = c.ProvinceCode,
+                    ProvinceName = c.ProvinceName,
+                    CountryId = c.CountryId,
+                    IsActive = c.IsActive
+                    // map any other properties you need
+                })
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<Province> AddProvinceAsync(Province province)
+        public async Task<provinceDTO> AddProvinceAsync(provinceDTO provincedto)
         {
-            province.Id = Guid.NewGuid();
-            province.CreatedOn = DateTime.UtcNow;
+            var province = new Province
+            {
+                Id = Guid.NewGuid(),
+                ProvinceCode = provincedto.ProvinceCode,
+                ProvinceName = provincedto.ProvinceName,
+                CountryId = provincedto.CountryId,
+                IsActive = provincedto.IsActive,
+                CreatedOn = DateTime.UtcNow,
+                CreatedBy = "sami",
+                UpdatedOn = DateTime.UtcNow,
+                UpdatedBy = "sami"
+            };
 
             await _context.Provinces.AddAsync(province);
             await _context.SaveChangesAsync();
 
-            return province;
+            return new provinceDTO
+            {
+                Id = province.Id,
+                ProvinceCode = province.ProvinceCode,
+                ProvinceName = province.ProvinceName,
+                CountryId = province.CountryId,
+                IsActive= province.IsActive,
+                CreatedOn = province.CreatedOn
+            }; ;
         }
 
-        public async Task<Province?> UpdateProvinceAsync(Province province)
+        public async Task<Province?> UpdateProvinceAsync(provinceDTO province)
         {
             var existing = await _context.Provinces.FirstOrDefaultAsync(c => c.Id == province.Id);
             if (existing == null) return null;
@@ -119,28 +210,82 @@ namespace TekRemittance.Repository.Implementations
         #endregion
 
         #region City
-        public async Task<IEnumerable<City>> GetAllCityAsync()
+        public async Task<IEnumerable<cityDTO>> GetAllCityAsync()
         {
-            return await _context.Cities.AsNoTracking().ToListAsync();
+            return await _context.Cities
+                .AsNoTracking()
+                .Select(c => new cityDTO
+                {
+                    Id = c.Id,
+                    CityCode = c.CityCode,
+                    CityName = c.CityName,
+                    CountryId = c.CountryId,
+                    ProvinceId = c.ProvinceId,
+                    IsActive = c.IsActive,
+                    CreatedBy = c.CreatedBy,
+                    CreatedOn = c.CreatedOn,
+                    UpdatedBy = c.UpdatedBy,
+                    UpdatedOn = c.UpdatedOn
+                })
+                .ToListAsync();
         }
 
-        public async Task<City> GetCityByIdAsync(Guid id)
+        public async Task<cityDTO?> GetCityByIdAsync(Guid id)
         {
-            return await _context.Cities.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Cities
+                .AsNoTracking()
+                .Where(c => c.Id == id)
+                .Select(c => new cityDTO
+                {
+                    Id = c.Id,
+                    CityCode = c.CityCode,
+                    CityName = c.CityName,
+                    CountryId = c.CountryId,
+                    ProvinceId = c.ProvinceId,
+                    IsActive = c.IsActive,
+                    CreatedBy = c.CreatedBy,
+                    CreatedOn = c.CreatedOn,
+                    UpdatedBy = c.UpdatedBy,
+                    UpdatedOn = c.UpdatedOn
+                })
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<City> AddCityAsync(City city)
+        public async Task<cityDTO> AddCityAsync(cityDTO city)
         {
-            city.Id = Guid.NewGuid();
-            city.CreatedOn = DateTime.UtcNow;
+            var entity = new City
+            {
+                Id = Guid.NewGuid(),
+                CityCode = city.CityCode,
+                CityName = city.CityName,
+                CountryId = city.CountryId,
+                ProvinceId = city.ProvinceId,
+                IsActive = city.IsActive,
+                CreatedOn = DateTime.UtcNow,
+                CreatedBy = "sami",
+                UpdatedOn = DateTime.UtcNow,
+                UpdatedBy = "sami"
+            };
 
-            await _context.Cities.AddAsync(city);
+            await _context.Cities.AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            return city;
+            return new cityDTO
+            {
+                Id = entity.Id,
+                CityCode = entity.CityCode,
+                CityName = entity.CityName,
+                CountryId = entity.CountryId,
+                ProvinceId = entity.ProvinceId,
+                IsActive = entity.IsActive,
+                CreatedBy = entity.CreatedBy,
+                CreatedOn = entity.CreatedOn,
+                UpdatedBy = entity.UpdatedBy,
+                UpdatedOn = entity.UpdatedOn
+            };
         }
 
-        public async Task<City?> UpdateCityAsync(City city)
+        public async Task<City?> UpdateCityAsync(cityDTO city)
         {
             var existing = await _context.Cities.FirstOrDefaultAsync(c => c.Id == city.Id);
             if (existing == null) return null;
@@ -156,13 +301,133 @@ namespace TekRemittance.Repository.Implementations
             await _context.SaveChangesAsync();
             return existing;
         }
-
+        
         public async Task<bool> DeleteCityAsync(Guid id)
         {
-            var existing = await _context.Provinces.FirstOrDefaultAsync(c => c.Id == id);
+            var existing = await _context.Cities.FirstOrDefaultAsync(c => c.Id == id);
             if (existing == null) return false;
 
-            _context.Provinces.Remove(existing);
+            _context.Cities.Remove(existing);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        #endregion
+
+        #region Bank
+        public async Task<IEnumerable<bankDTO>> GetAllBankAsync()
+        {
+            return await _context.Banks
+                .AsNoTracking()
+                .Select(b => new bankDTO
+                {
+                    Id = b.Id,
+                    BankCode = b.BankCode,
+                    BankName = b.BankName,
+                    IMD = b.IMD,
+                    Website = b.Website,
+                    Allases = b.Allases,
+                    PhoneNo = b.PhoneNo,
+                    Description = b.Description,
+                    IsActive = b.IsActive,
+                    CreatedBy = b.CreatedBy,
+                    CreatedOn = b.CreatedOn,
+                    UpdatedBy = b.UpdatedBy,
+                    UpdatedOn = b.UpdatedOn
+                })
+                .ToListAsync();
+        }
+
+        public async Task<bankDTO?> GetBankByIdAsync(Guid id)
+        {
+            return await _context.Banks
+                .AsNoTracking()
+                .Where(b => b.Id == id)
+                .Select(b => new bankDTO
+                {
+                    Id = b.Id,
+                    BankCode = b.BankCode,
+                    BankName = b.BankName,
+                    IMD = b.IMD,
+                    Website = b.Website,
+                    Allases = b.Allases,
+                    PhoneNo = b.PhoneNo,
+                    Description = b.Description,
+                    IsActive = b.IsActive,
+                    CreatedBy = b.CreatedBy,
+                    CreatedOn = b.CreatedOn,
+                    UpdatedBy = b.UpdatedBy,
+                    UpdatedOn = b.UpdatedOn
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bankDTO> AddBankAsync(bankDTO bank)
+        {
+            var entity = new Bank
+            {
+                Id = Guid.NewGuid(),
+                BankCode = bank.BankCode,
+                BankName = bank.BankName,
+                IMD = bank.IMD,
+                Website = bank.Website,
+                Allases = bank.Allases,
+                PhoneNo = bank.PhoneNo,
+                Description = bank.Description,
+                IsActive = bank.IsActive,
+                CreatedOn = DateTime.UtcNow,
+                CreatedBy = "sami",
+                UpdatedOn = DateTime.UtcNow,
+                UpdatedBy = "sami"
+            };
+
+            await _context.Banks.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            return new bankDTO
+            {
+                Id = entity.Id,
+                BankCode = entity.BankCode,
+                BankName = entity.BankName,
+                IMD = entity.IMD,
+                Website = entity.Website,
+                Allases = entity.Allases,
+                PhoneNo = entity.PhoneNo,
+                Description = entity.Description,
+                IsActive = entity.IsActive,
+                CreatedBy = entity.CreatedBy,
+                CreatedOn = entity.CreatedOn,
+                UpdatedBy = entity.UpdatedBy,
+                UpdatedOn = entity.UpdatedOn
+            };
+        }
+
+        public async Task<Bank?> UpdateBankAsync(bankDTO bank)
+        {
+            var existing = await _context.Banks.FirstOrDefaultAsync(b => b.Id == bank.Id);
+            if (existing == null) return null;
+
+            existing.BankCode = bank.BankCode;
+            existing.BankName = bank.BankName;
+            existing.IMD = bank.IMD;
+            existing.Website = bank.Website;
+            existing.Allases = bank.Allases;
+            existing.PhoneNo = bank.PhoneNo;
+            existing.Description = bank.Description;
+            existing.IsActive = bank.IsActive;
+            existing.UpdatedBy = bank.UpdatedBy;
+            existing.UpdatedOn = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return existing;
+        }
+
+        public async Task<bool> DeleteBankAsync(Guid id)
+        {
+            var existing = await _context.Banks.FirstOrDefaultAsync(b => b.Id == id);
+            if (existing == null) return false;
+
+            _context.Banks.Remove(existing);
             await _context.SaveChangesAsync();
 
             return true;
