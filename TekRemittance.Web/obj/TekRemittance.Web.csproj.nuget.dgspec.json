@@ -179,6 +179,9 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+              "F:\\HomeRemittance\\TekRemittex\\TekRemittance\\TekRemittance.Repository\\TekRemittance.Repository.csproj": {
+                "projectPath": "F:\\HomeRemittance\\TekRemittex\\TekRemittance\\TekRemittance.Repository\\TekRemittance.Repository.csproj"
+              },
               "F:\\HomeRemittance\\TekRemittex\\TekRemittance\\TekRemittance.Service\\TekRemittance.Service.csproj": {
                 "projectPath": "F:\\HomeRemittance\\TekRemittex\\TekRemittance\\TekRemittance.Service\\TekRemittance.Service.csproj"
               }

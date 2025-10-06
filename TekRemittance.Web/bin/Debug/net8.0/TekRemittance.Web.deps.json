@@ -11,6 +11,7 @@
           "Microsoft.AspNetCore.OpenApi": "8.0.20",
           "Microsoft.EntityFrameworkCore.Design": "9.0.9",
           "Swashbuckle.AspNetCore": "6.5.0",
+          "TekRemittance.Repository": "1.0.0",
           "TekRemittance.Service": "1.0.0"
         },
         "runtime": {

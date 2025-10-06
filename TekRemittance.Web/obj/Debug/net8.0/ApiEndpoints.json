@@ -1,0 +1,298 @@
+[
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "GetAllBank",
+    "RelativePath": "api/BasicSetup/Bank",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "GetBankById",
+    "RelativePath": "api/BasicSetup/BankbyId/{bankId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bankId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "GetAllCity",
+    "RelativePath": "api/BasicSetup/City",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "GetCityById",
+    "RelativePath": "api/BasicSetup/CitybyId/{Id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "GetAll",
+    "RelativePath": "api/BasicSetup/countries",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "GetById",
+    "RelativePath": "api/BasicSetup/countrybyId/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "Create",
+    "RelativePath": "api/BasicSetup/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "country",
+        "Type": "TekRemittance.Web.Models.dto.countryDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "CreateBank",
+    "RelativePath": "api/BasicSetup/CreateBank",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bank",
+        "Type": "TekRemittance.Web.Models.dto.bankDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "CreateCity",
+    "RelativePath": "api/BasicSetup/CreateCity",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "city",
+        "Type": "TekRemittance.Web.Models.dto.cityDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "CreateProvince",
+    "RelativePath": "api/BasicSetup/CreateProvince",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TekRemittance.Web.Models.dto.provinceDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "Delete",
+    "RelativePath": "api/BasicSetup/delete/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "DeleteBank",
+    "RelativePath": "api/BasicSetup/deleteBank/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "DeleteCity",
+    "RelativePath": "api/BasicSetup/deleteCity/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "DeleteProvince",
+    "RelativePath": "api/BasicSetup/deleteProvince/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "GetAllProvince",
+    "RelativePath": "api/BasicSetup/Province",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "GetProvinceById",
+    "RelativePath": "api/BasicSetup/provincebyId/{Id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "Update",
+    "RelativePath": "api/BasicSetup/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "country",
+        "Type": "TekRemittance.Web.Models.dto.countryDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "UpdateBank",
+    "RelativePath": "api/BasicSetup/updateBank",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bank",
+        "Type": "TekRemittance.Web.Models.dto.bankDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "UpdateCity",
+    "RelativePath": "api/BasicSetup/updateCity",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "city",
+        "Type": "TekRemittance.Web.Models.dto.cityDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TekRemittance.Web.Controllers.BasicSetupController",
+    "Method": "UpdateProvince",
+    "RelativePath": "api/BasicSetup/updateProvince",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "province",
+        "Type": "TekRemittance.Web.Models.dto.provinceDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
