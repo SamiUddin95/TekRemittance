@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Entities;
 
 namespace TekRemittance.Repository.Entities.Data
 {
@@ -15,6 +16,9 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<Province> Provinces { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Bank> Banks { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<RevokedToken> RevokedTokens { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -124,6 +128,64 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.Property(b => b.UpdatedOn);
             });
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+
+                entity.Property(u => u.Name)
+                      .IsRequired()
+                      .HasMaxLength(150);
+
+                entity.Property(u => u.Email)
+                      .HasMaxLength(200);
+
+                entity.Property(u => u.Phone)
+                      .HasMaxLength(30);
+
+                entity.Property(u => u.EmployeeId)
+                      .HasMaxLength(50);
+
+                entity.Property(u => u.Limit)
+                      .HasColumnType("decimal(18,2)");
+
+                entity.Property(u => u.LoginName)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(u => u.PasswordHash)
+                      .IsRequired()
+                      .HasMaxLength(256);
+
+                entity.Property(u => u.IsActive)
+                      .HasDefaultValue(true);
+
+                entity.Property(u => u.CreatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(u => u.UpdatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(u => u.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasIndex(u => u.LoginName)
+                      .IsUnique();
+
+                entity.HasIndex(u => u.Email)
+                      .IsUnique()
+                      .HasFilter("[Email] IS NOT NULL");
+            });
+
+            modelBuilder.Entity<RevokedToken>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.Jti)
+                      .IsRequired()
+                      .HasMaxLength(100);
+                entity.HasIndex(r => r.Jti).IsUnique();
+                entity.Property(r => r.RevokedAt).IsRequired();
+                entity.Property(r => r.ExpiresAt).IsRequired();
+            });
         }
     }
 }
