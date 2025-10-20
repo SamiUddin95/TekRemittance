@@ -17,9 +17,9 @@ namespace TekRemittance.Service.Implementations
             _repo = repo;
         }
 
-        public async Task<IEnumerable<userDTO>> GetAllAsync()
+        public async Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _repo.GetAllAsync();
+            return await _repo.GetAllAsync(pageNumber, pageSize);
         }
 
         public async Task<userDTO?> GetByIdAsync(Guid id)

@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using TekRemittance.Web.Models.dto;
+
 
 namespace TekRemittance.Repository.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<userDTO>> GetAllAsync();
+        Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
         Task<userDTO?> GetByIdAsync(Guid id);
         Task<userDTO> AddAsync(userDTO user, string passwordHash);
         Task<userDTO?> UpdateAsync(userDTO user);

@@ -23,12 +23,19 @@ namespace TekRemittance.Web.Controllers
         #region Country
 
         [HttpGet("countries")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllCountries(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var countries = await _service.GetAllCountriesAsync();
-                return Ok(ApiResponse<IEnumerable<countryDTO>>.Success(countries, 200));
+                var result = await _service.GetAllCountriesAsync(pageNumber, pageSize);
+                return Ok(ApiResponse<object>.Success(new 
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
             }
             catch (Exception ex)
             {
@@ -110,13 +117,20 @@ namespace TekRemittance.Web.Controllers
 
         #region Province
 
-        [HttpGet("Province")]
-        public async Task<IActionResult> GetAllProvince()
+        [HttpGet("provinces")]
+        public async Task<IActionResult> GetAllProvinces(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var province = await _service.GetAllProvinceAsync();
-                return Ok(ApiResponse<IEnumerable<provinceDTO>>.Success(province, 200));
+                var result = await _service.GetAllProvinceAsync(pageNumber, pageSize);
+                return Ok(ApiResponse<object>.Success(new 
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
             }
             catch (Exception ex)
             {
@@ -194,13 +208,20 @@ namespace TekRemittance.Web.Controllers
 
         #region City
 
-        [HttpGet("City")]
-        public async Task<IActionResult> GetAllCity()
+        [HttpGet("cities")]
+        public async Task<IActionResult> GetAllCities(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var city = await _service.GetAllCityAsync();
-                return Ok(ApiResponse<IEnumerable<cityDTO>>.Success(city, 200));
+                var result = await _service.GetAllCityAsync(pageNumber, pageSize);
+                return Ok(ApiResponse<object>.Success(new 
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
             }
             catch (Exception ex)
             {
@@ -278,13 +299,20 @@ namespace TekRemittance.Web.Controllers
 
         #region Bank
 
-        [HttpGet("Bank")]
-        public async Task<IActionResult> GetAllBank()
+        [HttpGet("banks")]
+        public async Task<IActionResult> GetAllBanks(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var banks = await _service.GetAllBankAsync();
-                return Ok(ApiResponse<IEnumerable<bankDTO>>.Success(banks, 200));
+                var result = await _service.GetAllBankAsync(pageNumber, pageSize);
+                return Ok(ApiResponse<object>.Success(new 
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
             }
             catch (Exception ex)
             {

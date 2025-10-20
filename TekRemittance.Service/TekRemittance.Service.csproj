@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TekRemittance.Repository\TekRemittance.Repository.csproj" />
+    <!--<ProjectReference Include="..\TekRemittance.Shared\TekRemittance.Shared.csproj" />-->
   </ItemGroup>
 
   <PropertyGroup>

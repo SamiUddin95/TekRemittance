@@ -21,9 +21,12 @@ namespace TekRemittance.Repository.Implementations
         }
 
         #region Country
-        public async Task<IEnumerable<countryDTO>> GetAllAsync()
+        public async Task<PagedResult<countryDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _context.Countries
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.Countries
                 .AsNoTracking()
                 .Select(c => new countryDTO
                 {
@@ -35,8 +38,22 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = c.CreatedOn,
                     UpdatedBy = c.UpdatedBy,
                     UpdatedOn = c.UpdatedOn
-                })
+                });
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .OrderBy(c => c.CountryName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            return new PagedResult<countryDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<countryDTO?> GetByIdAsync(Guid id)
@@ -116,9 +133,12 @@ namespace TekRemittance.Repository.Implementations
         #endregion
 
         #region Province
-        public async Task<IEnumerable<provinceDTO>> GetAllProvinceAsync()
+        public async Task<PagedResult<provinceDTO>> GetAllProvinceAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _context.Provinces
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.Provinces
                 .AsNoTracking()
                 .Select(p => new provinceDTO
                 {
@@ -131,8 +151,22 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = p.CreatedOn,
                     UpdatedBy = p.UpdatedBy,
                     UpdatedOn = p.UpdatedOn
-                })
+                });
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .OrderBy(p => p.ProvinceName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            return new PagedResult<provinceDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<provinceDTO> GetProvinceByIdAsync(Guid id)
@@ -210,9 +244,12 @@ namespace TekRemittance.Repository.Implementations
         #endregion
 
         #region City
-        public async Task<IEnumerable<cityDTO>> GetAllCityAsync()
+        public async Task<PagedResult<cityDTO>> GetAllCityAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _context.Cities
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.Cities
                 .AsNoTracking()
                 .Select(c => new cityDTO
                 {
@@ -226,8 +263,22 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = c.CreatedOn,
                     UpdatedBy = c.UpdatedBy,
                     UpdatedOn = c.UpdatedOn
-                })
+                });
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .OrderBy(c => c.CityName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            return new PagedResult<cityDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<cityDTO?> GetCityByIdAsync(Guid id)
@@ -315,9 +366,12 @@ namespace TekRemittance.Repository.Implementations
         #endregion
 
         #region Bank
-        public async Task<IEnumerable<bankDTO>> GetAllBankAsync()
+        public async Task<PagedResult<bankDTO>> GetAllBankAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _context.Banks
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.Banks
                 .AsNoTracking()
                 .Select(b => new bankDTO
                 {
@@ -334,8 +388,22 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = b.CreatedOn,
                     UpdatedBy = b.UpdatedBy,
                     UpdatedOn = b.UpdatedOn
-                })
+                });
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .OrderBy(b => b.BankName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            return new PagedResult<bankDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<bankDTO?> GetBankByIdAsync(Guid id)

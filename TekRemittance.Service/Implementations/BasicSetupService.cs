@@ -20,9 +20,9 @@ namespace TekRemittance.Service.Implementations
         }
 
         #region Country
-        public async Task<IEnumerable<countryDTO>> GetAllCountriesAsync()
+        public async Task<PagedResult<countryDTO>> GetAllCountriesAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _repository.GetAllAsync();
+            return await _repository.GetAllAsync(pageNumber, pageSize);
         }
 
         public async Task<countryDTO?> GetCountryByIdAsync(Guid id)
@@ -60,9 +60,9 @@ namespace TekRemittance.Service.Implementations
         #endregion
 
         #region Bank
-        public async Task<IEnumerable<bankDTO>> GetAllBankAsync()
+        public async Task<PagedResult<bankDTO>> GetAllBankAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _repository.GetAllBankAsync();
+            return await _repository.GetAllBankAsync(pageNumber, pageSize);
         }
 
         public async Task<bankDTO?> GetBankByIdAsync(Guid id)
@@ -104,9 +104,9 @@ namespace TekRemittance.Service.Implementations
         }
         #endregion
         #region Province
-        public async Task<IEnumerable<provinceDTO>> GetAllProvinceAsync()
+        public async Task<PagedResult<provinceDTO>> GetAllProvinceAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _repository.GetAllProvinceAsync();
+            return await _repository.GetAllProvinceAsync(pageNumber, pageSize);
         }
 
         public async Task<provinceDTO?> GetProvinceByIdAsync(Guid id)
@@ -144,9 +144,9 @@ namespace TekRemittance.Service.Implementations
         #endregion
 
         #region City
-        public async Task<IEnumerable<cityDTO>> GetAllCityAsync()
+        public async Task<PagedResult<cityDTO>> GetAllCityAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _repository.GetAllCityAsync();
+            return await _repository.GetAllCityAsync(pageNumber, pageSize);
         }
 
         public async Task<cityDTO?> GetCityByIdAsync(Guid id)
