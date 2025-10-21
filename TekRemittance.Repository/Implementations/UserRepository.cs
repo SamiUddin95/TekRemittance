@@ -18,9 +18,26 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<userDTO>> GetAllAsync()
+        public async Task<IEnumerable<userDTO>> GetAllAsync(userSearchDTO search)
         {
-            return await _context.Users.AsNoTracking()
+            var query = _context.Users.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search?.EmployeeId))
+            {
+                query = query.Where(u => u.EmployeeId != null && EF.Functions.Like(u.EmployeeId, "%" + search.EmployeeId + "%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.Name))
+            {
+                query = query.Where(u => u.Name != null && EF.Functions.Like(u.Name, "%" + search.Name + "%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search?.LoginName))
+            {
+                query = query.Where(u => u.LoginName != null && EF.Functions.Like(u.LoginName, "%" + search.LoginName + "%"));
+            }
+
+            return await query
                 .Select(u => new userDTO
                 {
                     Id = u.Id,
@@ -34,7 +51,8 @@ namespace TekRemittance.Repository.Implementations
                     CreatedBy = u.CreatedBy,
                     CreatedOn = u.CreatedOn,
                     UpdatedBy = u.UpdatedBy,
-                    UpdatedOn = u.UpdatedOn
+                    UpdatedOn = u.UpdatedOn,
+                    IsSupervise = u.IsSupervise
                 }).ToListAsync();
         }
 
@@ -55,7 +73,9 @@ namespace TekRemittance.Repository.Implementations
                     CreatedBy = u.CreatedBy,
                     CreatedOn = u.CreatedOn,
                     UpdatedBy = u.UpdatedBy,
-                    UpdatedOn = u.UpdatedOn
+                    UpdatedOn = u.UpdatedOn,
+                    password = u.PasswordHash,
+                    IsSupervise = u.IsSupervise
                 }).FirstOrDefaultAsync();
         }
 
@@ -75,7 +95,8 @@ namespace TekRemittance.Repository.Implementations
                 CreatedBy = dto.CreatedBy ?? "system",
                 CreatedOn = DateTime.UtcNow,
                 UpdatedBy = dto.UpdatedBy ?? "system",
-                UpdatedOn = DateTime.UtcNow
+                UpdatedOn = DateTime.UtcNow,
+                IsSupervise  = false
             };
             await _context.Users.AddAsync(entity);
             await _context.SaveChangesAsync();
@@ -93,7 +114,9 @@ namespace TekRemittance.Repository.Implementations
                 CreatedBy = entity.CreatedBy,
                 CreatedOn = entity.CreatedOn,
                 UpdatedBy = entity.UpdatedBy,
-                UpdatedOn = entity.UpdatedOn
+                UpdatedOn = entity.UpdatedOn,
+                IsSupervise = entity.IsSupervise
+                
             };
         }
 
@@ -111,6 +134,8 @@ namespace TekRemittance.Repository.Implementations
             existing.IsActive = dto.IsActive;
             existing.UpdatedBy = dto.UpdatedBy;
             existing.UpdatedOn = DateTime.UtcNow;
+            existing.IsSupervise = false;
+            
 
             await _context.SaveChangesAsync();
 
@@ -127,7 +152,8 @@ namespace TekRemittance.Repository.Implementations
                 CreatedBy = existing.CreatedBy,
                 CreatedOn = existing.CreatedOn,
                 UpdatedBy = existing.UpdatedBy,
-                UpdatedOn = existing.UpdatedOn
+                UpdatedOn = existing.UpdatedOn,
+                IsSupervise = existing.IsSupervise,
             };
         }
 
@@ -141,13 +167,37 @@ namespace TekRemittance.Repository.Implementations
         }
 
         public async Task<(Guid Id, string PasswordHash, bool IsActive)?> GetAuthByLoginAsync(string loginName)
-        {
+        {   
             var data = await _context.Users.AsNoTracking()
                 .Where(u => u.LoginName == loginName)
-                .Select(u => new { u.Id, u.PasswordHash, u.IsActive })
+                .Select(u => new { u.Id, u.PasswordHash, u.IsActive, u.IsSupervise })
                 .FirstOrDefaultAsync();
             if (data == null) return null;
             return (data.Id, data.PasswordHash!, data.IsActive);
+        }
+
+        public async Task<bool> UpdateIsSuperviseAsync(Guid id, bool isSupervise)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null) return false;
+            user.IsSupervise = isSupervise;
+            user.UpdatedOn = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateNameAndPasswordAsync(Guid id, string name, string passwordHash)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null) return false;
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                user.Name = name;
+            }
+            user.PasswordHash = passwordHash;
+            user.UpdatedOn = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

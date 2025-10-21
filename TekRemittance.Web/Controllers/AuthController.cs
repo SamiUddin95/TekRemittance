@@ -40,7 +40,11 @@ namespace TekRemittance.Web.Controllers
                 var user = await _userService.ValidateCredentialsAsync(login.LoginName, login.Password);
                 if (user == null)
                 {
-                    return Unauthorized(ApiResponse<string>.Error("Invalid credentials", 401));
+                    return Unauthorized(ApiResponse<string>.Error("Invalid credentials", 201));
+                }
+                if (!user.IsSupervise)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("You are not authorized to log in. Please wait for supervisor approval.", 201));
                 }
 
                 var token = GenerateJwtToken(user);
@@ -57,6 +61,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpPost("logout")]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             try

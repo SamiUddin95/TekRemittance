@@ -17,9 +17,9 @@ namespace TekRemittance.Service.Implementations
             _repo = repo;
         }
 
-        public async Task<IEnumerable<userDTO>> GetAllAsync()
+        public async Task<IEnumerable<userDTO>> GetAllAsync(userSearchDTO search)
         {
-            return await _repo.GetAllAsync();
+            return await _repo.GetAllAsync(search);
         }
 
         public async Task<userDTO?> GetByIdAsync(Guid id)
@@ -60,6 +60,17 @@ namespace TekRemittance.Service.Implementations
             var sb = new StringBuilder();
             foreach (var b in bytes) sb.Append(b.ToString("x2"));
             return sb.ToString();
+        }
+
+        public async Task<bool> UpdateIsSuperviseAsync(Guid id, bool isSupervise)
+        {
+            return await _repo.UpdateIsSuperviseAsync(id, isSupervise);
+        }
+
+        public async Task<bool> UpdateNameAndPasswordAsync(Guid id, string name, string password)
+        {
+            var hash = HashPassword(password);
+            return await _repo.UpdateNameAndPasswordAsync(id, name, hash);
         }
     }
 }
