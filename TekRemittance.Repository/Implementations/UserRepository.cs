@@ -80,6 +80,15 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task<userDTO> AddAsync(userDTO dto, string passwordHash)
         {
+            // Duplicate LoginName Validation (case-insensitive, trimmed)
+            var loginName = dto.LoginName?.Trim() ?? string.Empty;
+            if (!string.IsNullOrEmpty(loginName))
+            {
+                if (await _context.Users.AnyAsync(u => u.LoginName != null && u.LoginName.ToLower() == loginName.ToLower()))
+                {
+                    throw new ArgumentException("Login name already exists.");
+                }
+            }
             var entity = new User
             {
                 Id = Guid.NewGuid(),
@@ -88,7 +97,7 @@ namespace TekRemittance.Repository.Implementations
                 Phone = dto.Phone,
                 EmployeeId = dto.EmployeeId,
                 Limit = dto.Limit,
-                LoginName = dto.LoginName!,
+                LoginName = loginName!,
                 PasswordHash = passwordHash,
                 IsActive = dto.IsActive,
                 CreatedBy = dto.CreatedBy ?? "system",
@@ -121,12 +130,22 @@ namespace TekRemittance.Repository.Implementations
             var existing = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.Id);
             if (existing == null) return null;
 
+            // Duplicate LoginName Validation (case-insensitive, trimmed) excluding self
+            var loginName = dto.LoginName?.Trim() ?? string.Empty;
+            if (!string.IsNullOrEmpty(loginName))
+            {
+                if (await _context.Users.AnyAsync(u => u.Id != dto.Id && u.LoginName != null && u.LoginName.ToLower() == loginName.ToLower()))
+                {
+                    throw new ArgumentException("Login name already exists.");
+                }
+            }
+
             existing.Name = dto.Name;
             existing.Email = dto.Email;
             existing.Phone = dto.Phone;
             existing.EmployeeId = dto.EmployeeId;
             existing.Limit = dto.Limit;
-            existing.LoginName = dto.LoginName;
+            existing.LoginName = loginName;
             existing.IsActive = dto.IsActive;
             existing.UpdatedBy = dto.UpdatedBy;
             existing.UpdatedOn = DateTime.UtcNow;

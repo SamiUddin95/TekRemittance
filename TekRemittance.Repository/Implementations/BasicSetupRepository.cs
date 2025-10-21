@@ -77,11 +77,17 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task<countryDTO> AddAsync(countryDTO country)
         {
+            // Duplicate Name Validation (case-insensitive, trimmed)
+            var countryName = country.CountryName?.Trim() ?? string.Empty;
+            if (await _context.Countries.AnyAsync(c => c.CountryName.ToLower() == countryName.ToLower()))
+            {
+                throw new ArgumentException("Country name already exists.");
+            }
             var entity = new Country
             {
                 Id = Guid.NewGuid(),
                 CountryCode = country.CountryCode,
-                CountryName = country.CountryName,
+                CountryName = countryName,
                 IsActive = country.IsActive,
                 CreatedOn = DateTime.UtcNow,
                 CreatedBy = "sami",
@@ -110,8 +116,15 @@ namespace TekRemittance.Repository.Implementations
             var existing = await _context.Countries.FirstOrDefaultAsync(c => c.Id == country.Id);
             if (existing == null) return null;
 
+            // Duplicate Name Validation (case-insensitive, trimmed) excluding self
+            var countryName = country.CountryName?.Trim() ?? string.Empty;
+            if (await _context.Countries.AnyAsync(c => c.Id != country.Id && c.CountryName.ToLower() == countryName.ToLower()))
+            {
+                throw new ArgumentException("Country name already exists.");
+            }
+
             existing.CountryCode = country.CountryCode;
-            existing.CountryName = country.CountryName;
+            existing.CountryName = countryName;
             existing.IsActive = country.IsActive;
             existing.UpdatedBy = country.UpdatedBy;
             existing.UpdatedOn = DateTime.UtcNow;
@@ -188,11 +201,18 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task<provinceDTO> AddProvinceAsync(provinceDTO provincedto)
         {
+            // Duplicate Name Validation within the same Country (case-insensitive, trimmed)
+            var provinceName = provincedto.ProvinceName?.Trim() ?? string.Empty;
+            if (await _context.Provinces.AnyAsync(p => p.CountryId == provincedto.CountryId && p.ProvinceName.ToLower() == provinceName.ToLower()))
+            {
+                throw new ArgumentException("Province name already exists in the selected country.");
+            }
+
             var province = new Province
             {
                 Id = Guid.NewGuid(),
                 ProvinceCode = provincedto.ProvinceCode,
-                ProvinceName = provincedto.ProvinceName,
+                ProvinceName = provinceName,
                 CountryId = provincedto.CountryId,
                 IsActive = provincedto.IsActive,
                 CreatedOn = DateTime.UtcNow,
@@ -220,8 +240,15 @@ namespace TekRemittance.Repository.Implementations
             var existing = await _context.Provinces.FirstOrDefaultAsync(c => c.Id == province.Id);
             if (existing == null) return null;
 
+            // Duplicate Name Validation within the same Country (case-insensitive, trimmed) excluding self
+            var provinceName = province.ProvinceName?.Trim() ?? string.Empty;
+            if (await _context.Provinces.AnyAsync(p => p.Id != province.Id && p.CountryId == province.CountryId && p.ProvinceName.ToLower() == provinceName.ToLower()))
+            {
+                throw new ArgumentException("Province name already exists in the selected country.");
+            }
+
             existing.ProvinceCode = province.ProvinceCode;
-            existing.ProvinceName = province.ProvinceName;
+            existing.ProvinceName = provinceName;
             existing.CountryId = province.CountryId;
             existing.IsActive = province.IsActive;
             existing.UpdatedBy = province.UpdatedBy;
@@ -304,11 +331,18 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task<cityDTO> AddCityAsync(cityDTO city)
         {
+            // Duplicate Name Validation within the same Province (case-insensitive, trimmed)
+            var cityName = city.CityName?.Trim() ?? string.Empty;
+            if (await _context.Cities.AnyAsync(c => c.ProvinceId == city.ProvinceId && c.CityName.ToLower() == cityName.ToLower()))
+            {
+                throw new ArgumentException("City name already exists in the selected province.");
+            }
+
             var entity = new City
             {
                 Id = Guid.NewGuid(),
                 CityCode = city.CityCode,
-                CityName = city.CityName,
+                CityName = cityName,
                 CountryId = city.CountryId,
                 ProvinceId = city.ProvinceId,
                 IsActive = city.IsActive,
@@ -341,8 +375,15 @@ namespace TekRemittance.Repository.Implementations
             var existing = await _context.Cities.FirstOrDefaultAsync(c => c.Id == city.Id);
             if (existing == null) return null;
 
+            // Duplicate Name Validation within the same Province (case-insensitive, trimmed) excluding self
+            var cityName = city.CityName?.Trim() ?? string.Empty;
+            if (await _context.Cities.AnyAsync(c => c.Id != city.Id && c.ProvinceId == city.ProvinceId && c.CityName.ToLower() == cityName.ToLower()))
+            {
+                throw new ArgumentException("City name already exists in the selected province.");
+            }
+
             existing.CityCode = city.CityCode;
-            existing.CityName = city.CityName;
+            existing.CityName = cityName;
             existing.CountryId = city.CountryId;
             existing.ProvinceId = city.ProvinceId;
             existing.IsActive = city.IsActive;
@@ -432,11 +473,18 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task<bankDTO> AddBankAsync(bankDTO bank)
         {
+            // Duplicate Name Validation (case-insensitive, trimmed)
+            var bankName = bank.BankName?.Trim() ?? string.Empty;
+            if (await _context.Banks.AnyAsync(b => b.BankName.ToLower() == bankName.ToLower()))
+            {
+                throw new ArgumentException("Bank name already exists.");
+            }
+
             var entity = new Bank
             {
                 Id = Guid.NewGuid(),
                 BankCode = bank.BankCode,
-                BankName = bank.BankName,
+                BankName = bankName,
                 IMD = bank.IMD,
                 Website = bank.Website,
                 Allases = bank.Allases,
@@ -475,8 +523,15 @@ namespace TekRemittance.Repository.Implementations
             var existing = await _context.Banks.FirstOrDefaultAsync(b => b.Id == bank.Id);
             if (existing == null) return null;
 
+            // Duplicate Name Validation (case-insensitive, trimmed) excluding self
+            var bankName = bank.BankName?.Trim() ?? string.Empty;
+            if (await _context.Banks.AnyAsync(b => b.Id != bank.Id && b.BankName.ToLower() == bankName.ToLower()))
+            {
+                throw new ArgumentException("Bank name already exists.");
+            }
+
             existing.BankCode = bank.BankCode;
-            existing.BankName = bank.BankName;
+            existing.BankName = bankName;
             existing.IMD = bank.IMD;
             existing.Website = bank.Website;
             existing.Allases = bank.Allases;

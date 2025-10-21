@@ -18,6 +18,7 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<Bank> Banks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RevokedToken> RevokedTokens { get; set; }
+        public DbSet<AcquisitionAgents> AcquisitionAgents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -185,6 +186,57 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.HasIndex(r => r.Jti).IsUnique();
                 entity.Property(r => r.RevokedAt).IsRequired();
                 entity.Property(r => r.ExpiresAt).IsRequired();
+            });
+
+            modelBuilder.Entity<AcquisitionAgents>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.Property(a => a.Code).IsRequired().HasMaxLength(50);
+                entity.HasIndex(a => a.Code).IsUnique();
+                entity.Property(a => a.AgentName).IsRequired().HasMaxLength(150);
+                entity.Property(a => a.Phone1).HasMaxLength(30);
+                entity.Property(a => a.Phone2).HasMaxLength(30);
+                entity.Property(a => a.Fax).HasMaxLength(30);
+                entity.Property(a => a.Email).HasMaxLength(200);
+                entity.Property(a => a.LogoUrl).HasMaxLength(400);
+                entity.Property(a => a.Address).HasMaxLength(500);
+                entity.Property(a => a.InquiryURL).HasMaxLength(400);
+                entity.Property(a => a.PaymentURL).HasMaxLength(400);
+                entity.Property(a => a.UnlockURL).HasMaxLength(400);
+                entity.Property(a => a.CreatedBy).HasMaxLength(100);
+                entity.Property(a => a.UpdatedBy).HasMaxLength(100);
+
+                // Store enums as strings
+                entity.Property(a => a.RIN)
+                      .HasConversion<string>()
+                      .HasMaxLength(50);
+                entity.Property(a => a.Process)
+                      .HasConversion<string>()
+                      .HasMaxLength(50);
+                entity.Property(a => a.AcquisitionModes)
+                      .HasConversion<string>()
+                      .HasMaxLength(200);
+                entity.Property(a => a.DisbursementModes)
+                      .HasConversion<string>()
+                      .HasMaxLength(200);
+
+                entity.HasOne(a => a.Country)
+                      .WithMany()
+                      .HasForeignKey(a => a.CountryId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(a => a.Province)
+                      .WithMany()
+                      .HasForeignKey(a => a.ProvinceId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(a => a.City)
+                      .WithMany()
+                      .HasForeignKey(a => a.CityId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(a => a.IsActive).HasDefaultValue(true);
+                entity.Property(a => a.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
             });
         }
     }

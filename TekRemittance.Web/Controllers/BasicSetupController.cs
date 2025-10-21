@@ -70,6 +70,10 @@ namespace TekRemittance.Web.Controllers
                 var created = await _service.CreateCountryAsync(country);
                 return Ok(ApiResponse<countryDTO>.Success(created, 201));
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
@@ -88,6 +92,10 @@ namespace TekRemittance.Web.Controllers
                     return NotFound(ApiResponse<string>.Error("Country not found", 404));
 
                 return Ok(ApiResponse<countryDTO>.Success(updated, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
             }
             catch (Exception ex)
             {
@@ -163,6 +171,10 @@ namespace TekRemittance.Web.Controllers
                 var created = await _service.CreateProvinceAsync(dto);
                 return Ok(ApiResponse<provinceDTO>.Success(created, 201));
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
@@ -180,6 +192,10 @@ namespace TekRemittance.Web.Controllers
                     return NotFound(ApiResponse<string>.Error("Province not found", 404));
 
                 return Ok(ApiResponse<provinceDTO>.Success(updated, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
             }
             catch (Exception ex)
             {
@@ -254,6 +270,10 @@ namespace TekRemittance.Web.Controllers
                 var created = await _service.CreateCityAsync(city);
                 return Ok(ApiResponse<cityDTO>.Success(created, 201));
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
@@ -271,6 +291,10 @@ namespace TekRemittance.Web.Controllers
                     return NotFound(ApiResponse<string>.Error("City not found", 404));
 
                 return Ok(ApiResponse<cityDTO>.Success(updated, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
             }
             catch (Exception ex)
             {
@@ -345,6 +369,10 @@ namespace TekRemittance.Web.Controllers
                 var created = await _service.CreateBankAsync(bank);
                 return Ok(ApiResponse<bankDTO>.Success(created, 201));
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
@@ -362,6 +390,10 @@ namespace TekRemittance.Web.Controllers
                     return NotFound(ApiResponse<string>.Error("Bank not found", 404));
 
                 return Ok(ApiResponse<bankDTO>.Success(updated, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
             }
             catch (Exception ex)
             {

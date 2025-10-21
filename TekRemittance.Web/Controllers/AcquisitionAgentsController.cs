@@ -1,21 +1,20 @@
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
-using System;
-using System.Threading.Tasks;
 
 namespace TekRemittance.Web.Controllers
 {
     [EnableCors("AllowFrontend")]
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class AcquisitionAgentsController : ControllerBase
     {
-        private readonly IUserService _service;
-        public UsersController(IUserService service)
+        private readonly IAcquisitionAgentsService _service;
+        public AcquisitionAgentsController(IAcquisitionAgentsService service)
         {
             _service = service;
         }
@@ -26,7 +25,7 @@ namespace TekRemittance.Web.Controllers
             try
             {
                 var result = await _service.GetAllAsync(pageNumber, pageSize);
-                return Ok(ApiResponse<object>.Success(new 
+                return Ok(ApiResponse<object>.Success(new
                 {
                     items = result.Items,
                     totalCount = result.TotalCount,
@@ -46,9 +45,9 @@ namespace TekRemittance.Web.Controllers
         {
             try
             {
-                var user = await _service.GetByIdAsync(id);
-                if (user == null) return NotFound(ApiResponse<string>.Error("User not found", 404));
-                return Ok(ApiResponse<object>.Success(user, 200));
+                var item = await _service.GetByIdAsync(id);
+                if (item == null) return NotFound(ApiResponse<string>.Error("Acquisition Agent not found", 404));
+                return Ok(ApiResponse<object>.Success(item, 200));
             }
             catch (Exception ex)
             {
@@ -56,18 +55,12 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        public class CreateUserRequest
-        {
-            public userDTO User { get; set; } = new userDTO();
-            public string Password { get; set; } = string.Empty;
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserRequest req)
+        public async Task<IActionResult> Create([FromBody] acquisitionAgentDTO dto)
         {
             try
             {
-                var created = await _service.CreateAsync(req.User, req.Password);
+                var created = await _service.CreateAsync(dto);
                 return Ok(ApiResponse<object>.Success(created, 201));
             }
             catch (ArgumentException ex)
@@ -81,12 +74,12 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] userDTO dto)
+        public async Task<IActionResult> Update([FromBody] acquisitionAgentDTO dto)
         {
             try
             {
                 var updated = await _service.UpdateAsync(dto);
-                if (updated == null) return NotFound(ApiResponse<string>.Error("User not found", 404));
+                if (updated == null) return NotFound(ApiResponse<string>.Error("Acquisition Agent not found", 404));
                 return Ok(ApiResponse<object>.Success(updated, 200));
             }
             catch (ArgumentException ex)
@@ -105,8 +98,8 @@ namespace TekRemittance.Web.Controllers
             try
             {
                 var ok = await _service.DeleteAsync(id);
-                if (!ok) return NotFound(ApiResponse<string>.Error("User not found", 404));
-                return Ok(ApiResponse<string>.Success("User deleted successfully", 200));
+                if (!ok) return NotFound(ApiResponse<string>.Error("Acquisition Agent not found", 404));
+                return Ok(ApiResponse<string>.Success("Acquisition Agent deleted successfully", 200));
             }
             catch (Exception ex)
             {
