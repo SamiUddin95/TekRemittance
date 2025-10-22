@@ -1,3 +1,0 @@
-﻿dotnet ef migrations add InitialCreate -p TekRemittance.Repository -s TekRemittance.Web
-
-dotnet ef database update -p TekRemittance.Repository -s TekRemittance.Web
