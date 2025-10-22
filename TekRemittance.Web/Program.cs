@@ -10,6 +10,7 @@ using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Implementations;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Service.Implementations;
+using TekRemittance.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddScoped<IBasicSetupService, BasicSetupService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenRevocationRepository, TokenRevocationRepository>();
+builder.Services.AddScoped<IAcquisitionAgentAccountRepository, AcquisitionAgentAccountRepository>();
+builder.Services.AddScoped<IAcquisitionAgentAccountService, AcquisitionAgentAccountService>();
 
 // Swagger & Controllers
 builder.Services.AddControllers();

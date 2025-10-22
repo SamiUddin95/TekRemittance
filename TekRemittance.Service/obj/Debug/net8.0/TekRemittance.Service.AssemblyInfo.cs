@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TekRemittance.Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e94f8516fde45216c0095f97435f482974c34c63")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+084117cfbd94c239b4beb3ed90807fa565f12180")]
 [assembly: System.Reflection.AssemblyProductAttribute("TekRemittance.Service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TekRemittance.Service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -18,6 +18,8 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<Bank> Banks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RevokedToken> RevokedTokens { get; set; }
+        public DbSet<AcquisitionAgentAccount> AcquisitionAgentAccounts { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
