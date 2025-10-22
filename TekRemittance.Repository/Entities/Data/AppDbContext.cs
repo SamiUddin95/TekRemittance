@@ -19,6 +19,9 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<User> Users { get; set; }
         public DbSet<RevokedToken> RevokedTokens { get; set; }
         public DbSet<AcquisitionAgents> AcquisitionAgents { get; set; }
+        public DbSet<AgentFileTemplate> AgentFileTemplates { get; set; }
+        public DbSet<AgentFileTemplateField> AgentFileTemplateFields { get; set; }
+        public DbSet<AgentFileUpload> AgentFileUploads { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +40,66 @@ namespace TekRemittance.Repository.Entities.Data
 
                 entity.Property(c => c.CreatedOn)
                       .HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            modelBuilder.Entity<AgentFileTemplate>(entity =>
+            {
+                entity.HasKey(t => t.Id);
+                entity.Property(t => t.Name).IsRequired().HasMaxLength(150);
+                entity.Property(t => t.SheetName).HasMaxLength(100);
+                entity.Property(t => t.Delimiter).HasMaxLength(10);
+                entity.Property(t => t.CreatedBy).HasMaxLength(100);
+                entity.Property(t => t.UpdatedBy).HasMaxLength(100);
+
+                // One template per agent
+                entity.HasIndex(t => t.AgentId).IsUnique();
+                entity.HasOne(t => t.Agent)
+                      .WithOne()
+                      .HasForeignKey<AgentFileTemplate>(t => t.AgentId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Store enums as strings
+                entity.Property(t => t.Format).HasConversion<string>().HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<AgentFileTemplateField>(entity =>
+            {
+                entity.HasKey(f => f.Id);
+                entity.Property(f => f.FieldName).IsRequired().HasMaxLength(100);
+                entity.Property(f => f.StartIndex);
+                entity.Property(f => f.Length);
+
+                entity.HasOne(f => f.Template)
+                      .WithMany()
+                      .HasForeignKey(f => f.TemplateId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Unique order per template
+                entity.HasIndex(f => new { f.TemplateId, f.FieldOrder }).IsUnique();
+
+                // Store enums as strings
+                entity.Property(f => f.FieldType).HasConversion<string>().HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<AgentFileUpload>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.FileName).IsRequired().HasMaxLength(260);
+                entity.Property(u => u.StoragePath).HasMaxLength(500);
+                entity.Property(u => u.ErrorMessage).HasMaxLength(1000);
+
+                entity.HasOne(u => u.Agent)
+                      .WithMany()
+                      .HasForeignKey(u => u.AgentId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(u => u.Template)
+                      .WithMany()
+                      .HasForeignKey(u => u.TemplateId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Store enums as strings
+                entity.Property(u => u.Status).HasConversion<string>().HasMaxLength(20);
             });
 
             // Province configuration
