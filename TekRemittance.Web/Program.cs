@@ -28,6 +28,7 @@ builder.Services.AddScoped<ITokenRevocationRepository, TokenRevocationRepository
 builder.Services.AddScoped<IAcquisitionAgentsRepository, AcquisitionAgentsRepository>();
 builder.Services.AddScoped<IAcquisitionAgentsService, AcquisitionAgentsService>();
 
+
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
