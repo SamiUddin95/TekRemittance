@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Any;
 using System.IdentityModel.Tokens.Jwt;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Implementations;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Service.Implementations;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,13 +25,26 @@ builder.Services.AddScoped<IBasicSetupService, BasicSetupService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenRevocationRepository, TokenRevocationRepository>();
+builder.Services.AddScoped<IAcquisitionAgentsRepository, AcquisitionAgentsRepository>();
+builder.Services.AddScoped<IAcquisitionAgentsService, AcquisitionAgentsService>();
 
 // Swagger & Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    // Serialize enums as strings in JSON
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "TekRemittance API", Version = "v1" });
+    // Show TimeSpan as string in Swagger with an example
+    options.MapType<TimeSpan>(() => new OpenApiSchema
+    {
+        Type = "string",
+        Example = new OpenApiString("09:00:00"),
+        Description = "Time in HH:mm:ss"
+    });
     var securityScheme = new OpenApiSecurityScheme
     {
         Name = "Authorization",

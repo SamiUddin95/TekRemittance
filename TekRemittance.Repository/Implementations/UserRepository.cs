@@ -18,26 +18,9 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<userDTO>> GetAllAsync(userSearchDTO search)
+        public async Task<IEnumerable<userDTO>> GetAllAsync()
         {
-            var query = _context.Users.AsNoTracking().AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(search?.EmployeeId))
-            {
-                query = query.Where(u => u.EmployeeId != null && EF.Functions.Like(u.EmployeeId, "%" + search.EmployeeId + "%"));
-            }
-
-            if (!string.IsNullOrWhiteSpace(search?.Name))
-            {
-                query = query.Where(u => u.Name != null && EF.Functions.Like(u.Name, "%" + search.Name + "%"));
-            }
-
-            if (!string.IsNullOrWhiteSpace(search?.LoginName))
-            {
-                query = query.Where(u => u.LoginName != null && EF.Functions.Like(u.LoginName, "%" + search.LoginName + "%"));
-            }
-
-            return await query
+            return await _context.Users.AsNoTracking()
                 .Select(u => new userDTO
                 {
                     Id = u.Id,
@@ -51,8 +34,7 @@ namespace TekRemittance.Repository.Implementations
                     CreatedBy = u.CreatedBy,
                     CreatedOn = u.CreatedOn,
                     UpdatedBy = u.UpdatedBy,
-                    UpdatedOn = u.UpdatedOn,
-                    IsSupervise = u.IsSupervise
+                    UpdatedOn = u.UpdatedOn
                 }).ToListAsync();
         }
 
@@ -81,6 +63,15 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task<userDTO> AddAsync(userDTO dto, string passwordHash)
         {
+            // Duplicate LoginName Validation (case-insensitive, trimmed)
+            var loginName = dto.LoginName?.Trim() ?? string.Empty;
+            if (!string.IsNullOrEmpty(loginName))
+            {
+                if (await _context.Users.AnyAsync(u => u.LoginName != null && u.LoginName.ToLower() == loginName.ToLower()))
+                {
+                    throw new ArgumentException("Login name already exists.");
+                }
+            }
             var entity = new User
             {
                 Id = Guid.NewGuid(),
@@ -89,7 +80,7 @@ namespace TekRemittance.Repository.Implementations
                 Phone = dto.Phone,
                 EmployeeId = dto.EmployeeId,
                 Limit = dto.Limit,
-                LoginName = dto.LoginName!,
+                LoginName = loginName!,
                 PasswordHash = passwordHash,
                 IsActive = dto.IsActive,
                 CreatedBy = dto.CreatedBy ?? "system",
@@ -125,12 +116,22 @@ namespace TekRemittance.Repository.Implementations
             var existing = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.Id);
             if (existing == null) return null;
 
+            // Duplicate LoginName Validation (case-insensitive, trimmed) excluding self
+            var loginName = dto.LoginName?.Trim() ?? string.Empty;
+            if (!string.IsNullOrEmpty(loginName))
+            {
+                if (await _context.Users.AnyAsync(u => u.Id != dto.Id && u.LoginName != null && u.LoginName.ToLower() == loginName.ToLower()))
+                {
+                    throw new ArgumentException("Login name already exists.");
+                }
+            }
+
             existing.Name = dto.Name;
             existing.Email = dto.Email;
             existing.Phone = dto.Phone;
             existing.EmployeeId = dto.EmployeeId;
             existing.Limit = dto.Limit;
-            existing.LoginName = dto.LoginName;
+            existing.LoginName = loginName;
             existing.IsActive = dto.IsActive;
             existing.UpdatedBy = dto.UpdatedBy;
             existing.UpdatedOn = DateTime.UtcNow;

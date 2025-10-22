@@ -21,12 +21,19 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] userSearchDTO search)
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var users = await _service.GetAllAsync(search);
-                return Ok(ApiResponse<object>.Success(users, 200));
+                var result = await _service.GetAllAsync(pageNumber, pageSize);
+                return Ok(ApiResponse<object>.Success(new 
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
             }
             catch (Exception ex)
             {
@@ -64,6 +71,10 @@ namespace TekRemittance.Web.Controllers
                 var created = await _service.CreateAsync(req.User, req.Password);
                 return Ok(ApiResponse<object>.Success(created, 201));
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
@@ -78,6 +89,10 @@ namespace TekRemittance.Web.Controllers
                 var updated = await _service.UpdateAsync(dto);
                 if (updated == null) return NotFound(ApiResponse<string>.Error("User not found", 404));
                 return Ok(ApiResponse<object>.Success(updated, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
             }
             catch (Exception ex)
             {
