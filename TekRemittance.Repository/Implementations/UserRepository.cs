@@ -18,9 +18,19 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<userDTO>> GetAllAsync()
+        public async Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
         {
-            return await _context.Users.AsNoTracking()
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.Users.AsNoTracking();
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(u => u.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(u => new userDTO
                 {
                     Id = u.Id,
@@ -35,7 +45,16 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = u.CreatedOn,
                     UpdatedBy = u.UpdatedBy,
                     UpdatedOn = u.UpdatedOn
-                }).ToListAsync();
+                })
+                .ToListAsync();
+
+            return new PagedResult<userDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<userDTO?> GetByIdAsync(Guid id)
