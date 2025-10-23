@@ -18,8 +18,10 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<Bank> Banks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<RevokedToken> RevokedTokens { get; set; }
-        public DbSet<AcquisitionAgentAccount> AcquisitionAgentAccounts { get; set; }
-
+        public DbSet<AcquisitionAgents> AcquisitionAgents { get; set; }
+        public DbSet<AgentFileTemplate> AgentFileTemplates { get; set; }
+        public DbSet<AgentFileTemplateField> AgentFileTemplateFields { get; set; }
+        public DbSet<AgentFileUpload> AgentFileUploads { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +40,66 @@ namespace TekRemittance.Repository.Entities.Data
 
                 entity.Property(c => c.CreatedOn)
                       .HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            modelBuilder.Entity<AgentFileTemplate>(entity =>
+            {
+                entity.HasKey(t => t.Id);
+                entity.Property(t => t.Name).IsRequired().HasMaxLength(150);
+                entity.Property(t => t.SheetName).HasMaxLength(100);
+                entity.Property(t => t.Delimiter).HasMaxLength(10);
+                entity.Property(t => t.CreatedBy).HasMaxLength(100);
+                entity.Property(t => t.UpdatedBy).HasMaxLength(100);
+
+                // One template per agent
+                entity.HasIndex(t => t.AgentId).IsUnique();
+                entity.HasOne(t => t.Agent)
+                      .WithOne()
+                      .HasForeignKey<AgentFileTemplate>(t => t.AgentId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Store enums as strings
+                entity.Property(t => t.Format).HasConversion<string>().HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<AgentFileTemplateField>(entity =>
+            {
+                entity.HasKey(f => f.Id);
+                entity.Property(f => f.FieldName).IsRequired().HasMaxLength(100);
+                entity.Property(f => f.StartIndex);
+                entity.Property(f => f.Length);
+
+                entity.HasOne(f => f.Template)
+                      .WithMany()
+                      .HasForeignKey(f => f.TemplateId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Unique order per template
+                entity.HasIndex(f => new { f.TemplateId, f.FieldOrder }).IsUnique();
+
+                // Store enums as strings
+                entity.Property(f => f.FieldType).HasConversion<string>().HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<AgentFileUpload>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.FileName).IsRequired().HasMaxLength(260);
+                entity.Property(u => u.StoragePath).HasMaxLength(500);
+                entity.Property(u => u.ErrorMessage).HasMaxLength(1000);
+
+                entity.HasOne(u => u.Agent)
+                      .WithMany()
+                      .HasForeignKey(u => u.AgentId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(u => u.Template)
+                      .WithMany()
+                      .HasForeignKey(u => u.TemplateId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Store enums as strings
+                entity.Property(u => u.Status).HasConversion<string>().HasMaxLength(20);
             });
 
             // Province configuration
@@ -187,6 +249,57 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.HasIndex(r => r.Jti).IsUnique();
                 entity.Property(r => r.RevokedAt).IsRequired();
                 entity.Property(r => r.ExpiresAt).IsRequired();
+            });
+
+            modelBuilder.Entity<AcquisitionAgents>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.Property(a => a.Code).IsRequired().HasMaxLength(50);
+                entity.HasIndex(a => a.Code).IsUnique();
+                entity.Property(a => a.AgentName).IsRequired().HasMaxLength(150);
+                entity.Property(a => a.Phone1).HasMaxLength(30);
+                entity.Property(a => a.Phone2).HasMaxLength(30);
+                entity.Property(a => a.Fax).HasMaxLength(30);
+                entity.Property(a => a.Email).HasMaxLength(200);
+                entity.Property(a => a.LogoUrl).HasMaxLength(400);
+                entity.Property(a => a.Address).HasMaxLength(500);
+                entity.Property(a => a.InquiryURL).HasMaxLength(400);
+                entity.Property(a => a.PaymentURL).HasMaxLength(400);
+                entity.Property(a => a.UnlockURL).HasMaxLength(400);
+                entity.Property(a => a.CreatedBy).HasMaxLength(100);
+                entity.Property(a => a.UpdatedBy).HasMaxLength(100);
+
+                // Store enums as strings
+                entity.Property(a => a.RIN)
+                      .HasConversion<string>()
+                      .HasMaxLength(50);
+                entity.Property(a => a.Process)
+                      .HasConversion<string>()
+                      .HasMaxLength(50);
+                entity.Property(a => a.AcquisitionModes)
+                      .HasConversion<string>()
+                      .HasMaxLength(200);
+                entity.Property(a => a.DisbursementModes)
+                      .HasConversion<string>()
+                      .HasMaxLength(200);
+
+                entity.HasOne(a => a.Country)
+                      .WithMany()
+                      .HasForeignKey(a => a.CountryId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(a => a.Province)
+                      .WithMany()
+                      .HasForeignKey(a => a.ProvinceId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(a => a.City)
+                      .WithMany()
+                      .HasForeignKey(a => a.CityId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(a => a.IsActive).HasDefaultValue(true);
+                entity.Property(a => a.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
             });
         }
     }

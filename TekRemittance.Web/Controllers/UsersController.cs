@@ -21,12 +21,19 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var users = await _service.GetAllAsync();
-                return Ok(ApiResponse<object>.Success(users, 200));
+                var result = await _service.GetAllAsync(pageNumber, pageSize);
+                return Ok(ApiResponse<object>.Success(new 
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
             }
             catch (Exception ex)
             {
@@ -56,12 +63,17 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CreateUserRequest req)
         {
             try
             {
                 var created = await _service.CreateAsync(req.User, req.Password);
                 return Ok(ApiResponse<object>.Success(created, 201));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
             }
             catch (Exception ex)
             {
@@ -78,6 +90,10 @@ namespace TekRemittance.Web.Controllers
                 if (updated == null) return NotFound(ApiResponse<string>.Error("User not found", 404));
                 return Ok(ApiResponse<object>.Success(updated, 200));
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
@@ -92,6 +108,42 @@ namespace TekRemittance.Web.Controllers
                 var ok = await _service.DeleteAsync(id);
                 if (!ok) return NotFound(ApiResponse<string>.Error("User not found", 404));
                 return Ok(ApiResponse<string>.Success("User deleted successfully", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPut("{id:guid}/supervise")]
+        public async Task<IActionResult> UpdateSupervise(Guid id, [FromQuery] bool isSupervise)
+        {
+            try
+            {
+                var ok = await _service.UpdateIsSuperviseAsync(id, isSupervise);
+                if (!ok) return NotFound(ApiResponse<string>.Error("User not found", 404));
+                return Ok(ApiResponse<string>.Success("IsSupervise updated", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        public class UpdateNamePasswordRequest
+        {
+            public string Name { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+        }
+
+        [HttpPut("{id:guid}/name-password")]
+        public async Task<IActionResult> UpdateNameAndPassword(Guid id, [FromBody] UpdateNamePasswordRequest req)
+        {
+            try
+            {
+                var ok = await _service.UpdateNameAndPasswordAsync(id, req.Name, req.Password);
+                if (!ok) return NotFound(ApiResponse<string>.Error("User not found", 404));
+                return Ok(ApiResponse<string>.Success("Name and password updated", 200));
             }
             catch (Exception ex)
             {

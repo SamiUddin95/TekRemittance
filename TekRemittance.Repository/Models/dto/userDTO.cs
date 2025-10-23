@@ -12,6 +12,9 @@ namespace TekRemittance.Web.Models.dto
         public decimal Limit { get; set; }
         public string? LoginName { get; set; }
         public bool IsActive { get; set; }
+        public string? password { get; set; }
+
+        public bool IsSupervise { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public string? UpdatedBy { get; set; }
