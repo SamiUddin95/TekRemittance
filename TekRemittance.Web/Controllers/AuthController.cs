@@ -49,6 +49,7 @@ namespace TekRemittance.Web.Controllers
 
                 var token = GenerateJwtToken(user);
                 return Ok(ApiResponse<object>.Success(new {
+                    name = user.Name,
                     token = token.Token,
                     expiresUtc = token.Expires,
                     expiresLocal = token.Expires.ToLocalTime()
@@ -105,10 +106,8 @@ namespace TekRemittance.Web.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, jti)
             };
 
-            var minutesOpt = _config.GetValue<int?>("Jwt:ExpiresMinutes");
-            var expires = (minutesOpt.HasValue && minutesOpt.Value > 0)
-                ? DateTime.UtcNow.AddMinutes(minutesOpt.Value)
-                : DateTime.UtcNow.AddHours(_config.GetValue<int>("Jwt:ExpiresHours", 8));
+            var hours = _config.GetValue<int>("Jwt:ExpiresHours", 8);
+            var expires = DateTime.UtcNow.AddHours(hours);
 
             var token = new JwtSecurityToken(
                 issuer: issuer,
