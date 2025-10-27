@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Models.dto;
@@ -22,12 +22,19 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
         {
             try
             {
-                var users = await _service.GetAllAccounts();
-                return Ok(ApiResponse<object>.Success(users, 200));
+                var result = await _service.GetAllAccounts(pageNumber, pageSize);
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
             }
             catch (Exception ex)
             {

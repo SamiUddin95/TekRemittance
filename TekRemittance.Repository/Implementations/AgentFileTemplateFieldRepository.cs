@@ -19,6 +19,11 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task<IEnumerable<agentFileTemplateFieldDTO>> GetByTemplateIdAsync(Guid templateId)
         {
+            var template = await _context.AgentFileTemplates
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == templateId);
+
+
             return await _context.AgentFileTemplateFields.AsNoTracking()
                 .Where(f => f.TemplateId == templateId)
                 .OrderBy(f => f.FieldOrder)
@@ -26,6 +31,7 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = f.Id,
                     TemplateId = f.TemplateId,
+                    TemplateName = template.Name,
                     FieldOrder = f.FieldOrder,
                     FieldName = f.FieldName,
                     FieldType = f.FieldType,

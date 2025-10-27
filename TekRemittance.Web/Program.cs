@@ -11,6 +11,7 @@ using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Implementations;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Service.Implementations;
+using TekRemittance.Service.Services;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,12 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenRevocationRepository, TokenRevocationRepository>();
 builder.Services.AddScoped<IAcquisitionAgentsRepository, AcquisitionAgentsRepository>();
 builder.Services.AddScoped<IAcquisitionAgentsService, AcquisitionAgentsService>();
-
+builder.Services.AddScoped<IAcquisitionAgentAccountRepository, AcquisitionAgentAccountRepository>();
+builder.Services.AddScoped<IAcquisitionAgentAccountService, AcquisitionAgentAccountService>();
+builder.Services.AddScoped<IAgentFileTemplateRepository, AgentFileTemplateRepository>();
+builder.Services.AddScoped<IAgentFileTemplateService, AgentFileTemplateService>();
+builder.Services.AddScoped<IAgentFileTemplateFieldRepository, AgentFileTemplateFieldRepository>();
+builder.Services.AddScoped<IAgentFileTemplateFieldService, AgentFileTemplateFieldService>();
 
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>

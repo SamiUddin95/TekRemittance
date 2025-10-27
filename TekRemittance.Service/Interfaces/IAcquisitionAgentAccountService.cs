@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
@@ -6,7 +6,7 @@ namespace TekRemittance.Service.Interfaces
 {
     public interface IAcquisitionAgentAccountService
     {
-       Task <IEnumerable<AcquisitionAgentAccountDTO>> GetAllAccounts();
+       Task<PagedResult<AcquisitionAgentAccountDTO>> GetAllAccounts(int pageNumber = 1, int pageSize = 10);
        Task<AcquisitionAgentAccountDTO?> GetAccountByName(string agentAccountName);
        Task<AcquisitionAgentAccountDTO> CreateAccount(AcquisitionAgentAccountDTO account);
        Task<AcquisitionAgentAccountDTO> UpdateAccount(AcquisitionAgentAccountDTO account);

@@ -22,6 +22,7 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<AgentFileTemplate> AgentFileTemplates { get; set; }
         public DbSet<AgentFileTemplateField> AgentFileTemplateFields { get; set; }
         public DbSet<AgentFileUpload> AgentFileUploads { get; set; }
+        public DbSet<AgentAccount> AgentAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -300,6 +301,19 @@ namespace TekRemittance.Repository.Entities.Data
 
                 entity.Property(a => a.IsActive).HasDefaultValue(true);
                 entity.Property(a => a.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
+            });
+
+            modelBuilder.Entity<AgentAccount>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.Property(a => a.AgentAccountName).IsRequired().HasMaxLength(150);
+                entity.HasIndex(a => a.AgentAccountName).IsUnique();
+                entity.Property(a => a.AccountNumber);
+                entity.Property(a => a.AgentName).HasMaxLength(150);
+                entity.Property(a => a.Approve);
+                entity.Property(a => a.AccountTitle).HasMaxLength(150);
+                entity.Property(a => a.AccountType).HasMaxLength(50);
+                entity.Property(a => a.IsActive).HasDefaultValue(true);
             });
         }
     }

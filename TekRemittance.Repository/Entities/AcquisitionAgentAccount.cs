@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TekRemittance.Repository.Entities
 {
-   public class AcquisitionAgentAccount
+   public class AgentAccount
     {
         public Guid Id { get; set; }
         public string AgentAccountName { get; set; }
