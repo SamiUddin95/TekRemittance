@@ -7,6 +7,8 @@ namespace TekRemittance.Web.Models.dto
     {
         public Guid Id { get; set; }
         public Guid TemplateId { get; set; }
+
+        public string? TemplateName { get; set; }
         public int FieldOrder { get; set; }
         public string FieldName { get; set; }
         public FieldType FieldType { get; set; }

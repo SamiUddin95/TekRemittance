@@ -10,5 +10,6 @@ namespace TekRemittance.Service.Interfaces
         Task<agentFileTemplateDTO> CreateAsync(agentFileTemplateDTO dto);
         Task<agentFileTemplateDTO?> UpdateAsync(agentFileTemplateDTO dto);
         Task<bool> DeleteByAgentIdAsync(Guid agentId);
+        Task<PagedResult<agentFileTemplateDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
     }
 }

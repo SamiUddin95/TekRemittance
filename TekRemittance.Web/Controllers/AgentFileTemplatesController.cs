@@ -19,6 +19,27 @@ namespace TekRemittance.Web.Controllers
             _service = service;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                var result = await _service.GetAllAsync(pageNumber, pageSize);
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
         [HttpGet("{agentId:guid}")]
         public async Task<IActionResult> GetByAgentId(Guid agentId)
         {

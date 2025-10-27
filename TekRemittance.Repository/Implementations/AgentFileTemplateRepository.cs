@@ -134,5 +134,44 @@ namespace TekRemittance.Repository.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<PagedResult<agentFileTemplateDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.AgentFileTemplates.AsNoTracking();
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(t => t.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(t => new agentFileTemplateDTO
+                {
+                    Id = t.Id,
+                    AgentId = t.AgentId,
+                    Name = t.Name,
+                    SheetName = t.SheetName,
+                    Format = t.Format,
+                    IsFixedLength = t.IsFixedLength,
+                    DelimiterEnabled = t.DelimiterEnabled,
+                    Delimiter = t.Delimiter,
+                    IsActive = t.IsActive,
+                    CreatedBy = t.CreatedBy,
+                    CreatedOn = t.CreatedOn,
+                    UpdatedBy = t.UpdatedBy,
+                    UpdatedOn = t.UpdatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<agentFileTemplateDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
     }
 }
