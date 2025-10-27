@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Interfaces;
@@ -18,9 +18,9 @@ namespace TekRemittance.Service.Services
         {
             _repository = repository;
         }
-        public async Task<IEnumerable<AcquisitionAgentAccountDTO>> GetAllAccounts()
+        public async Task<PagedResult<AcquisitionAgentAccountDTO>> GetAllAccounts(int pageNumber = 1, int pageSize = 10)
         {
-            return await _repository.GetAllAsync();
+            return await _repository.GetAllAsync(pageNumber, pageSize);
         }
         public async Task<AcquisitionAgentAccountDTO?> GetAccountByName(string agentAccountName)
         {
