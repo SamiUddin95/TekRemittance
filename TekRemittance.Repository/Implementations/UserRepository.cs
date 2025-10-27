@@ -40,6 +40,7 @@ namespace TekRemittance.Repository.Implementations
                     EmployeeId = u.EmployeeId,
                     Limit = u.Limit,
                     LoginName = u.LoginName,
+                    IsSupervise = u.IsSupervise,
                     IsActive = u.IsActive,
                     CreatedBy = u.CreatedBy,
                     CreatedOn = u.CreatedOn,
