@@ -18,5 +18,6 @@ namespace TekRemittance.Service.Implementations
         public Task<agentFileTemplateDTO> CreateAsync(agentFileTemplateDTO dto) => _repo.CreateAsync(dto);
         public Task<agentFileTemplateDTO?> UpdateAsync(agentFileTemplateDTO dto) => _repo.UpdateAsync(dto);
         public Task<bool> DeleteByAgentIdAsync(Guid agentId) => _repo.DeleteByAgentIdAsync(agentId);
+        public Task<PagedResult<agentFileTemplateDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10) => _repo.GetAllAsync(pageNumber, pageSize);
     }
 }
