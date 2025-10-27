@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Interfaces;
-//using TekRemittance.Repository.DTOs;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
 
@@ -54,13 +53,11 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-
-
-        public async Task<AcquisitionAgentAccountDTO?> GetByNameAsync(string agentAccountName)
+        public async Task<AcquisitionAgentAccountDTO?> GetByIdAsync(Guid id)
         {
             return await _context.AgentAccounts
                 .AsNoTracking()
-                .Where(a => a.AgentAccountName == agentAccountName)
+                .Where(a => a.Id == id)
                 .Select(a => new AcquisitionAgentAccountDTO
                 {
                     Id = a.Id,
@@ -74,8 +71,6 @@ namespace TekRemittance.Repository.Implementations
                 })
                 .FirstOrDefaultAsync();
         }
-
-
         public async Task<AcquisitionAgentAccountDTO> AddAsync(AcquisitionAgentAccountDTO dto)
         {
 
@@ -111,15 +106,18 @@ namespace TekRemittance.Repository.Implementations
                 AccountType = entity.AccountType,
                 IsActive = entity.IsActive,
             };
-        }  
+        }
+       
         public async Task<AcquisitionAgentAccountDTO?> UpdateAsync(AcquisitionAgentAccountDTO dto)
         {
             var existing = await _context.AgentAccounts
-                .FirstOrDefaultAsync(a => a.AgentAccountName == dto.AgentAccountName);
+                .FirstOrDefaultAsync(a => a.Id == dto.Id); 
 
             if (existing == null)
                 return null;
 
+            
+            existing.AgentAccountName = dto.AgentAccountName;
             existing.AccountNumber = dto.AccountNumber;
             existing.AgentName = dto.AgentName;
             existing.Approve = dto.Approve;
@@ -129,7 +127,6 @@ namespace TekRemittance.Repository.Implementations
 
             await _context.SaveChangesAsync();
 
-           
             return new AcquisitionAgentAccountDTO
             {
                 Id = existing.Id,
@@ -142,10 +139,11 @@ namespace TekRemittance.Repository.Implementations
                 IsActive = existing.IsActive
             };
         }
-        public async Task<bool> DeleteAsync(string agentAccountName)
+        
+        public async Task<bool> DeleteByIdAsync(Guid id)
         {
             var existing = await _context.AgentAccounts
-                .FirstOrDefaultAsync(a => a.AgentAccountName == agentAccountName);
+                .FirstOrDefaultAsync(a => a.Id == id);
 
             if (existing == null)
                 return false;
@@ -154,41 +152,6 @@ namespace TekRemittance.Repository.Implementations
             await _context.SaveChangesAsync();
 
             return true;
-        }
-       
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AcquisitionAgentAccountDTO?> GetById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AcquisitionAgentAccountDTO> Add(AcquisitionAgentAccountDTO entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AcquisitionAgentAccountDTO> Delete(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AcquisitionAgentAccountDTO> Save(AcquisitionAgentAccountDTO entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task CreateAccount(AgentAccount entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<AcquisitionAgentAccountDTO?> Update(AcquisitionAgentAccountDTO entity)
-        {
-            throw new NotImplementedException();
         }
 
     }

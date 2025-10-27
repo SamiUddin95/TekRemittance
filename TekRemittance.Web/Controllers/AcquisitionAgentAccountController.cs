@@ -43,13 +43,13 @@ namespace TekRemittance.Web.Controllers
 
         }
 
-        [HttpGet("byname/{name}")]
-       
-        public async Task<IActionResult> GetByName(string name)
+        
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
             try
             {
-                var account = await _service.GetAccountByName(name);
+                var account = await _service.GetAccountById(id);
                 if (account == null)
                     return NotFound(ApiResponse<string>.Error("Account not found", 404));
 
@@ -60,8 +60,6 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AcquisitionAgentAccountDTO model)
@@ -80,18 +78,19 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        [HttpPut("updatebyname")]
-        public async Task<IActionResult> UpdateByName([FromBody] AcquisitionAgentAccountDTO model)
+        
+        [HttpPut("updatebyid")]
+        public async Task<IActionResult> UpdateById([FromBody] AcquisitionAgentAccountDTO model)
         {
             try
             {
-                if (model == null || string.IsNullOrWhiteSpace(model.AgentAccountName))
-                    return BadRequest(ApiResponse<string>.Error("AgentAccountName is required."));
+                if (model == null || model.Id == Guid.Empty)
+                    return BadRequest(ApiResponse<string>.Error("Valid Id is required."));
 
-                var updated = await _service.UpdateAccount(model);
+                var updated = await _service.UpdateAccountById(model);
 
                 if (updated == null)
-                    return NotFound(ApiResponse<string>.Error("Record not found for the given AgentAccountName."));
+                    return NotFound(ApiResponse<string>.Error("Record not found for the given Id."));
 
                 return Ok(ApiResponse<object>.Success(updated, 200));
             }
@@ -101,20 +100,26 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-
-
-        [HttpDelete("deletebyname/{agentAccountName}")]
-        public async Task<IActionResult> DeleteByName(string agentAccountName)
+        [HttpDelete("deletebyid/{id}")]
+        public async Task<IActionResult> DeleteById(Guid id)
         {
-            var deleted = await _service.DeleteAccount(agentAccountName);
+            try
+            {
+                if (id == Guid.Empty)
+                    return BadRequest(ApiResponse<string>.Error("Valid Id is required."));
 
-            if (!deleted)
-                return NotFound(ApiResponse<string>.Error("Record not found for the given AgentAccountName."));
+                var deleted = await _service.DeleteAccountById(id);
 
-            return Ok(ApiResponse<string>.Success($"Record '{agentAccountName}' deleted successfully.", 200));
+                if (!deleted)
+                    return NotFound(ApiResponse<string>.Error("Record not found for the given Id."));
+
+                return Ok(ApiResponse<string>.Success($"Record with Id '{id}' deleted successfully.", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
         }
-
-
 
     }
 }

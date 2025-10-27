@@ -22,27 +22,27 @@ namespace TekRemittance.Service.Services
         {
             return await _repository.GetAllAsync(pageNumber, pageSize);
         }
-        public async Task<AcquisitionAgentAccountDTO?> GetAccountByName(string agentAccountName)
+       
+        public async Task<AcquisitionAgentAccountDTO?> GetAccountById(Guid id)
         {
-            return await _repository.GetByNameAsync(agentAccountName);
+            return await _repository.GetByIdAsync(id);
         }
+
 
         public async Task<AcquisitionAgentAccountDTO> CreateAccount(AcquisitionAgentAccountDTO account)
         {
             return await _repository.AddAsync(account);
         }
-        public async Task<AcquisitionAgentAccountDTO> UpdateAccount(AcquisitionAgentAccountDTO account)
+        public async Task<AcquisitionAgentAccountDTO?> UpdateAccountById(AcquisitionAgentAccountDTO entity)
         {
-           return await _repository.UpdateAsync(account);
-           
+            return await _repository.UpdateAsync(entity);
         }
-        public async Task<bool> DeleteAccount(string agentAccountName)
+
+        
+        public async Task<bool> DeleteAccountById(Guid id)
         {
-            return await _repository.DeleteAsync(agentAccountName);
+            return await _repository.DeleteByIdAsync(id);
         }
-        public Task SaveChangesAsync()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

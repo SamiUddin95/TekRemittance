@@ -7,10 +7,10 @@ namespace TekRemittance.Service.Interfaces
     public interface IAcquisitionAgentAccountService
     {
        Task<PagedResult<AcquisitionAgentAccountDTO>> GetAllAccounts(int pageNumber = 1, int pageSize = 10);
-       Task<AcquisitionAgentAccountDTO?> GetAccountByName(string agentAccountName);
+       Task<AcquisitionAgentAccountDTO?> GetAccountById(Guid id);
        Task<AcquisitionAgentAccountDTO> CreateAccount(AcquisitionAgentAccountDTO account);
-       Task<AcquisitionAgentAccountDTO> UpdateAccount(AcquisitionAgentAccountDTO account);
-        Task<bool> DeleteAccount(string agentAccountName);
-        Task SaveChangesAsync();
+       Task<AcquisitionAgentAccountDTO?> UpdateAccountById(AcquisitionAgentAccountDTO entity);
+       Task<bool> DeleteAccountById(Guid id);
+
     }
 }
