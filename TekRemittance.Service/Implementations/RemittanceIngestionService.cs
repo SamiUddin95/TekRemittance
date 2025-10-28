@@ -64,7 +64,7 @@ namespace TekRemittance.Service.Implementations
                 .ToList();
             if (fields.Count == 0) throw new InvalidOperationException("Template has no enabled fields");
 
-            var uploadId = await _remitRepo.CreateUploadAsync(agentId, template.Id, file.FileName);
+            var uploadId = await _remitRepo.CreateUploadAsync(agentId, template.Id, baseName);
 
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             var rows = new List<RemittanceInfo>(capacity: 512);
