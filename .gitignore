@@ -80,3 +80,7 @@ Thumbs.db
 /global.json
 /.gitignore
 /.gitignore
+/TekRemittance.Repository/Migrations/20251020131433_RemoveActiveFromAcquisitionAgentAccount.cs
+/TekRemittance.Repository/Migrations/20251020131433_RemoveActiveFromAcquisitionAgentAccount.Designer.cs
+/TekRemittance.Repository/Migrations/20251028104233_Branch.cs
+/TekRemittance.Repository/Migrations/20251028104233_Branch.Designer.cs
