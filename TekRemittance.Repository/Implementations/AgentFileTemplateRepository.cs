@@ -20,7 +20,7 @@ namespace TekRemittance.Repository.Implementations
         public async Task<agentFileTemplateDTO?> GetByAgentIdAsync(Guid agentId)
         {
             return await _context.AgentFileTemplates.AsNoTracking()
-                .Where(t => t.AgentId == agentId)
+                .Where(t => t.Id == agentId)
                 .Select(t => new agentFileTemplateDTO
                 {
                     Id = t.Id,
@@ -143,27 +143,31 @@ namespace TekRemittance.Repository.Implementations
             var query = _context.AgentFileTemplates.AsNoTracking();
             var totalCount = await query.CountAsync();
 
-            var items = await query
-                .OrderBy(t => t.Name)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(t => new agentFileTemplateDTO
-                {
-                    Id = t.Id,
-                    AgentId = t.AgentId,
-                    Name = t.Name,
-                    SheetName = t.SheetName,
-                    Format = t.Format,
-                    IsFixedLength = t.IsFixedLength,
-                    DelimiterEnabled = t.DelimiterEnabled,
-                    Delimiter = t.Delimiter,
-                    IsActive = t.IsActive,
-                    CreatedBy = t.CreatedBy,
-                    CreatedOn = t.CreatedOn,
-                    UpdatedBy = t.UpdatedBy,
-                    UpdatedOn = t.UpdatedOn
-                })
-                .ToListAsync();
+            var items = await (
+                 from t in query
+                 join ag in _context.AcquisitionAgents on t.AgentId equals ag.Id
+                 orderby t.Name
+                 select new agentFileTemplateDTO
+                 {
+                     Id = t.Id,
+                     AgentId = t.AgentId,
+                     Name = t.Name,
+                     SheetName = t.SheetName,
+                     Format = t.Format,
+                     IsFixedLength = t.IsFixedLength,
+                     DelimiterEnabled = t.DelimiterEnabled,
+                     Delimiter = t.Delimiter,
+                     IsActive = t.IsActive,
+                     CreatedBy = t.CreatedBy,
+                     CreatedOn = t.CreatedOn,
+                     UpdatedBy = t.UpdatedBy,
+                     UpdatedOn = t.UpdatedOn,
+                     AgentName = ag.AgentName 
+                 }
+             )
+             .Skip((pageNumber - 1) * pageSize)
+             .Take(pageSize)
+             .ToListAsync();
 
             return new PagedResult<agentFileTemplateDTO>
             {

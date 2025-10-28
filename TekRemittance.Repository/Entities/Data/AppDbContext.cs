@@ -23,6 +23,7 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<AgentFileTemplateField> AgentFileTemplateFields { get; set; }
         public DbSet<AgentFileUpload> AgentFileUploads { get; set; }
         public DbSet<AgentAccount> AgentAccounts { get; set; }
+        public DbSet<RemittanceInfo> RemittanceInfos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -306,14 +307,37 @@ namespace TekRemittance.Repository.Entities.Data
             modelBuilder.Entity<AgentAccount>(entity =>
             {
                 entity.HasKey(a => a.Id);
-                entity.Property(a => a.AgentAccountName).IsRequired().HasMaxLength(150);
-                entity.HasIndex(a => a.AgentAccountName).IsUnique();
                 entity.Property(a => a.AccountNumber);
-                entity.Property(a => a.AgentName).HasMaxLength(150);
+                entity.HasOne(a => a.AcquisitionAgents)
+                      .WithMany()
+                      .HasForeignKey(a => a.AgentId)
+                      .OnDelete(DeleteBehavior.Restrict);
                 entity.Property(a => a.Approve);
                 entity.Property(a => a.AccountTitle).HasMaxLength(150);
                 entity.Property(a => a.AccountType).HasMaxLength(50);
                 entity.Property(a => a.IsActive).HasDefaultValue(true);
+                entity.Property(b => b.CreatedBy)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(b => b.UpdatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(b => b.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.Property(b => b.UpdatedOn);
+            });
+
+            modelBuilder.Entity<RemittanceInfo>(entity =>
+            {
+                entity.HasKey(r => r.Id);
+                entity.Property(r => r.DataJson).IsRequired();
+                entity.Property(r => r.Error).HasMaxLength(1000);
+                entity.Property(r => r.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
+                entity.HasIndex(r => r.AgentId);
+                entity.HasIndex(r => r.UploadId);
+                entity.HasIndex(r => r.TemplateId);
             });
         }
     }
