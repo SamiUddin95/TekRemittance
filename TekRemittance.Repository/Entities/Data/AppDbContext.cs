@@ -24,7 +24,7 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<AgentFileUpload> AgentFileUploads { get; set; }
         public DbSet<AgentAccount> AgentAccounts { get; set; }
         public DbSet<RemittanceInfo> RemittanceInfos { get; set; }
-
+        public DbSet<Branches> Branches { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -339,6 +339,74 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.HasIndex(r => r.UploadId);
                 entity.HasIndex(r => r.TemplateId);
             });
+            modelBuilder.Entity<Branches>(entity =>
+            {
+                entity.HasKey(b => b.Id);
+
+                entity.Property(b => b.Code)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.HasIndex(b => b.Code)
+                      .IsUnique();
+
+                entity.Property(b => b.AgentBranchName)
+                      .IsRequired()
+                      .HasMaxLength(150);
+
+                entity.Property(b => b.Phone1)
+                      .HasMaxLength(30);
+
+                entity.Property(b => b.Phone2)
+                      .HasMaxLength(30);
+
+                entity.Property(b => b.Fax)
+                      .HasMaxLength(30);
+
+                entity.Property(b => b.Email)
+                      .HasMaxLength(200);
+
+                entity.Property(b => b.Address)
+                      .HasMaxLength(500);
+
+                entity.Property(b => b.CreatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(b => b.UpdatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(b => b.AcquisitionModes)
+                      .HasConversion<string>()
+                      .HasMaxLength(200);
+
+                entity.Property(b => b.DisbursementModes)
+                      .HasConversion<string>()
+                      .HasMaxLength(200);
+
+                entity.HasOne(b => b.Agent)
+                      .WithMany()
+                      .HasForeignKey(b => b.AgentId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(b => b.Country)
+                      .WithMany()
+                      .HasForeignKey(b => b.CountryId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(b => b.Province)
+                      .WithMany()
+                      .HasForeignKey(b => b.ProvinceId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(b => b.City)
+                      .WithMany()
+                      .HasForeignKey(b => b.CityId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(b => b.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+            });
+
         }
     }
 }
