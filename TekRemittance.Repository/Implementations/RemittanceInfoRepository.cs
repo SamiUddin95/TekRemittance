@@ -40,7 +40,7 @@ namespace TekRemittance.Repository.Implementations
             var upload = await _context.AgentFileUploads.FirstOrDefaultAsync(u => u.Id == uploadId);
             if (upload == null) return;
             upload.RowCount = rowCount;
-            upload.ProcessedAt = DateTime.UtcNow;
+            upload.ProcessedAt = DateTime.Now;
             upload.Status = success ? UploadStatus.Parsed : UploadStatus.Failed;
             upload.ErrorMessage = errorMessage;
             await _context.SaveChangesAsync();
@@ -52,13 +52,18 @@ namespace TekRemittance.Repository.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<(IEnumerable<RemittanceInfo> Items, int TotalCount)> GetByUploadAsync(Guid uploadId, int pageNumber = 1, int pageSize = 50)
+        public async Task<(IEnumerable<AgentFileUpload> Items, int TotalCount)> GetByUploadAsync(int pageNumber = 1, int pageSize = 50)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
-            var query = _context.RemittanceInfos.AsNoTracking().Where(r => r.UploadId == uploadId).OrderBy(r => r.RowNumber);
+            var query = _context.AgentFileUploads
+                .AsNoTracking()
+                .OrderByDescending(u => u.CreatedOn);
             var total = await query.CountAsync();
-            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
             return (items, total);
         }
     }

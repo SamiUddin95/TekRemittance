@@ -1,3 +1,6 @@
+using ClosedXML.Excel;
+using ExcelDataReader;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,10 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ClosedXML.Excel;
-using ExcelDataReader;
-using Microsoft.AspNetCore.Http;
 using TekRemittance.Repository.Entities;
+using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models.dto;
@@ -22,21 +23,26 @@ namespace TekRemittance.Service.Implementations
         private readonly IAgentFileTemplateRepository _templateRepo;
         private readonly IAgentFileTemplateFieldRepository _fieldRepo;
         private readonly IRemittanceInfoRepository _remitRepo;
-
+        private readonly AppDbContext _context;
         public RemittanceIngestionService(
             IAgentFileTemplateRepository templateRepo,
             IAgentFileTemplateFieldRepository fieldRepo,
-            IRemittanceInfoRepository remitRepo)
+            IRemittanceInfoRepository remitRepo,
+            AppDbContext context)
         {
             _templateRepo = templateRepo;
             _fieldRepo = fieldRepo;
             _remitRepo = remitRepo;
+            _context = context;
         }
 
         public async Task<(Guid UploadId, int RowCount)> IngestAsync(Guid agentId, Guid? templateId, IFormFile file, bool hasHeader)
         {
             if (file == null || file.Length == 0) throw new ArgumentException("File is empty");
-            var template = await _templateRepo.GetByAgentIdAsync(agentId) 
+
+            var baseName = Path.GetFileNameWithoutExtension(file.FileName)?.Trim();
+            var getTemplateId = _context.AgentFileTemplates.Where(x => x.SheetName == baseName).FirstOrDefault();
+            var template = await _templateRepo.GetByAgentIdAsync(getTemplateId.Id) 
                           ?? throw new InvalidOperationException("Template not found for agent");
             if (templateId.HasValue && template.Id != templateId.Value)
             {
@@ -44,7 +50,7 @@ namespace TekRemittance.Service.Implementations
             }
 
             // Filename vs SheetName check
-            var baseName = Path.GetFileNameWithoutExtension(file.FileName)?.Trim();
+            agentId = getTemplateId.AgentId;
             var templateSheetName = template.SheetName?.Trim();
             if (!string.IsNullOrEmpty(templateSheetName))
             {

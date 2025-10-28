@@ -10,6 +10,6 @@ namespace TekRemittance.Repository.Interfaces
         Task<Guid> CreateUploadAsync(Guid agentId, Guid templateId, string fileName);
         Task UpdateUploadAsync(Guid uploadId, int rowCount, bool success, string? errorMessage);
         Task AddRangeAsync(IEnumerable<RemittanceInfo> rows);
-        Task<(IEnumerable<RemittanceInfo> Items, int TotalCount)> GetByUploadAsync(Guid uploadId, int pageNumber = 1, int pageSize = 50);
+        Task<(IEnumerable<AgentFileUpload> Items, int TotalCount)> GetByUploadAsync(int pageNumber = 1, int pageSize = 50);
     }
 }
