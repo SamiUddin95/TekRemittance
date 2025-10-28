@@ -42,6 +42,10 @@ namespace TekRemittance.Service.Implementations
 
             var baseName = Path.GetFileNameWithoutExtension(file.FileName)?.Trim();
             var getTemplateId = _context.AgentFileTemplates.Where(x => x.SheetName == baseName).FirstOrDefault();
+            if (getTemplateId == null)
+            {
+                throw new InvalidOperationException("File template Not Found.");
+            }
             var template = await _templateRepo.GetByAgentIdAsync(getTemplateId.Id) 
                           ?? throw new InvalidOperationException("Template not found for agent");
             if (templateId.HasValue && template.Id != templateId.Value)
