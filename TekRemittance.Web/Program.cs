@@ -34,6 +34,8 @@ builder.Services.AddScoped<IAgentFileTemplateRepository, AgentFileTemplateReposi
 builder.Services.AddScoped<IAgentFileTemplateService, AgentFileTemplateService>();
 builder.Services.AddScoped<IAgentFileTemplateFieldRepository, AgentFileTemplateFieldRepository>();
 builder.Services.AddScoped<IAgentFileTemplateFieldService, AgentFileTemplateFieldService>();
+builder.Services.AddScoped<IRemittanceInfoRepository, RemittanceInfoRepository>();
+builder.Services.AddScoped<IRemittanceIngestionService, RemittanceIngestionService>();
 
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
