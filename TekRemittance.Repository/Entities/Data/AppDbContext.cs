@@ -315,6 +315,17 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.Property(a => a.AccountTitle).HasMaxLength(150);
                 entity.Property(a => a.AccountType).HasMaxLength(50);
                 entity.Property(a => a.IsActive).HasDefaultValue(true);
+                entity.Property(b => b.CreatedBy)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(b => b.UpdatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(b => b.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.Property(b => b.UpdatedOn);
             });
         }
     }

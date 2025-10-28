@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
@@ -38,12 +39,16 @@ namespace TekRemittance.Repository.Implementations
             {
                 Id = a.Id,
                 AccountNumber = a.AccountNumber,
-                AgentId = a.AgentId,
                 Approve = a.Approve,
                 AccountTitle = a.AccountTitle,
                 AccountType = a.AccountType,
                 IsActive = a.IsActive,
-                AgentName = ag.AgentName 
+                AgentId = a.AgentId,
+                AgentName = ag.AgentName,
+                CreatedBy = a.CreatedBy,
+                CreatedOn = a.CreatedOn,
+                UpdatedBy = a.UpdatedBy,
+                UpdatedOn = a.UpdatedOn
             }
         )
         .Skip((pageNumber - 1) * pageSize)
@@ -67,11 +72,15 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = a.Id,
                     AccountNumber = a.AccountNumber,
-                    AgentId = a.AgentId,
                     Approve = a.Approve,
                     AccountTitle = a.AccountTitle,
                     AccountType = a.AccountType,
-                    IsActive = a.IsActive
+                    IsActive = a.IsActive,
+                    AgentId = a.AgentId,
+                    CreatedBy = a.CreatedBy,
+                    CreatedOn = a.CreatedOn,
+                    UpdatedBy = a.UpdatedBy,
+                    UpdatedOn = a.UpdatedOn
                 })
                 .FirstOrDefaultAsync();
         }
@@ -89,11 +98,15 @@ namespace TekRemittance.Repository.Implementations
             {
                 Id = Guid.NewGuid(),
                 AccountNumber = dto.AccountNumber,
-                AgentId = dto.AgentId,
                 Approve = false,
                 AccountTitle = dto.AccountTitle,
                 AccountType = dto.AccountType,
                 IsActive = dto.IsActive,
+                AgentId = dto.AgentId,
+                CreatedBy = dto.CreatedBy ?? "system",
+                CreatedOn = DateTime.UtcNow,
+                UpdatedBy = dto.UpdatedBy ?? "system",
+                UpdatedOn = DateTime.UtcNow
             };
             await _context.AgentAccounts.AddAsync(entity);
             await _context.SaveChangesAsync();
@@ -107,6 +120,10 @@ namespace TekRemittance.Repository.Implementations
                 AccountTitle = entity.AccountTitle,
                 AccountType = entity.AccountType,
                 IsActive = entity.IsActive,
+                CreatedBy = entity.CreatedBy,
+                CreatedOn = entity.CreatedOn,
+                UpdatedBy = entity.UpdatedBy,
+                UpdatedOn = entity.UpdatedOn
             };
         }
        
@@ -119,11 +136,13 @@ namespace TekRemittance.Repository.Implementations
                 return null;
 
             existing.AccountNumber = dto.AccountNumber;
-            existing.AgentId = dto.AgentId;
             existing.Approve = false;
             existing.AccountTitle = dto.AccountTitle;
             existing.AccountType = dto.AccountType;
             existing.IsActive = dto.IsActive;
+            existing.AgentId = dto.AgentId;
+            existing.UpdatedBy = dto.UpdatedBy;
+            existing.UpdatedOn = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
@@ -131,11 +150,15 @@ namespace TekRemittance.Repository.Implementations
             {
                 Id = existing.Id,
                 AccountNumber = existing.AccountNumber,
-                AgentId = existing.AgentId,
                 Approve = existing.Approve,
                 AccountTitle = existing.AccountTitle,
                 AccountType = existing.AccountType,
-                IsActive = existing.IsActive
+                IsActive = existing.IsActive,
+                AgentId = existing.AgentId,
+                CreatedBy = existing.CreatedBy,
+                CreatedOn = existing.CreatedOn,
+                UpdatedBy = existing.UpdatedBy,
+                UpdatedOn = existing.UpdatedOn
             };
         }
         
