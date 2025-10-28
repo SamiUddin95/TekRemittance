@@ -28,22 +28,27 @@ namespace TekRemittance.Repository.Implementations
             var query = _context.AgentAccounts.AsNoTracking();
             var totalCount = await query.CountAsync();
 
-            var items = await query
-                .OrderBy(a => a.AgentAccountName)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(a => new AcquisitionAgentAccountDTO
-                {
-                    Id = a.Id,
-                    AgentAccountName = a.AgentAccountName,
-                    AccountNumber = a.AccountNumber,
-                    AgentName = a.AgentName,
-                    Approve = a.Approve,
-                    AccountTitle = a.AccountTitle,
-                    AccountType = a.AccountType,
-                    IsActive = a.IsActive
-                })
-                .ToListAsync();
+
+
+            var items = await (
+            from a in _context.AgentAccounts
+            join ag in _context.AcquisitionAgents on a.AgentId equals ag.Id
+            orderby a.AccountTitle
+            select new AcquisitionAgentAccountDTO
+            {
+                Id = a.Id,
+                AccountNumber = a.AccountNumber,
+                AgentId = a.AgentId,
+                Approve = a.Approve,
+                AccountTitle = a.AccountTitle,
+                AccountType = a.AccountType,
+                IsActive = a.IsActive,
+                AgentName = ag.AgentName 
+            }
+        )
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .ToListAsync();
 
             return new PagedResult<AcquisitionAgentAccountDTO>
             {
@@ -61,9 +66,8 @@ namespace TekRemittance.Repository.Implementations
                 .Select(a => new AcquisitionAgentAccountDTO
                 {
                     Id = a.Id,
-                    AgentAccountName = a.AgentAccountName,
                     AccountNumber = a.AccountNumber,
-                    AgentName = a.AgentName,
+                    AgentId = a.AgentId,
                     Approve = a.Approve,
                     AccountTitle = a.AccountTitle,
                     AccountType = a.AccountType,
@@ -75,19 +79,18 @@ namespace TekRemittance.Repository.Implementations
         {
 
             var existingAccount = await _context.AgentAccounts
-                .FirstOrDefaultAsync(a => a.AgentAccountName.ToLower() == dto.AgentAccountName.ToLower());
+                .FirstOrDefaultAsync(a => a.AccountTitle.ToLower() == dto.AccountTitle.ToLower());
 
             if (existingAccount != null)
             {
-                throw new Exception($"Account name '{dto.AgentAccountName}' already exists.");
+                throw new Exception($"Account name '{dto.AccountTitle}' already exists.");
             }
             var entity = new AgentAccount
             {
                 Id = Guid.NewGuid(),
-                AgentAccountName = dto.AgentAccountName,
                 AccountNumber = dto.AccountNumber,
-                AgentName = dto.AgentName,
-                Approve = dto.Approve,
+                AgentId = dto.AgentId,
+                Approve = false,
                 AccountTitle = dto.AccountTitle,
                 AccountType = dto.AccountType,
                 IsActive = dto.IsActive,
@@ -98,9 +101,8 @@ namespace TekRemittance.Repository.Implementations
             return new AcquisitionAgentAccountDTO
             {
                 Id = entity.Id,
-                AgentAccountName = entity.AgentAccountName,
                 AccountNumber = entity.AccountNumber,
-                AgentName = entity.AgentName,
+                AgentId = entity.AgentId,
                 Approve = entity.Approve,
                 AccountTitle = entity.AccountTitle,
                 AccountType = entity.AccountType,
@@ -116,11 +118,9 @@ namespace TekRemittance.Repository.Implementations
             if (existing == null)
                 return null;
 
-            
-            existing.AgentAccountName = dto.AgentAccountName;
             existing.AccountNumber = dto.AccountNumber;
-            existing.AgentName = dto.AgentName;
-            existing.Approve = dto.Approve;
+            existing.AgentId = dto.AgentId;
+            existing.Approve = false;
             existing.AccountTitle = dto.AccountTitle;
             existing.AccountType = dto.AccountType;
             existing.IsActive = dto.IsActive;
@@ -130,9 +130,8 @@ namespace TekRemittance.Repository.Implementations
             return new AcquisitionAgentAccountDTO
             {
                 Id = existing.Id,
-                AgentAccountName = existing.AgentAccountName,
                 AccountNumber = existing.AccountNumber,
-                AgentName = existing.AgentName,
+                AgentId = existing.AgentId,
                 Approve = existing.Approve,
                 AccountTitle = existing.AccountTitle,
                 AccountType = existing.AccountType,

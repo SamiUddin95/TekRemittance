@@ -306,10 +306,11 @@ namespace TekRemittance.Repository.Entities.Data
             modelBuilder.Entity<AgentAccount>(entity =>
             {
                 entity.HasKey(a => a.Id);
-                entity.Property(a => a.AgentAccountName).IsRequired().HasMaxLength(150);
-                entity.HasIndex(a => a.AgentAccountName).IsUnique();
                 entity.Property(a => a.AccountNumber);
-                entity.Property(a => a.AgentName).HasMaxLength(150);
+                entity.HasOne(a => a.AcquisitionAgents)
+                      .WithMany()
+                      .HasForeignKey(a => a.AgentId)
+                      .OnDelete(DeleteBehavior.Restrict);
                 entity.Property(a => a.Approve);
                 entity.Property(a => a.AccountTitle).HasMaxLength(150);
                 entity.Property(a => a.AccountType).HasMaxLength(50);
