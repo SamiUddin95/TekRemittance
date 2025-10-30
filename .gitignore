@@ -84,3 +84,7 @@ Thumbs.db
 /TekRemittance.Repository/Migrations/20251020131433_RemoveActiveFromAcquisitionAgentAccount.Designer.cs
 /TekRemittance.Repository/Migrations/20251028104233_Branch.cs
 /TekRemittance.Repository/Migrations/20251028104233_Branch.Designer.cs
+/TekRemittance.Repository/Migrations/20251028145025_contextdb.cs
+/TekRemittance.Repository/Migrations/20251028145025_contextdb.Designer.cs
+/TekRemittance.Repository/Migrations/AppDbContextModelSnapshot.cs
+/TekRemittance.Web/Migration Command.txt
