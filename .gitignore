@@ -88,3 +88,5 @@ Thumbs.db
 /TekRemittance.Repository/Migrations/20251028145025_contextdb.Designer.cs
 /TekRemittance.Repository/Migrations/AppDbContextModelSnapshot.cs
 /TekRemittance.Web/Migration Command.txt
+/TekRemittance.Repository/Migrations/20251028145618_Branches.cs
+/TekRemittance.Repository/Migrations/20251028145618_Branches.Designer.cs

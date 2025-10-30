@@ -339,6 +339,7 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.HasIndex(r => r.UploadId);
                 entity.HasIndex(r => r.TemplateId);
             });
+
             modelBuilder.Entity<Branches>(entity =>
             {
                 entity.HasKey(b => b.Id);
@@ -406,7 +407,6 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.Property(b => b.CreatedOn)
                       .HasDefaultValueSql("GETUTCDATE()");
             });
-
         }
     }
 }

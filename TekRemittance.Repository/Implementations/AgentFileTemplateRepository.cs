@@ -20,7 +20,7 @@ namespace TekRemittance.Repository.Implementations
         public async Task<agentFileTemplateDTO?> GetByAgentIdAsync(Guid agentId)
         {
             return await _context.AgentFileTemplates.AsNoTracking()
-                .Where(t => t.Id == agentId)
+                .Where(t => t.AgentId == agentId)
                 .Select(t => new agentFileTemplateDTO
                 {
                     Id = t.Id,
