@@ -18,7 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .EnableDetailedErrors()
+           .EnableSensitiveDataLogging());
+builder.Services.AddHttpContextAccessor();
 
 // Dependency Injection
 builder.Services.AddScoped<IBasicSetupRepository, BasicSetupRepository>();
@@ -38,6 +41,8 @@ builder.Services.AddScoped<IRemittanceInfoRepository, RemittanceInfoRepository>(
 builder.Services.AddScoped<IRemittanceIngestionService, RemittanceIngestionService>();
 builder.Services.AddScoped<IBranchesRepository,BranchesRepository>();
 builder.Services.AddScoped<IBranchesService,BranchesService>();
+builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>

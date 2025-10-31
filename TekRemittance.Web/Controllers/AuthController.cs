@@ -12,6 +12,8 @@ using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
 using TekRemittance.Repository.Interfaces;
+using TekRemittance.Repository.Entities;
+using System.Text.Json;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -23,12 +25,14 @@ namespace TekRemittance.Web.Controllers
         private readonly IUserService _userService;
         private readonly IConfiguration _config;
         private readonly ITokenRevocationRepository _revocationRepo;
+        private readonly IAuditLogService _audit;
 
-        public AuthController(IUserService userService, IConfiguration config, ITokenRevocationRepository revocationRepo)
+        public AuthController(IUserService userService, IConfiguration config, ITokenRevocationRepository revocationRepo, IAuditLogService audit)
         {
             _userService = userService;
             _config = config;
             _revocationRepo = revocationRepo;
+            _audit = audit;
         }
 
         [AllowAnonymous]
@@ -48,6 +52,21 @@ namespace TekRemittance.Web.Controllers
                 }
 
                 var token = GenerateJwtToken(user);
+                try
+                {
+                    await _audit.AddAsync(new AuditLog
+                    {
+                        Id = Guid.NewGuid(),
+                        EntityName = "Auth",
+                        EntityId = user.Id,
+                        Action = "Login",
+                        OldValues = "{}",
+                        NewValues = JsonSerializer.Serialize(new { user = user.LoginName, expiresUtc = token.Expires }),
+                        PerformedBy = user.LoginName ?? user.Name ?? string.Empty,
+                        PerformedOn = DateTime.UtcNow
+                    });
+                }
+                catch { /* best-effort audit, do not block login */ }
                 return Ok(ApiResponse<object>.Success(new {
                     name = user.Name,
                     token = token.Token,
@@ -69,6 +88,7 @@ namespace TekRemittance.Web.Controllers
             {
                 var jti = User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
                 var expStr = User.FindFirst(JwtRegisteredClaimNames.Exp)?.Value;
+                var sub = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
                 if (string.IsNullOrEmpty(jti) || string.IsNullOrEmpty(expStr))
                 {
                     return Unauthorized(ApiResponse<string>.Error("Invalid token", 401));
@@ -80,6 +100,24 @@ namespace TekRemittance.Web.Controllers
                 }
                 var expiresAt = DateTimeOffset.FromUnixTimeSeconds(expSeconds).UtcDateTime;
                 await _revocationRepo.RevokeAsync(jti, expiresAt);
+                try
+                {
+                    Guid.TryParse(sub, out var userId);
+                    await _audit.AddAsync(new AuditLog
+                    {
+                        Id = Guid.NewGuid(),
+                        EntityName = "Auth",
+                        EntityId = userId,
+                        Action = "Logout",
+                        OldValues = JsonSerializer.Serialize(new { jti }),
+                        NewValues = "{}",
+                        PerformedBy = User.FindFirst("unique_name")?.Value
+                                        ?? User.FindFirst("name")?.Value
+                                        ?? string.Empty,
+                        PerformedOn = DateTime.UtcNow
+                    });
+                }
+                catch { /* best-effort audit, do not block logout */ }
                 return Ok(ApiResponse<string>.Success("Logged out", 200));
             }
             catch (Exception ex)

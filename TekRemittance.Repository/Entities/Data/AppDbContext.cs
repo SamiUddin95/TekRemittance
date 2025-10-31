@@ -5,12 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
+using System.Threading;
 
 namespace TekRemittance.Repository.Entities.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        private readonly IHttpContextAccessor? _httpContextAccessor;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor? httpContextAccessor = null) : base(options)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
         public DbSet<Country> Countries { get; set; }
         public DbSet<Province> Provinces { get; set; }
@@ -25,6 +33,7 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<AgentAccount> AgentAccounts { get; set; }
         public DbSet<RemittanceInfo> RemittanceInfos { get; set; }
         public DbSet<Branches> Branches { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -407,6 +416,108 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.Property(b => b.CreatedOn)
                       .HasDefaultValueSql("GETUTCDATE()");
             });
+
+            modelBuilder.Entity<AuditLog>(entity =>
+            {
+                entity.HasKey(a => a.Id);
+                entity.Property(a => a.EntityName)
+                      .IsRequired()
+                      .HasMaxLength(100);
+                entity.Property(a => a.Action)
+                      .IsRequired()
+                      .HasMaxLength(20);
+                entity.Property(a => a.OldValues);
+                entity.Property(a => a.NewValues);
+                entity.Property(a => a.PerformedBy)
+                      .HasMaxLength(100);
+                entity.Property(a => a.PerformedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+                entity.HasIndex(a => new { a.EntityName, a.EntityId });
+            });
+        }
+
+        public override int SaveChanges()
+        {
+            AddAuditLogs();
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            AddAuditLogs();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void AddAuditLogs()
+        {
+            var entries = ChangeTracker.Entries()
+                .Where(e => e.Entity is not AuditLog &&
+                            (e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted))
+                .ToList();
+
+            if (entries.Count == 0) return;
+
+            var performedBy = GetCurrentUserName();
+            foreach (var entry in entries)
+            {
+                var entityType = entry.Entity.GetType();
+                var entityName = entityType.Name;
+                var idProp = entityType.GetProperty("Id");
+                var entityId = idProp != null && idProp.PropertyType == typeof(Guid)
+                    ? (Guid)(idProp.GetValue(entry.Entity) ?? Guid.Empty)
+                    : Guid.Empty;
+
+                string? oldValues = null;
+                string? newValues = null;
+
+                if (entry.State == EntityState.Added)
+                {
+                    var currentDict = entry.CurrentValues.Properties.ToDictionary(p => p.Name, p => entry.CurrentValues[p.Name]);
+                    newValues = JsonSerializer.Serialize(currentDict);
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    var originalDict = entry.OriginalValues.Properties.ToDictionary(p => p.Name, p => entry.OriginalValues[p.Name]);
+                    var currentDict = entry.CurrentValues.Properties.ToDictionary(p => p.Name, p => entry.CurrentValues[p.Name]);
+                    oldValues = JsonSerializer.Serialize(originalDict);
+                    newValues = JsonSerializer.Serialize(currentDict);
+                }
+                else if (entry.State == EntityState.Deleted)
+                {
+                    var originalDict = entry.OriginalValues.Properties.ToDictionary(p => p.Name, p => entry.OriginalValues[p.Name]);
+                    oldValues = JsonSerializer.Serialize(originalDict);
+                }
+
+                AuditLogs.Add(new AuditLog
+                {
+                    Id = Guid.NewGuid(),
+                    EntityName = entityName,
+                    EntityId = entityId,
+                    Action = entry.State.ToString(),
+                    OldValues = oldValues ?? "{}",
+                    NewValues = newValues ?? "{}",
+                    PerformedBy = performedBy,
+                    PerformedOn = DateTime.UtcNow
+                });
+            }
+        }
+
+        private string GetCurrentUserName()
+        {
+            try
+            {
+                var user = _httpContextAccessor?.HttpContext?.User;
+                if (user == null || !user.Identity?.IsAuthenticated == true)
+                    return "system";
+                return user.Identity?.Name
+                       ?? user.FindFirst("name")?.Value
+                       ?? user.FindFirst("unique_name")?.Value
+                       ?? "system";
+            }
+            catch
+            {
+                return "system";
+            }
         }
     }
 }
