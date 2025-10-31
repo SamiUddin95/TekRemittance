@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Interfaces
@@ -11,5 +12,7 @@ namespace TekRemittance.Repository.Interfaces
         Task<agentFileTemplateDTO?> UpdateAsync(agentFileTemplateDTO dto);
         Task<bool> DeleteByAgentIdAsync(Guid agentId);
         Task<PagedResult<agentFileTemplateDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
+        Task<Dictionary<string, List<string>>> GetDataByAgentIdAsync(Guid agentId);
+
     }
 }

@@ -14,10 +14,12 @@ namespace TekRemittance.Web.Controllers
     public class AgentFileTemplatesController : ControllerBase
     {
         private readonly IAgentFileTemplateService _service;
+
         public AgentFileTemplatesController(IAgentFileTemplateService service)
         {
             _service = service;
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
@@ -106,5 +108,23 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+        [HttpGet("remittance/{agentId:guid}")]
+        public async Task<IActionResult> GetRemittanceData(Guid agentId)
+        {
+            try
+            {
+                var result = await _service.GetDataByAgentIdAsync(agentId);
+                if (result == null || !result.Any())
+                    return NotFound(ApiResponse<string>.Error("No remittance data found for this agent", 404));
+
+                return Ok(ApiResponse<object>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
     }
 }

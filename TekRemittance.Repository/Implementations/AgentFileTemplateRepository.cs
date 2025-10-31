@@ -6,12 +6,16 @@ using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Web.Models.dto;
+using TekRemittance.Repository.Models.dto;
+using System.Text.Json;
+//using System.Text.Json;
 
 namespace TekRemittance.Repository.Implementations
 {
     public class AgentFileTemplateRepository : IAgentFileTemplateRepository
     {
         private readonly AppDbContext _context;
+
         public AgentFileTemplateRepository(AppDbContext context)
         {
             _context = context;
@@ -177,5 +181,51 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
+        public async Task<Dictionary<string, List<string>>> GetDataByAgentIdAsync(Guid agentId)
+        {
+            var records = await _context.RemittanceInfos
+                .Where(a => a.AgentId == agentId)
+                .Select(a => a.DataJson)
+                .ToListAsync();
+
+            var groupedData = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var json in records)
+            {
+                if (string.IsNullOrWhiteSpace(json)) continue;
+
+                try
+                {
+                    var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+
+                    if (dict == null) continue;
+
+                    foreach (var kv in dict)
+                    {
+                        
+                        var value = kv.Value?.ToString()?.Trim();
+                        if (string.IsNullOrEmpty(value))
+                            continue;
+
+                        if (!groupedData.ContainsKey(kv.Key))
+                            groupedData[kv.Key] = new List<string>();
+
+
+                        //if (!groupedData[kv.Key].Contains(value))
+                        //    groupedData[kv.Key].Add(value);
+
+                        groupedData[kv.Key].Add(value);
+
+                    }
+                }
+                catch
+                {  
+                }
+            }
+
+            return groupedData;
+        }
+
+       
     }
 }
