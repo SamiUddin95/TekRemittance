@@ -24,9 +24,16 @@ namespace TekRemittance.Repository.Implementations
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
-            var records = await _context.RemittanceInfos
-                .Where(a => a.AgentId == agentId)
-                .Select(a => a.DataJson)
+            var baseQuery = _context.RemittanceInfos
+                .Where(a => a.AgentId == agentId);
+
+            var totalCount = await baseQuery.CountAsync();  
+
+            var records = await baseQuery
+                .OrderBy(a => a.RowNumber)                     
+                .Skip((pageNumber - 1) * pageSize)             
+                .Take(pageSize)                              
+                .Select(a => a.DataJson)                       
                 .ToListAsync();
 
             var groupedData = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
@@ -38,14 +45,12 @@ namespace TekRemittance.Repository.Implementations
                 try
                 {
                     var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-
                     if (dict == null) continue;
 
                     foreach (var kv in dict)
                     {
                         var value = kv.Value?.ToString()?.Trim();
-                        if (string.IsNullOrEmpty(value))
-                            continue;
+                        if (string.IsNullOrEmpty(value)) continue;
 
                         if (!groupedData.ContainsKey(kv.Key))
                             groupedData[kv.Key] = new List<string>();
@@ -53,22 +58,19 @@ namespace TekRemittance.Repository.Implementations
                         groupedData[kv.Key].Add(value);
                     }
                 }
-                catch { }
+                catch
+                {}
             }
-            var totalCount = groupedData.Count;
-            var items = groupedData
-                .OrderBy(x => x.Key)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList(); 
+
             return new PagedResult<KeyValuePair<string, List<string>>>
             {
-                Items = items,
+                Items = groupedData.ToList(),
                 TotalCount = totalCount,
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
         }
+
 
     }
 }
