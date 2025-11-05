@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
@@ -109,16 +110,23 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        [HttpGet("remittance/{agentId:guid}")]
-        public async Task<IActionResult> GetRemittanceData(Guid agentId)
+        [HttpGet("remittance/{uploadId:guid}")]
+        public async Task<IActionResult> GetRemittanceData(Guid uploadId, int pageNumber = 1, int pageSize = 50)
         {
             try
             {
-                var result = await _service.GetDataByAgentIdAsync(agentId);
-                if (result == null || !result.Any())
+                var result = await _service.GetDataByUploadIdAsync(uploadId, pageNumber, pageSize);
+                if (result == null || result.Items == null || !result.Items.Any())
                     return NotFound(ApiResponse<string>.Error("No remittance data found for this agent", 404));
 
-                return Ok(ApiResponse<object>.Success(result, 200));
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
             }
             catch (Exception ex)
             {

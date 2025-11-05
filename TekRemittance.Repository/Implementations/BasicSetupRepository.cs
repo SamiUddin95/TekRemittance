@@ -96,7 +96,14 @@ namespace TekRemittance.Repository.Implementations
             };
 
             await _context.Countries.AddAsync(entity);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception(ex.InnerException?.Message ?? ex.Message, ex);
+            }
 
             return new countryDTO
             {
@@ -122,14 +129,20 @@ namespace TekRemittance.Repository.Implementations
             {
                 throw new ArgumentException("Country name already exists.");
             }
-
             existing.CountryCode = country.CountryCode;
             existing.CountryName = countryName;
             existing.IsActive = country.IsActive;
             existing.UpdatedBy = country.UpdatedBy;
             existing.UpdatedOn = DateTime.UtcNow;
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception(ex.InnerException?.Message ?? ex.Message, ex);
+            }
             return existing;
         }
 
@@ -139,8 +152,14 @@ namespace TekRemittance.Repository.Implementations
             if (existing == null) return false;
 
             _context.Countries.Remove(existing);
-            await _context.SaveChangesAsync();
-
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new Exception(ex.InnerException?.Message ?? ex.Message, ex);
+            }
             return true;
         }
         #endregion

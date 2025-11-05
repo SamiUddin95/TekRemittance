@@ -181,10 +181,20 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<Dictionary<string, List<string>>> GetDataByAgentIdAsync(Guid agentId)
+        public async Task<PagedResult<KeyValuePair<string, List<string>>>> GetDataByUploadIdAsync(Guid UploadId, int pageNumber = 1, int pageSize = 50)
         {
-            var records = await _context.RemittanceInfos
-                .Where(a => a.AgentId == agentId)
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 50;
+
+            var baseQuery = _context.RemittanceInfos
+                .Where(a => a.UploadId == UploadId);
+
+            var totalCount = await baseQuery.CountAsync();
+
+            var records = await baseQuery
+                .OrderBy(a => a.RowNumber)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(a => a.DataJson)
                 .ToListAsync();
 
@@ -210,10 +220,6 @@ namespace TekRemittance.Repository.Implementations
                         if (!groupedData.ContainsKey(kv.Key))
                             groupedData[kv.Key] = new List<string>();
 
-
-                        //if (!groupedData[kv.Key].Contains(value))
-                        //    groupedData[kv.Key].Add(value);
-
                         groupedData[kv.Key].Add(value);
 
                     }
@@ -223,9 +229,13 @@ namespace TekRemittance.Repository.Implementations
                 }
             }
 
-            return groupedData;
+            return new PagedResult<KeyValuePair<string, List<string>>>
+            {
+                Items = groupedData.ToList(),
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
-
-       
     }
 }
