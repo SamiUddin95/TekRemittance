@@ -38,6 +38,8 @@ builder.Services.AddScoped<IRemittanceInfoRepository, RemittanceInfoRepository>(
 builder.Services.AddScoped<IRemittanceIngestionService, RemittanceIngestionService>();
 builder.Services.AddScoped<IBranchesRepository,BranchesRepository>();
 builder.Services.AddScoped<IBranchesService,BranchesService>();
+builder.Services.AddScoped<IDisbursementRepository, DisbursementRepository>();
+builder.Services.AddScoped<IDisbursementService, DisbursementService>();
 
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -100,7 +102,7 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
-    {
+    {   
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
