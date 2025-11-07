@@ -78,19 +78,21 @@ namespace TekRemittance.Repository.Implementations
             if (pageSize < 1) pageSize = 50;
 
             var query = _context.RemittanceInfos
-                .Where(r => r.AgentId == agentId && r.Status == "P")
-                .AsNoTracking();
+                .Where(r => r.AgentId == agentId && r.Status == "P");
+                //.AsNoTracking();
 
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(r => r.CreatedOn) 
+                .OrderBy(r => r.RowNumber) 
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(r => new RemitttanceInfosStatusDTO
                 {
                     Id = r.Id,
                     AgentId = r.AgentId,
+                    TemplateId=r.TemplateId,
+                    UploadId=r.UploadId,
                     RowNumber = r.RowNumber,
                     DataJson = r.DataJson,
                     Error = r.Error,
@@ -126,6 +128,8 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = r.Id,
                     AgentId = r.AgentId,
+                    TemplateId = r.TemplateId,
+                    UploadId = r.UploadId,
                     RowNumber = r.RowNumber,
                     DataJson = r.DataJson,
                     Error = r.Error,
@@ -161,6 +165,8 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = r.Id,
                     AgentId = r.AgentId,
+                    TemplateId = r.TemplateId,
+                    UploadId = r.UploadId,
                     RowNumber = r.RowNumber,
                     DataJson = r.DataJson,
                     Error = r.Error,
@@ -196,6 +202,8 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = r.Id,
                     AgentId = r.AgentId,
+                    TemplateId=r.TemplateId,
+                    UploadId=r.UploadId,
                     RowNumber = r.RowNumber,
                     DataJson = r.DataJson,
                     Error = r.Error,
