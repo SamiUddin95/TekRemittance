@@ -186,10 +186,10 @@ namespace TekRemittance.Service.Implementations
                 RowNumber = rowNo,
                 DataJson = json,
                 Error = error,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.Now,
+                Status = "P"
             };
         }
-
         private static (string Json, string? Error) MapToJson(IReadOnlyList<string> values, List<agentFileTemplateFieldDTO> fields)
         {
             var dict = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);

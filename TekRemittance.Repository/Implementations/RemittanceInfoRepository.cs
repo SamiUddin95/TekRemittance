@@ -27,8 +27,8 @@ namespace TekRemittance.Repository.Implementations
                 TemplateId = templateId,
                 FileName = fileName,
                 Status = UploadStatus.Pending,
-                RowCount = 0,
-                CreatedOn = DateTime.UtcNow
+                RowCount = 0,             
+                CreatedOn = DateTime.Now
             };
             _context.AgentFileUploads.Add(upload);
             await _context.SaveChangesAsync();
@@ -48,6 +48,10 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task AddRangeAsync(IEnumerable<RemittanceInfo> rows)
         {
+            foreach (var row in rows)
+            {
+                row.Status = "P";
+            }
             await _context.RemittanceInfos.AddRangeAsync(rows);
             await _context.SaveChangesAsync();
         }

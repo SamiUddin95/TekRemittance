@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TekRemittance.Repository.DTOs;
+using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
@@ -70,7 +72,145 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 50;
 
+            var query = _context.RemittanceInfos
+                .Where(r => r.AgentId == agentId && r.Status == "P")
+                .AsNoTracking();
 
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(r => r.CreatedOn) 
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new RemitttanceInfosStatusDTO
+                {
+                    Id = r.Id,
+                    AgentId = r.AgentId,
+                    RowNumber = r.RowNumber,
+                    DataJson = r.DataJson,
+                    Error = r.Error,
+                    Status = r.Status,
+                    CreatedOn = r.CreatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<RemitttanceInfosStatusDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 50;
+
+            var query = _context.RemittanceInfos
+                .Where(r => r.AgentId == agentId && r.Status == "U")
+                .AsNoTracking();
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(r => r.CreatedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new RemitttanceInfosStatusDTO
+                {
+                    Id = r.Id,
+                    AgentId = r.AgentId,
+                    RowNumber = r.RowNumber,
+                    DataJson = r.DataJson,
+                    Error = r.Error,
+                    Status = r.Status,
+                    CreatedOn = r.CreatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<RemitttanceInfosStatusDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusREAsync(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 50;
+
+            var query = _context.RemittanceInfos
+              .Where(r => r.AgentId == agentId && r.Status == "RE")
+              .AsNoTracking();
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(r => r.CreatedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new RemitttanceInfosStatusDTO
+                {
+                    Id = r.Id,
+                    AgentId = r.AgentId,
+                    RowNumber = r.RowNumber,
+                    DataJson = r.DataJson,
+                    Error = r.Error,
+                    Status = r.Status,
+                    CreatedOn = r.CreatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<RemitttanceInfosStatusDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
+        }
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber=1, int pageSize=50)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 50;
+
+            var query = _context.RemittanceInfos
+                .Where(r => r.AgentId == agentId && r.Status == "R")
+                .AsNoTracking();
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(r => r.CreatedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new RemitttanceInfosStatusDTO
+                {
+                    Id = r.Id,
+                    AgentId = r.AgentId,
+                    RowNumber = r.RowNumber,
+                    DataJson = r.DataJson,
+                    Error = r.Error,
+                    Status = r.Status,
+                    CreatedOn = r.CreatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<RemitttanceInfosStatusDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
+        }
     }
 }
