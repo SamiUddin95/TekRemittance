@@ -34,6 +34,7 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<RemittanceInfo> RemittanceInfos { get; set; }
         public DbSet<Branches> Branches { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<PasswordPolicy> PasswordPolicy { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

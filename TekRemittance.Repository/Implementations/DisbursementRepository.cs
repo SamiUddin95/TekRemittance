@@ -220,5 +220,43 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize,
             };
         }
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 50;
+
+            var query = _context.RemittanceInfos
+                .Where(r => r.AgentId == agentId && r.Status == "A")
+                .AsNoTracking();
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(r => r.CreatedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(r => new RemitttanceInfosStatusDTO
+                {
+                    Id = r.Id,
+                    AgentId = r.AgentId,
+                    TemplateId = r.TemplateId,
+                    UploadId = r.UploadId,
+                    RowNumber = r.RowNumber,
+                    DataJson = r.DataJson,
+                    Error = r.Error,
+                    Status = r.Status,
+                    CreatedOn = r.CreatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<RemitttanceInfosStatusDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+            };
+        }
+
     }
 }

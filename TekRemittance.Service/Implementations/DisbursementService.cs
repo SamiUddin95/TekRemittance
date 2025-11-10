@@ -36,6 +36,11 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.GetByAgentIdWithStatusRAsync(agentId, pageNumber, pageSize);
         }
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        {
+            return await _repo.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize);
+        }
+
     }
 
 

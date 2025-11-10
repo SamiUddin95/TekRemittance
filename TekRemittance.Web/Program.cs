@@ -45,6 +45,8 @@ builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IDisbursementRepository, DisbursementRepository>();
 builder.Services.AddScoped<IDisbursementService, DisbursementService>();
+builder.Services.AddScoped<IPasswordPolicyRepository, PasswordPolicyRepository>();
+builder.Services.AddScoped<IPasswordPolicyService, PasswordPolicyService>();
 
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>

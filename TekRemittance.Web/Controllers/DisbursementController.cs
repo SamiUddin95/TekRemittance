@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Web.Models;
 using TekRemittance.Service.Interfaces;
+using Microsoft.AspNetCore.Cors;
 
 
 namespace TekRemittance.Web.Controllers
 {
+    [EnableCors("AllowFrontend")]
     [Route("api/[controller]")]
     [ApiController]
     public class DisbursementController : ControllerBase
@@ -122,6 +124,28 @@ namespace TekRemittance.Web.Controllers
                     pageNumber = data.PageNumber,
                     pageSize = data.PageSize,
                     totalPages = data.TotalPages 
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpGet("GetDataByApproved/{agentId:guid}")]
+        public async Task<IActionResult> GetDataAByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        {
+            try
+            {
+                var data = await _service.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize);
+
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = data.Items,
+                    totalCount = data.TotalCount,
+                    pageNumber = data.PageNumber,
+                    pageSize = data.PageSize,
+                    totalPages = data.TotalPages
                 }, 200));
             }
             catch (Exception ex)
