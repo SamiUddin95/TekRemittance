@@ -20,7 +20,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("{agentId:guid}")]
-        public async Task<IActionResult> GetDisbursementData(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        public async Task<IActionResult> GetDisbursementData(Guid agentId, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
@@ -44,8 +44,8 @@ namespace TekRemittance.Web.Controllers
             }
         }
       
-        [HttpGet("GetDataByAgent/{agentId:guid}")]
-        public async Task<IActionResult> GetByAgentIdP(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        [HttpGet("GetDataByAgent")]
+        public async Task<IActionResult> GetByAgentIdP(Guid agentId, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByAuthorize/{agentId:guid}")]
-        public async Task<IActionResult> GetDataByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        public async Task<IActionResult> GetDataByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByReject/{agentId:guid}")]
-        public async Task<IActionResult> GetDataREByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        public async Task<IActionResult> GetDataREByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
@@ -111,7 +111,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByRepair/{agentId:guid}")]
-        public async Task<IActionResult> GetDataRByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        public async Task<IActionResult> GetDataRByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByApproved/{agentId:guid}")]
-        public async Task<IActionResult> GetDataAByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 50)
+        public async Task<IActionResult> GetDataAByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10)
         {
             try
             {
