@@ -49,7 +49,6 @@ namespace TekRemittance.Web.Controllers
             try
             {
                 var result = await _service.GetByAgentIdAsync(agentId);
-                if (result == null) return NotFound(ApiResponse<string>.Error("Template not found", 404));
                 return Ok(ApiResponse<object>.Success(result, 200));
             }
             catch (Exception ex)
@@ -58,8 +57,11 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] agentFileTemplateDTO dto)
+
+
         {
             try
             {

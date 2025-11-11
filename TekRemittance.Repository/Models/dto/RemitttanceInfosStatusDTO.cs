@@ -10,6 +10,7 @@ namespace TekRemittance.Repository.Models.dto
     {
         public Guid Id { get; set; }
         public Guid AgentId { get; set; }
+        public string AgentName { get; set; }
         public Guid TemplateId { get; set; }
         public Guid UploadId { get; set; }
         public int RowNumber { get; set; }

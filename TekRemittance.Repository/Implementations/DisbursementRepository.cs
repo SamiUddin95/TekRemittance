@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,27 +78,30 @@ namespace TekRemittance.Repository.Implementations
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
-            var query = _context.RemittanceInfos
-                .Where(r => r.AgentId == agentId && r.Status == "P");
-                //.AsNoTracking();
+            var query = from r in _context.RemittanceInfos
+                        join a in _context.AcquisitionAgents
+                            on r.AgentId equals a.Id
+                        where r.AgentId == agentId && r.Status == "P"
+                        select new { r, a.AgentName };
 
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(r => r.RowNumber) 
+                .OrderBy(x => x.r.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(r => new RemitttanceInfosStatusDTO
+                .Select(x => new RemitttanceInfosStatusDTO
                 {
-                    Id = r.Id,
-                    AgentId = r.AgentId,
-                    TemplateId=r.TemplateId,
-                    UploadId=r.UploadId,
-                    RowNumber = r.RowNumber,
-                    DataJson = r.DataJson,
-                    Error = r.Error,
-                    Status = r.Status,
-                    CreatedOn = r.CreatedOn
+                    Id = x.r.Id,
+                    AgentId = x.r.AgentId,
+                    AgentName = x.AgentName, 
+                    TemplateId = x.r.TemplateId,
+                    UploadId = x.r.UploadId,
+                    RowNumber = x.r.RowNumber,
+                    DataJson = x.r.DataJson,
+                    Error = x.r.Error,
+                    Status = x.r.Status,
+                    CreatedOn = x.r.CreatedOn
                 })
                 .ToListAsync();
 
@@ -114,27 +118,30 @@ namespace TekRemittance.Repository.Implementations
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
-            var query = _context.RemittanceInfos
-                .Where(r => r.AgentId == agentId && r.Status == "U")
-                .AsNoTracking();
+            var query = from r in _context.RemittanceInfos
+                        join a in _context.AcquisitionAgents
+                            on r.AgentId equals a.Id
+                        where r.AgentId == agentId && r.Status == "U"
+                        select new { r, a.AgentName };
 
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(r => r.CreatedOn)
+                .OrderBy(x => x.r.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(r => new RemitttanceInfosStatusDTO
+                .Select(x => new RemitttanceInfosStatusDTO
                 {
-                    Id = r.Id,
-                    AgentId = r.AgentId,
-                    TemplateId = r.TemplateId,
-                    UploadId = r.UploadId,
-                    RowNumber = r.RowNumber,
-                    DataJson = r.DataJson,
-                    Error = r.Error,
-                    Status = r.Status,
-                    CreatedOn = r.CreatedOn
+                    Id = x.r.Id,
+                    AgentId = x.r.AgentId,
+                    AgentName = x.AgentName,
+                    TemplateId = x.r.TemplateId,
+                    UploadId = x.r.UploadId,
+                    RowNumber = x.r.RowNumber,
+                    DataJson = x.r.DataJson,
+                    Error = x.r.Error,
+                    Status = x.r.Status,
+                    CreatedOn = x.r.CreatedOn
                 })
                 .ToListAsync();
 
@@ -151,27 +158,30 @@ namespace TekRemittance.Repository.Implementations
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
-            var query = _context.RemittanceInfos
-              .Where(r => r.AgentId == agentId && r.Status == "RE")
-              .AsNoTracking();
+            var query = from r in _context.RemittanceInfos
+                        join a in _context.AcquisitionAgents
+                            on r.AgentId equals a.Id
+                        where r.AgentId == agentId && r.Status == "RE"
+                        select new { r, a.AgentName };
 
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(r => r.CreatedOn)
+                .OrderBy(x => x.r.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(r => new RemitttanceInfosStatusDTO
+                .Select(x => new RemitttanceInfosStatusDTO
                 {
-                    Id = r.Id,
-                    AgentId = r.AgentId,
-                    TemplateId = r.TemplateId,
-                    UploadId = r.UploadId,
-                    RowNumber = r.RowNumber,
-                    DataJson = r.DataJson,
-                    Error = r.Error,
-                    Status = r.Status,
-                    CreatedOn = r.CreatedOn
+                    Id = x.r.Id,
+                    AgentId = x.r.AgentId,
+                    AgentName = x.AgentName,
+                    TemplateId = x.r.TemplateId,
+                    UploadId = x.r.UploadId,
+                    RowNumber = x.r.RowNumber,
+                    DataJson = x.r.DataJson,
+                    Error = x.r.Error,
+                    Status = x.r.Status,
+                    CreatedOn = x.r.CreatedOn
                 })
                 .ToListAsync();
 
@@ -180,35 +190,38 @@ namespace TekRemittance.Repository.Implementations
                 Items = items,
                 TotalCount = totalCount,
                 PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber=1, int pageSize=10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
-            var query = _context.RemittanceInfos
-                .Where(r => r.AgentId == agentId && r.Status == "R")
-                .AsNoTracking();
+            var query = from r in _context.RemittanceInfos
+                        join a in _context.AcquisitionAgents
+                            on r.AgentId equals a.Id
+                        where r.AgentId == agentId && r.Status == "R"
+                        select new { r, a.AgentName };
 
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(r => r.CreatedOn)
+                .OrderBy(x => x.r.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(r => new RemitttanceInfosStatusDTO
+                .Select(x => new RemitttanceInfosStatusDTO
                 {
-                    Id = r.Id,
-                    AgentId = r.AgentId,
-                    TemplateId=r.TemplateId,
-                    UploadId=r.UploadId,
-                    RowNumber = r.RowNumber,
-                    DataJson = r.DataJson,
-                    Error = r.Error,
-                    Status = r.Status,
-                    CreatedOn = r.CreatedOn
+                    Id = x.r.Id,
+                    AgentId = x.r.AgentId,
+                    AgentName = x.AgentName,
+                    TemplateId = x.r.TemplateId,
+                    UploadId = x.r.UploadId,
+                    RowNumber = x.r.RowNumber,
+                    DataJson = x.r.DataJson,
+                    Error = x.r.Error,
+                    Status = x.r.Status,
+                    CreatedOn = x.r.CreatedOn
                 })
                 .ToListAsync();
 
@@ -217,7 +230,7 @@ namespace TekRemittance.Repository.Implementations
                 Items = items,
                 TotalCount = totalCount,
                 PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageSize = pageSize
             };
         }
         public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
@@ -225,27 +238,30 @@ namespace TekRemittance.Repository.Implementations
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
-            var query = _context.RemittanceInfos
-                .Where(r => r.AgentId == agentId && r.Status == "A")
-                .AsNoTracking();
+            var query = from r in _context.RemittanceInfos
+                        join a in _context.AcquisitionAgents
+                            on r.AgentId equals a.Id
+                        where r.AgentId == agentId && r.Status == "A"
+                        select new { r, a.AgentName };
 
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(r => r.CreatedOn)
+                .OrderBy(x => x.r.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(r => new RemitttanceInfosStatusDTO
+                .Select(x => new RemitttanceInfosStatusDTO
                 {
-                    Id = r.Id,
-                    AgentId = r.AgentId,
-                    TemplateId = r.TemplateId,
-                    UploadId = r.UploadId,
-                    RowNumber = r.RowNumber,
-                    DataJson = r.DataJson,
-                    Error = r.Error,
-                    Status = r.Status,
-                    CreatedOn = r.CreatedOn
+                    Id = x.r.Id,
+                    AgentId = x.r.AgentId,
+                    AgentName = x.AgentName,
+                    TemplateId = x.r.TemplateId,
+                    UploadId = x.r.UploadId,
+                    RowNumber = x.r.RowNumber,
+                    DataJson = x.r.DataJson,
+                    Error = x.r.Error,
+                    Status = x.r.Status,
+                    CreatedOn = x.r.CreatedOn
                 })
                 .ToListAsync();
 
@@ -254,9 +270,8 @@ namespace TekRemittance.Repository.Implementations
                 Items = items,
                 TotalCount = totalCount,
                 PageNumber = pageNumber,
-                PageSize = pageSize,
+                PageSize = pageSize
             };
         }
-
     }
 }
