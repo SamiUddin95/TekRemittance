@@ -4,6 +4,7 @@ using TekRemittance.Web.Models;
 using TekRemittance.Service.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using TekRemittance.Repository.Models.dto;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 
 namespace TekRemittance.Web.Controllers
@@ -162,9 +163,8 @@ namespace TekRemittance.Web.Controllers
                 if (dto == null)
                     return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
 
-                await _service.RemitApproveAsync(dto.Xpin, dto.UserId);
-
-                return Ok(ApiResponse<string>.Success("Remittance approval processed successfully.", 200));
+                var result = await _service.RemitApproveAsync(dto.Xpin, dto.UserId);
+                return Ok(new { isSuccess = result.isSuccess, message= result.message, Xpin=result.Xpin });
             }
 
             catch (Exception ex)

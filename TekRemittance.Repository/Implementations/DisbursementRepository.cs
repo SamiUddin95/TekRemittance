@@ -274,7 +274,7 @@ namespace TekRemittance.Repository.Implementations
             };
         }
 
-        public async Task<RemittanceInfoModelDTO> RemitApproveAsync(string xpin, Guid? userId)
+        public async Task<(bool isSuccess, string message, string Xpin)> RemitApproveAsync(string xpin, Guid? userId)
         {
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
@@ -314,16 +314,21 @@ namespace TekRemittance.Repository.Implementations
             }
             else
             {
-                throw new InvalidOperationException("Amount not found in JSON.");
+                return (false, "Amount not found in JSON.", xpin);
+            }
+            bool status = amount <= userLimit ;
+
+            if (!status)
+            {
+                remitInfo.Status = "U";
+                await _context.SaveChangesAsync();
+                return (false, "Remittance unauthorized due to insufficient user limit.", xpin);
             }
 
-            remitInfo.Status = userLimit < amount ? "U" : "A";
+            remitInfo.Status = "A";
             await _context.SaveChangesAsync();
-            return new RemittanceInfoModelDTO
-            {
-                UserId = userId,
-                Xpin = xpin,
-            };
+            return (true, "Remittance approved successfully.", xpin);
+            
         }
 
         public async Task<RemittanceInfoModelDTO> RemitRejectAsync(string xpin, Guid? userId)
