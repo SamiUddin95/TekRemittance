@@ -68,6 +68,7 @@ namespace TekRemittance.Web.Controllers
                 }
                 catch { /* best-effort audit, do not block login */ }
                 return Ok(ApiResponse<object>.Success(new {
+                    userid=user.Id,
                     name = user.Name,
                     token = token.Token,
                     expiresUtc = token.Expires,
