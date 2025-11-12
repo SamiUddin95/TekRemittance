@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Web.Models;
 using TekRemittance.Service.Interfaces;
 using Microsoft.AspNetCore.Cors;
+using TekRemittance.Repository.Models.dto;
 
 
 namespace TekRemittance.Web.Controllers
@@ -153,6 +154,128 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+        [HttpPost("RemitApprove")]
+        public async Task<IActionResult> Approve([FromBody] RemittanceInfoModelDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                    return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
+
+                await _service.RemitApproveAsync(dto.Xpin, dto.UserId);
+
+                return Ok(ApiResponse<string>.Success("Remittance approval processed successfully.", 200));
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        [HttpPost("RemitReject")]
+        public async Task<IActionResult> Reject([FromBody] RemittanceInfoModelDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                    return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
+
+                var result = await _service.RemitRejectAsync(dto.Xpin, dto.UserId);
+
+                return Ok(ApiResponse<RemittanceInfoModelDTO>.Success(result, 200));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPost("RemitAuthorize")]
+        public async Task<IActionResult> Authorize([FromBody] RemittanceInfoModelDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                    return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
+
+                var result = await _service.RemitAuthorizeAsync(dto.Xpin, dto.UserId);
+
+                return Ok(ApiResponse<RemittanceInfoModelDTO>.Success(result, 200));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPost("RemitRepair")]
+        public async Task<IActionResult> Repair([FromBody] RemittanceInfoModelDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                    return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
+
+                var result = await _service.RemitRepairAsync(dto.Xpin, dto.UserId);
+
+                return Ok(ApiResponse<RemittanceInfoModelDTO>.Success(result, 200));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPost("RemitReverse")]
+        public async Task<IActionResult> Reverse([FromBody] RemittanceInfoModelDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                    return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
+
+                var result = await _service.RemitReverseAsync(dto.Xpin, dto.UserId);
+
+                return Ok(ApiResponse<RemittanceInfoModelDTO>.Success(result, 200));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
 
     }
 }

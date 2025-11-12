@@ -15,7 +15,7 @@ using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Implementations
 {
-   public  class DisbursementRepository : IDisbursementRepository
+    public class DisbursementRepository : IDisbursementRepository
     {
         private readonly AppDbContext _context;
         public DisbursementRepository(AppDbContext context)
@@ -30,13 +30,13 @@ namespace TekRemittance.Repository.Implementations
             var baseQuery = _context.RemittanceInfos
                 .Where(a => a.AgentId == agentId);
 
-            var totalCount = await baseQuery.CountAsync();  
+            var totalCount = await baseQuery.CountAsync();
 
             var records = await baseQuery
-                .OrderBy(a => a.RowNumber)                     
-                .Skip((pageNumber - 1) * pageSize)             
-                .Take(pageSize)                              
-                .Select(a => a.DataJson)                       
+                .OrderBy(a => a.RowNumber)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(a => a.DataJson)
                 .ToListAsync();
 
             var groupedData = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
@@ -62,7 +62,7 @@ namespace TekRemittance.Repository.Implementations
                     }
                 }
                 catch
-                {}
+                { }
             }
 
             return new PagedResult<KeyValuePair<string, List<string>>>
@@ -94,7 +94,7 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = x.r.Id,
                     AgentId = x.r.AgentId,
-                    AgentName = x.AgentName, 
+                    AgentName = x.AgentName,
                     TemplateId = x.r.TemplateId,
                     UploadId = x.r.UploadId,
                     RowNumber = x.r.RowNumber,
@@ -271,6 +271,136 @@ namespace TekRemittance.Repository.Implementations
                 TotalCount = totalCount,
                 PageNumber = pageNumber,
                 PageSize = pageSize
+            };
+        }
+
+        public async Task<RemittanceInfoModelDTO> RemitApproveAsync(string xpin, Guid? userId)
+        {
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
+
+            var userLimit = await _context.Users
+                .Where(u => u.Id == userId.Value)
+                .Select(u => u.Limit)
+                .FirstOrDefaultAsync();
+
+
+            var remitInfo = await _context.RemittanceInfos
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+
+            if (remitInfo == null)
+                throw new InvalidOperationException("Remittance info not found for given XPin.");
+
+            var jsonDoc = JsonDocument.Parse(remitInfo.DataJson);
+            decimal amount = 0;
+
+            if (jsonDoc.RootElement.TryGetProperty("Amount", out JsonElement amountElement))
+            {
+                if (amountElement.ValueKind == JsonValueKind.String)
+                {
+                    if (!decimal.TryParse(amountElement.GetString()?.Trim(), out amount))
+                    {
+                        throw new InvalidOperationException("Amount value is invalid.");
+                    }
+                }
+                else if (amountElement.ValueKind == JsonValueKind.Number)
+                {
+                    amount = amountElement.GetDecimal();
+                }
+                else
+                {
+                    throw new InvalidOperationException("Amount is neither string nor number.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Amount not found in JSON.");
+            }
+
+            remitInfo.Status = userLimit < amount ? "U" : "A";
+            await _context.SaveChangesAsync();
+            return new RemittanceInfoModelDTO
+            {
+                UserId = userId,
+                Xpin = xpin,
+            };
+        }
+
+        public async Task<RemittanceInfoModelDTO> RemitRejectAsync(string xpin, Guid? userId)
+        {
+            
+
+            var remitInfo = await _context.RemittanceInfos
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+
+            if (remitInfo == null)
+                throw new InvalidOperationException("Remittance info not found for given XPin.");
+            remitInfo.Status = "RE";
+            await _context.SaveChangesAsync();
+
+            return new RemittanceInfoModelDTO
+            {
+                Xpin = xpin,
+                UserId = userId,
+            };
+        }
+        public async Task<RemittanceInfoModelDTO> RemitAuthorizeAsync(string xpin, Guid? userId)
+        {
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
+
+            var remitInfo = await _context.RemittanceInfos
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+
+            if (remitInfo == null)
+                throw new InvalidOperationException("Remittance info not found for given XPin.");
+            remitInfo.Status = "A";
+            await _context.SaveChangesAsync();
+
+            return new RemittanceInfoModelDTO
+            {
+                Xpin = xpin,
+                UserId = userId,
+            };
+        }
+
+        public async Task<RemittanceInfoModelDTO> RemitRepairAsync(string xpin, Guid? userId)
+        {
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
+
+            var remitInfo = await _context.RemittanceInfos
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+
+            if (remitInfo == null)
+                throw new InvalidOperationException("Remittance info not found for given XPin.");
+            remitInfo.Status = "R";
+            await _context.SaveChangesAsync();
+
+            return new RemittanceInfoModelDTO
+            {
+                Xpin = xpin,
+                UserId = userId,
+            };
+        }
+
+        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId)
+        {
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
+
+            var remitInfo = await _context.RemittanceInfos
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+
+            if (remitInfo == null)
+                throw new InvalidOperationException("Remittance info not found for given XPin.");
+            remitInfo.Status = "P";
+            await _context.SaveChangesAsync();
+
+            return new RemittanceInfoModelDTO
+            {
+                Xpin = xpin,
+                UserId = userId,
             };
         }
     }
