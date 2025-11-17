@@ -286,7 +286,7 @@ namespace TekRemittance.Repository.Implementations
 
 
             var remitInfo = await _context.RemittanceInfos
-                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
@@ -336,7 +336,7 @@ namespace TekRemittance.Repository.Implementations
             
 
             var remitInfo = await _context.RemittanceInfos
-                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
@@ -355,7 +355,7 @@ namespace TekRemittance.Repository.Implementations
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
 
             var remitInfo = await _context.RemittanceInfos
-                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
@@ -375,7 +375,7 @@ namespace TekRemittance.Repository.Implementations
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
 
             var remitInfo = await _context.RemittanceInfos
-                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
@@ -395,7 +395,7 @@ namespace TekRemittance.Repository.Implementations
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
 
             var remitInfo = await _context.RemittanceInfos
-                .FirstOrDefaultAsync(r => r.DataJson.Contains($"\"XPin\":{xpin}"));
+                .FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
