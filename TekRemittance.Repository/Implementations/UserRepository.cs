@@ -2,10 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Interfaces;
+using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Implementations
@@ -13,7 +16,9 @@ namespace TekRemittance.Repository.Implementations
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
-        public UserRepository(AppDbContext context)
+
+
+        public UserRepository (AppDbContext context)
         {
             _context = context;
         }
@@ -220,5 +225,59 @@ namespace TekRemittance.Repository.Implementations
             await _context.SaveChangesAsync();
             return true;
         }
+
+      
+        private string GeneratePlainPassword(int length = 8)
+        {
+            const string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            const string lower = "abcdefghijklmnopqrstuvwxyz";
+            const string digits = "0123456789";
+            const string special = "!@#$%^&*()_?";
+
+            string all = upper + lower + digits + special;
+            var random = new Random();
+            var password = new char[length];
+
+            password[0] = upper[random.Next(upper.Length)];
+            password[1] = lower[random.Next(lower.Length)];
+            password[2] = digits[random.Next(digits.Length)];
+            password[3] = special[random.Next(special.Length)];
+
+            for (int i = 4; i < length; i++)
+            {
+                password[i] = all[random.Next(all.Length)];
+            }
+
+            return new string(password.OrderBy(x => random.Next()).ToArray());
+        }
+
+        private string ComputeSha256Hash(string rawData)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                return BitConverter.ToString(bytes).Replace("-", "").ToLower();
+            }
+        }
+        public async Task<(bool Success, string Message, string NewPassword)> ForgetPasswordAsync(ForgetPasswordDTO dto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.LoginName == dto.LoginName && u.Email == dto.Email);
+
+            if (user == null)
+                return (false, "Invalid username or email.", null);
+
+            var plainPassword = GeneratePlainPassword(8);
+
+            var hashedPassword = ComputeSha256Hash(plainPassword);
+
+            user.PasswordHash = hashedPassword;
+            await _context.SaveChangesAsync();
+
+            return (true, "Email sent successfully.", plainPassword);
+        }
+
+
+
     }
 }

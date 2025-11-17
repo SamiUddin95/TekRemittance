@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Interfaces;
+using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models.dto;
 
@@ -71,6 +72,11 @@ namespace TekRemittance.Service.Implementations
         {
             var hash = HashPassword(password);
             return await _repo.UpdateNameAndPasswordAsync(id, name, hash);
+        }
+
+        public async Task<(bool Success, string Message, string NewPassword)> ForgetPassword(ForgetPasswordDTO dto)
+        {
+            return await _repo.ForgetPasswordAsync(dto);
         }
     }
 }

@@ -6,6 +6,7 @@ using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
 using System;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Models.dto;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -150,5 +151,28 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+        [HttpPost("forgetpassword")]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordDTO dto)
+        {
+
+            try
+            {
+                var result = await _service.ForgetPassword(dto);
+
+                if (!result.Success)
+                    return BadRequest(ApiResponse<string>.Error("Invalid Username or Email", 400));
+
+                return Ok(new { message = result.Message, newPassword = result.NewPassword });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+
+
+
     }
 }

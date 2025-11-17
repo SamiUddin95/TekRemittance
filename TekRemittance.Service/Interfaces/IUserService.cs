@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Service.Interfaces
@@ -14,5 +15,7 @@ namespace TekRemittance.Service.Interfaces
         Task<userDTO?> ValidateCredentialsAsync(string loginName, string password);
         Task<bool> UpdateIsSuperviseAsync(Guid id, bool isSupervise);
         Task<bool> UpdateNameAndPasswordAsync(Guid id, string name, string password);
+        Task<(bool Success, string Message, string NewPassword)> ForgetPassword(ForgetPasswordDTO dto);
+
     }
 }
