@@ -51,6 +51,11 @@ namespace TekRemittance.Web.Controllers
                     return Unauthorized(ApiResponse<string>.Error("You are not authorized to log in. Please wait for supervisor approval.", 201));
                 }
 
+                if (user.IsActive == false)
+                {
+                    return Unauthorized(ApiResponse<string>.Error("You are not authorized to log in. Your Status Is InActive.", 201));
+                }
+
                 var token = GenerateJwtToken(user);
                 try
                 {

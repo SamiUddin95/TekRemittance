@@ -50,7 +50,7 @@ namespace TekRemittance.Service.Implementations
             if (auth == null) return null;
             var hash = HashPassword(password);
             if (!string.Equals(auth.Value.PasswordHash, hash, StringComparison.Ordinal)) return null;
-            if (!auth.Value.IsActive) return null;
+            //if (!auth.Value.IsActive) return null;
             return await _repo.GetByIdAsync(auth.Value.Id);
         }
 
