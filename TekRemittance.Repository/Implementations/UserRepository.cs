@@ -277,6 +277,46 @@ namespace TekRemittance.Repository.Implementations
             return (true, "Email sent successfully.", plainPassword);
         }
 
+        public async Task<PagedResult<userUnAuthorizeDTO>> GetUnAuthorizeUser(int pageNumber = 1, int pageSize = 10)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.Users.Where(u => u.IsSupervise == false).AsNoTracking();
+
+            var totalcount = await query.CountAsync();
+
+            var items = await query
+        .OrderBy(u => u.Name)
+        .Skip((pageNumber - 1) * pageSize)
+        .Take(pageSize)
+        .Select(u => new userUnAuthorizeDTO
+        {
+            Id = u.Id,
+            Name = u.Name,
+            Email = u.Email,
+            Phone = u.Phone,
+            EmployeeId = u.EmployeeId,
+            Limit = u.Limit,
+            LoginName = u.LoginName,
+            IsSupervise = u.IsSupervise,
+            IsActive = u.IsActive,
+            CreatedBy = u.CreatedBy,
+            CreatedOn = u.CreatedOn,
+            UpdatedBy = u.UpdatedBy,
+            UpdatedOn = u.UpdatedOn
+        })
+        .ToListAsync();
+
+            return new PagedResult<userUnAuthorizeDTO>
+            {
+                Items = items,
+                TotalCount = totalcount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+        }
 
 
     }

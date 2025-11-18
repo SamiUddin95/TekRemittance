@@ -17,6 +17,8 @@ namespace TekRemittance.Repository.Interfaces
         Task<bool> UpdateIsSuperviseAsync(Guid id, bool isSupervise);
         Task<bool> UpdateNameAndPasswordAsync(Guid id, string name, string passwordHash);
         Task<(bool Success, string Message, string NewPassword)> ForgetPasswordAsync(ForgetPasswordDTO dto);
+        Task<PagedResult<userUnAuthorizeDTO>> GetUnAuthorizeUser(int pageNumber = 1, int pageSize = 10);
+
 
     }
 }

@@ -78,5 +78,9 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.ForgetPasswordAsync(dto);
         }
+        public async Task<PagedResult<userUnAuthorizeDTO>> GetAllUnAuthorize(int pageNumber = 1, int pageSize = 10)
+        {
+            return await _repo.GetUnAuthorizeUser(pageNumber, pageSize);
+        }
     }
 }
