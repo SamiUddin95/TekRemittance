@@ -23,12 +23,20 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        public async Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
             var query = _context.Users.AsNoTracking();
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(u => u.Name.Contains(name));
+            if (!string.IsNullOrEmpty(employeeId))
+                query = query.Where(u => u.EmployeeId.Contains(employeeId));
+            if (!string.IsNullOrEmpty(loginName))
+                query = query.Where(u => u.LoginName.Contains(loginName));
+
+
 
             var totalCount = await query.CountAsync();
 
@@ -62,7 +70,6 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-
         public async Task<userDTO?> GetByIdAsync(Guid id)
         {
             return await _context.Users.AsNoTracking()
@@ -272,17 +279,26 @@ namespace TekRemittance.Repository.Implementations
             var hashedPassword = ComputeSha256Hash(plainPassword);
 
             user.PasswordHash = hashedPassword;
+
             await _context.SaveChangesAsync();
 
             return (true, "Email sent successfully.", plainPassword);
-        }
+        }   
 
-        public async Task<PagedResult<userUnAuthorizeDTO>> GetUnAuthorizeUser(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<userUnAuthorizeDTO>> GetUnAuthorizeUser(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
             var query = _context.Users.Where(u => u.IsSupervise == false).AsNoTracking();
+
+            var querys = _context.Users.AsNoTracking();
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(u => u.Name.Contains(name));
+            if (!string.IsNullOrEmpty(employeeId))
+                query = query.Where(u => u.EmployeeId.Contains(employeeId));
+            if (!string.IsNullOrEmpty(loginName))
+                query = query.Where(u => u.LoginName.Contains(loginName));
 
             var totalcount = await query.CountAsync();
 

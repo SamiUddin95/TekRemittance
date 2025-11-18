@@ -18,11 +18,11 @@ namespace TekRemittance.Service.Implementations
             _repo = repo;
         }
 
-        public async Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null)
         {
-            return await _repo.GetAllAsync(pageNumber, pageSize);
+            return await _repo.GetAllAsync(pageNumber, pageSize, name, employeeId, loginName);
         }
-
+       
         public async Task<userDTO?> GetByIdAsync(Guid id)
         {
             return await _repo.GetByIdAsync(id);
@@ -78,9 +78,9 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.ForgetPasswordAsync(dto);
         }
-        public async Task<PagedResult<userUnAuthorizeDTO>> GetAllUnAuthorize(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<userUnAuthorizeDTO>> GetAllUnAuthorize(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null)
         {
-            return await _repo.GetUnAuthorizeUser(pageNumber, pageSize);
+            return await _repo.GetUnAuthorizeUser(pageNumber, pageSize, name, employeeId, loginName);
         }
     }
 }

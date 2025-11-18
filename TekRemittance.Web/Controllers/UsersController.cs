@@ -7,6 +7,7 @@ using TekRemittance.Web.Models.dto;
 using System;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Models.dto;
+using TekRemittance.Service.Implementations;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -22,12 +23,14 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null)
         {
             try
             {
-                var result = await _service.GetAllAsync(pageNumber, pageSize);
-                return Ok(ApiResponse<object>.Success(new 
+                var result = await _service.GetAllAsync(pageNumber, pageSize, name, employeeId, loginName);
+
+
+                return Ok(ApiResponse<object>.Success(new
                 {
                     items = result.Items,
                     totalCount = result.TotalCount,
@@ -41,7 +44,7 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
-
+       
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -172,11 +175,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("UnAuthorizeUsers")]
-        public async Task<IActionResult> GetAllUnAuthorize(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllUnAuthorize(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null)
         {
             try
             {
-                var result = await _service.GetAllUnAuthorize(pageNumber, pageSize);
+                var result = await _service.GetAllUnAuthorize(pageNumber, pageSize, name, employeeId, loginName);
                 return Ok(ApiResponse<object>.Success(new
                 {
                     items = result.Items,

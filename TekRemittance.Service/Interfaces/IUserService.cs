@@ -7,7 +7,7 @@ namespace TekRemittance.Service.Interfaces
 {
     public interface IUserService
     {
-        Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
+        Task<PagedResult<userDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null);
         Task<userDTO?> GetByIdAsync(Guid id);
         Task<userDTO> CreateAsync(userDTO user, string password);
         Task<userDTO?> UpdateAsync(userDTO user);
@@ -16,7 +16,7 @@ namespace TekRemittance.Service.Interfaces
         Task<bool> UpdateIsSuperviseAsync(Guid id, bool isSupervise);
         Task<bool> UpdateNameAndPasswordAsync(Guid id, string name, string password);
         Task<(bool Success, string Message, string NewPassword)> ForgetPassword(ForgetPasswordDTO dto);
-        Task<PagedResult<userUnAuthorizeDTO>> GetAllUnAuthorize(int pageNumber = 1, int pageSize = 10);
+        Task<PagedResult<userUnAuthorizeDTO>> GetAllUnAuthorize(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null);
 
     }
 }
