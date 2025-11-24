@@ -76,7 +76,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update([FromBody] BranchDTO dto)
         {
             try
