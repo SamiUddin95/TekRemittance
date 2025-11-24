@@ -5,6 +5,7 @@ using TekRemittance.Service.Implementations;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
+using TekRemittance.Web.Attributes;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -22,6 +23,7 @@ namespace TekRemittance.Web.Controllers
 
         #region Country
 
+        [RequirePermission("BasicSetup.Countries.Read")]
         [HttpGet("countries")]
         public async Task<IActionResult> GetAllCountries(int pageNumber = 1, int pageSize = 10)
         {
@@ -43,7 +45,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ GET: api/country/{id}
+        [RequirePermission("BasicSetup.Countries.Read")]
         [HttpGet("countrybyId/{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
@@ -61,7 +63,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ POST: api/country/create
+        //[RequirePermission("BasicSetup.Countries.Create")]
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] countryDTO country)
         {
@@ -80,7 +82,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ PUT: api/country/update/{id}
+        //[RequirePermission("BasicSetup.Countries.Edit")]
         [HttpPut("update")]
         public async Task<IActionResult> Update([FromBody] countryDTO country)
         {
@@ -103,7 +105,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        // ✅ DELETE: api/country/delete/{id}
+        //[RequirePermission("BasicSetup.Countries.Delete")]
         [HttpDelete("delete/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -125,6 +127,7 @@ namespace TekRemittance.Web.Controllers
 
         #region Province
 
+        [RequirePermission("BasicSetup.Provinces.Read")]
         [HttpGet("provinces")]
         public async Task<IActionResult> GetAllProvinces(int pageNumber = 1, int pageSize = 10)
         {
@@ -146,6 +149,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        //[RequirePermission("BasicSetup.Provinces.Read")]
         [HttpGet("provincebyId/{Id:guid}")]
         public async Task<IActionResult> GetProvinceById(Guid Id)
         {

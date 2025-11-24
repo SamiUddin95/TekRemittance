@@ -14,6 +14,8 @@ using TekRemittance.Web.Models.dto;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Entities;
 using System.Text.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -26,13 +28,15 @@ namespace TekRemittance.Web.Controllers
         private readonly IConfiguration _config;
         private readonly ITokenRevocationRepository _revocationRepo;
         private readonly IAuditLogService _audit;
+        private readonly IPermissionHelperService _permissionHelper;
 
-        public AuthController(IUserService userService, IConfiguration config, ITokenRevocationRepository revocationRepo, IAuditLogService audit)
+        public AuthController(IUserService userService, IConfiguration config, ITokenRevocationRepository revocationRepo, IAuditLogService audit, IPermissionHelperService permissionHelper)
         {
             _userService = userService;
             _config = config;
             _revocationRepo = revocationRepo;
             _audit = audit;
+            _permissionHelper = permissionHelper;
         }
 
         [AllowAnonymous]
@@ -56,7 +60,7 @@ namespace TekRemittance.Web.Controllers
                     return Unauthorized(ApiResponse<string>.Error("You are not authorized to log in. Your Status Is InActive.", 201));
                 }
 
-                var token = GenerateJwtToken(user);
+                var token = await GenerateJwtTokenAsync(user);
                 try
                 {
                     await _audit.AddAsync(new AuditLog
@@ -132,7 +136,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        private (string Token, DateTime Expires) GenerateJwtToken(userDTO user)
+        private async Task<(string Token, DateTime Expires)> GenerateJwtTokenAsync(userDTO user)
         {
             var key = _config["Jwt:Key"] ?? string.Empty;
             var issuer = _config["Jwt:Issuer"] ?? string.Empty;
@@ -142,13 +146,23 @@ namespace TekRemittance.Web.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var jti = Guid.NewGuid().ToString();
-            var claims = new[]
+            
+            // Get user permissions
+            var userPermissions = await _permissionHelper.GetUserPermissionsAsync(user.Id);
+            
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.LoginName ?? string.Empty),
                 new Claim("name", user.Name ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.Jti, jti)
             };
+            
+            // Add permissions as claims
+            foreach (var permission in userPermissions)
+            {
+                claims.Add(new Claim("permission", permission));
+            }
 
             var hours = _config.GetValue<int>("Jwt:ExpiresHours", 8);
             var expires = DateTime.UtcNow.AddHours(hours);
@@ -163,6 +177,40 @@ namespace TekRemittance.Web.Controllers
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
             return (tokenString, expires);
+        }
+
+        [HttpGet("user-modules")]
+        public async Task<IActionResult> GetUserModules()
+        {
+            try
+            {
+                var userId = Guid.Parse(User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value ?? string.Empty);
+                var userPermissions = await _permissionHelper.GetUserPermissionsAsync(userId);
+                
+                var modules = new Dictionary<string, List<string>>();
+                
+                foreach (var permission in userPermissions)
+                {
+                    var parts = permission.Split('.');
+                    if (parts.Length >= 2)
+                    {
+                        var module = parts[0];
+                        var screen = parts.Length > 2 ? parts[1] : "General";
+                        
+                        if (!modules.ContainsKey(module))
+                            modules[module] = new List<string>();
+                            
+                        if (!modules[module].Contains(screen))
+                            modules[module].Add(screen);
+                    }
+                }
+                
+                return Ok(ApiResponse<object>.Success(modules, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
         }
     }
 }

@@ -36,6 +36,10 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<PasswordPolicy> PasswordPolicy { get; set; } 
         public DbSet<ClearingStatus> ClearingStatus { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<UserGroup> UserGroups { get; set; }
+        public DbSet<GroupPermission> GroupPermissions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -435,6 +439,107 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.Property(a => a.PerformedOn)
                       .HasDefaultValueSql("GETUTCDATE()");
                 entity.HasIndex(a => new { a.EntityName, a.EntityId });
+            });
+            modelBuilder.Entity<Group>(entity =>
+            {
+                entity.HasKey(g => g.Id);
+
+                entity.Property(g => g.Name)
+                      .IsRequired()
+                      .HasMaxLength(150);
+
+                entity.Property(g => g.Description)
+                      .HasMaxLength(500);
+
+                entity.Property(g => g.IsActive)
+                      .HasDefaultValue(true);
+
+                entity.Property(g => g.CreatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(g => g.UpdatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(g => g.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasIndex(g => g.Name)
+                      .IsUnique();
+            });
+
+            modelBuilder.Entity<Permission>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+
+                entity.Property(p => p.Name)
+                      .IsRequired()
+                      .HasMaxLength(150);
+
+                entity.Property(p => p.Description)
+                      .HasMaxLength(500);
+
+                entity.Property(p => p.IsActive)
+                      .HasDefaultValue(true);
+
+                entity.Property(p => p.CreatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(p => p.UpdatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(p => p.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasIndex(p => p.Name)
+                      .IsUnique();
+            });
+
+            modelBuilder.Entity<UserGroup>(entity =>
+            {
+                entity.HasKey(ug => ug.Id);
+
+                entity.HasOne(ug => ug.User)
+                      .WithMany()
+                      .HasForeignKey(ug => ug.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(ug => ug.Group)
+                      .WithMany(g => g.UserGroups)
+                      .HasForeignKey(ug => ug.GroupId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(ug => ug.CreatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(ug => ug.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasIndex(ug => new { ug.UserId, ug.GroupId })
+                      .IsUnique();
+            });
+
+            modelBuilder.Entity<GroupPermission>(entity =>
+            {
+                entity.HasKey(gp => gp.Id);
+
+                entity.HasOne(gp => gp.Group)
+                      .WithMany(g => g.GroupPermissions)
+                      .HasForeignKey(gp => gp.GroupId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(gp => gp.Permission)
+                      .WithMany(p => p.GroupPermissions)
+                      .HasForeignKey(gp => gp.PermissionId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(gp => gp.CreatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(gp => gp.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.HasIndex(gp => new { gp.GroupId, gp.PermissionId })
+                      .IsUnique();
             });
         }
 

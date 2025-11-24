@@ -47,6 +47,11 @@ builder.Services.AddScoped<IDisbursementRepository, DisbursementRepository>();
 builder.Services.AddScoped<IDisbursementService, DisbursementService>();
 builder.Services.AddScoped<IPasswordPolicyRepository, PasswordPolicyRepository>();
 builder.Services.AddScoped<IPasswordPolicyService, PasswordPolicyService>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IPermissionHelperService, PermissionHelperService>();
 
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
