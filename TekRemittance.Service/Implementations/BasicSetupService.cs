@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
+using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models.dto;
@@ -20,9 +21,9 @@ namespace TekRemittance.Service.Implementations
         }
 
         #region Country
-        public async Task<PagedResult<countryDTO>> GetAllCountriesAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<countryDTO>> GetAllCountriesAsync(int pageNumber = 1, int pageSize = 10, string? countryCode = null, string? countryName = null, StatusesEnums? status = null)
         {
-            return await _repository.GetAllAsync(pageNumber, pageSize);
+            return await _repository.GetAllAsync(pageNumber, pageSize, countryCode, countryName, status);
         }
 
         public async Task<countryDTO?> GetCountryByIdAsync(Guid id)
@@ -60,9 +61,9 @@ namespace TekRemittance.Service.Implementations
         #endregion
 
         #region Bank
-        public async Task<PagedResult<bankDTO>> GetAllBankAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<bankDTO>> GetAllBankAsync(int pageNumber = 1, int pageSize = 10, string? bankCode = null, string? bankName = null, StatusesEnums? status = null)
         {
-            return await _repository.GetAllBankAsync(pageNumber, pageSize);
+            return await _repository.GetAllBankAsync(pageNumber, pageSize,bankCode,bankName,status);
         }
 
         public async Task<bankDTO?> GetBankByIdAsync(Guid id)
@@ -104,9 +105,9 @@ namespace TekRemittance.Service.Implementations
         }
         #endregion
         #region Province
-        public async Task<PagedResult<provinceDTO>> GetAllProvinceAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<provinceDTO>> GetAllProvinceAsync(int pageNumber = 1, int pageSize = 10, string? provinceCode = null, string? provinceName = null, StatusesEnums? status = null)
         {
-            return await _repository.GetAllProvinceAsync(pageNumber, pageSize);
+            return await _repository.GetAllProvinceAsync(pageNumber, pageSize,provinceCode,provinceName,status);
         }
 
         public async Task<provinceDTO?> GetProvinceByIdAsync(Guid id)
@@ -144,9 +145,9 @@ namespace TekRemittance.Service.Implementations
         #endregion
 
         #region City
-        public async Task<PagedResult<cityDTO>> GetAllCityAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<cityDTO>> GetAllCityAsync(int pageNumber = 1, int pageSize = 10, string? cityCode = null, string? cityName = null, StatusesEnums? status = null)
         {
-            return await _repository.GetAllCityAsync(pageNumber, pageSize);
+            return await _repository.GetAllCityAsync(pageNumber, pageSize,cityCode,cityName,status);
         }
 
         public async Task<cityDTO?> GetCityByIdAsync(Guid id)

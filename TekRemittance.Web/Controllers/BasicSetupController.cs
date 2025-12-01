@@ -6,6 +6,7 @@ using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
 using TekRemittance.Web.Attributes;
+using TekRemittance.Repository.Enums;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -23,13 +24,13 @@ namespace TekRemittance.Web.Controllers
 
         #region Country
 
-        [RequirePermission("BasicSetup.Countries.Read")]
+        //[RequirePermission("BasicSetup.Countries.Read")]
         [HttpGet("countries")]
-        public async Task<IActionResult> GetAllCountries(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllCountries(int pageNumber = 1, int pageSize = 10, string? countryCode = null, string? countryName = null, StatusesEnums? status = null)
         {
             try
             {
-                var result = await _service.GetAllCountriesAsync(pageNumber, pageSize);
+                var result = await _service.GetAllCountriesAsync(pageNumber, pageSize,countryCode,countryName,status);
                 return Ok(ApiResponse<object>.Success(new 
                 {
                     items = result.Items,
@@ -127,13 +128,13 @@ namespace TekRemittance.Web.Controllers
 
         #region Province
 
-        [RequirePermission("BasicSetup.Provinces.Read")]
+        //[RequirePermission("BasicSetup.Provinces.Read")]
         [HttpGet("provinces")]
-        public async Task<IActionResult> GetAllProvinces(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllProvinces(int pageNumber = 1, int pageSize = 10, string? provinceCode = null, string? provinceName = null, StatusesEnums? status = null)
         {
             try
             {
-                var result = await _service.GetAllProvinceAsync(pageNumber, pageSize);
+                var result = await _service.GetAllProvinceAsync(pageNumber, pageSize,provinceCode,provinceName,status);
                 return Ok(ApiResponse<object>.Success(new 
                 {
                     items = result.Items,
@@ -229,11 +230,11 @@ namespace TekRemittance.Web.Controllers
         #region City
 
         [HttpGet("cities")]
-        public async Task<IActionResult> GetAllCities(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllCities(int pageNumber = 1, int pageSize = 10, string? cityCode = null, string? cityName = null, StatusesEnums? status = null)
         {
             try
             {
-                var result = await _service.GetAllCityAsync(pageNumber, pageSize);
+                var result = await _service.GetAllCityAsync(pageNumber, pageSize,cityCode,cityName,status);
                 return Ok(ApiResponse<object>.Success(new 
                 {
                     items = result.Items,
@@ -328,11 +329,11 @@ namespace TekRemittance.Web.Controllers
         #region Bank
 
         [HttpGet("banks")]
-        public async Task<IActionResult> GetAllBanks(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllBanks(int pageNumber = 1, int pageSize = 10, string? bankCode = null, string? bankName = null, StatusesEnums? status = null)
         {
             try
             {
-                var result = await _service.GetAllBankAsync(pageNumber, pageSize);
+                var result = await _service.GetAllBankAsync(pageNumber, pageSize,bankCode,bankName,status);
                 return Ok(ApiResponse<object>.Success(new 
                 {
                     items = result.Items,

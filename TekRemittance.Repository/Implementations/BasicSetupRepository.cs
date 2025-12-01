@@ -6,8 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
+using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Web.Models.dto;
+using TekRemittance.Repository.Enums;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -21,13 +23,27 @@ namespace TekRemittance.Repository.Implementations
         }
 
         #region Country
-        public async Task<PagedResult<countryDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<countryDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? countryCode = null, string? countryName = null, StatusesEnums? status = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.Countries
-                .AsNoTracking()
+            var query = _context.Countries.AsNoTracking();
+            if (!string.IsNullOrWhiteSpace(countryCode))
+                query = query.Where(a => a.CountryCode.Contains(countryCode.Trim()));
+            if (!string.IsNullOrWhiteSpace(countryName))
+                query = query.Where(a => a.CountryName.Contains(countryName.Trim()));
+            if (status == StatusesEnums.Active)
+                query = query.Where(x => x.IsActive == true);
+            if (status == StatusesEnums.Inactive)
+                query = query.Where(x => x.IsActive == false);
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(c => c.CountryName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(c => new countryDTO
                 {
                     Id = c.Id,
@@ -38,13 +54,7 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = c.CreatedOn,
                     UpdatedBy = c.UpdatedBy,
                     UpdatedOn = c.UpdatedOn
-                });
-
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .OrderBy(c => c.CountryName)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                })
                 .ToListAsync();
 
             return new PagedResult<countryDTO>
@@ -165,13 +175,33 @@ namespace TekRemittance.Repository.Implementations
         #endregion
 
         #region Province
-        public async Task<PagedResult<provinceDTO>> GetAllProvinceAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<provinceDTO>> GetAllProvinceAsync(int pageNumber = 1, int pageSize = 10, string? provinceCode = null, string? provinceName = null, StatusesEnums? status = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.Provinces
-                .AsNoTracking()
+            var query = _context.Provinces.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(provinceCode))
+                query = query.Where(p => p.ProvinceCode.Contains(provinceCode));
+
+            if (!string.IsNullOrWhiteSpace(provinceName))
+                query = query.Where(p => p.ProvinceName.Contains(provinceName));
+
+            if (status.HasValue)
+            {
+                if (status.Value == StatusesEnums.Active)
+                    query = query.Where(p => p.IsActive == true);
+                else if (status.Value == StatusesEnums.Inactive)
+                    query = query.Where(p => p.IsActive == false);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(p => p.ProvinceName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(p => new provinceDTO
                 {
                     Id = p.Id,
@@ -183,13 +213,7 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = p.CreatedOn,
                     UpdatedBy = p.UpdatedBy,
                     UpdatedOn = p.UpdatedOn
-                });
-
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .OrderBy(p => p.ProvinceName)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                })
                 .ToListAsync();
 
             return new PagedResult<provinceDTO>
@@ -290,13 +314,33 @@ namespace TekRemittance.Repository.Implementations
         #endregion
 
         #region City
-        public async Task<PagedResult<cityDTO>> GetAllCityAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<cityDTO>> GetAllCityAsync(int pageNumber = 1, int pageSize = 10, string? cityCode = null, string? cityName = null, StatusesEnums? status = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.Cities
-                .AsNoTracking()
+            var query = _context.Cities.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(cityCode))
+                query = query.Where(a => a.CityCode.Contains(cityCode));
+
+            if (!string.IsNullOrWhiteSpace(cityName))
+                query = query.Where(a => a.CityName.Contains(cityName));
+
+            if (status.HasValue)
+            {
+                if (status.Value == StatusesEnums.Active)
+                    query = query.Where(x => x.IsActive == true);
+                else if (status.Value == StatusesEnums.Inactive)
+                    query = query.Where(x => x.IsActive == false);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(c => c.CityName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(c => new cityDTO
                 {
                     Id = c.Id,
@@ -309,13 +353,7 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = c.CreatedOn,
                     UpdatedBy = c.UpdatedBy,
                     UpdatedOn = c.UpdatedOn
-                });
-
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .OrderBy(c => c.CityName)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                })
                 .ToListAsync();
 
             return new PagedResult<cityDTO>
@@ -426,13 +464,33 @@ namespace TekRemittance.Repository.Implementations
         #endregion
 
         #region Bank
-        public async Task<PagedResult<bankDTO>> GetAllBankAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<bankDTO>> GetAllBankAsync(int pageNumber = 1, int pageSize = 10, string? bankCode = null, string? bankName = null, StatusesEnums? status = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.Banks
-                .AsNoTracking()
+            var query = _context.Banks.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(bankCode))
+                query = query.Where(b => b.BankCode.Contains(bankCode));
+
+            if (!string.IsNullOrWhiteSpace(bankName))
+                query = query.Where(b => b.BankName.Contains(bankName));
+
+            if (status.HasValue)
+            {
+                if (status.Value == StatusesEnums.Active)
+                    query = query.Where(b => b.IsActive == true);
+                else if (status.Value == StatusesEnums.Inactive)
+                    query = query.Where(b => b.IsActive == false);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(b => b.BankName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(b => new bankDTO
                 {
                     Id = b.Id,
@@ -448,13 +506,7 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = b.CreatedOn,
                     UpdatedBy = b.UpdatedBy,
                     UpdatedOn = b.UpdatedOn
-                });
-
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .OrderBy(b => b.BankName)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                })
                 .ToListAsync();
 
             return new PagedResult<bankDTO>
