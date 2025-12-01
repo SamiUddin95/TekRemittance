@@ -52,7 +52,7 @@ namespace TekRemittance.Service.Implementations
             return await _repo.SetPermissionsAsync(groupId, permissionIds);
         }
 
-        public async Task<List<Guid>> GetUsersByGroupIdAsync(Guid groupId)
+        public async Task<List<GroupUserDTO>> GetUsersByGroupIdAsync(Guid groupId)
         {
             return await _repo.GetUsersByGroupIdAsync(groupId);
         }

@@ -15,7 +15,7 @@ namespace TekRemittance.Service.Interfaces
         Task<bool> DeleteAsync(Guid id);
         Task<bool> SetUsersAsync(Guid groupId, IEnumerable<Guid> userIds);
         Task<bool> SetPermissionsAsync(Guid groupId, IEnumerable<Guid> permissionIds);
-        Task<List<Guid>> GetUsersByGroupIdAsync(Guid groupId);
+        Task<List<GroupUserDTO>> GetUsersByGroupIdAsync(Guid groupId);
         Task<List<Guid>> GetPermissionsByGroupIdAsync(Guid groupId);
     }
 }

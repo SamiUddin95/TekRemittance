@@ -154,7 +154,7 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = now
                 });
             }
-
+            var ids = Guid.NewGuid();
             await _context.SaveChangesAsync();
             return true;
         }
@@ -183,13 +183,25 @@ namespace TekRemittance.Repository.Implementations
             return true;
         }
 
-        public async Task<List<Guid>> GetUsersByGroupIdAsync(Guid groupId)
+       
+        public async Task<List<GroupUserDTO>> GetUsersByGroupIdAsync(Guid groupId)
         {
-            return await _context.UserGroups
-                .Where(ug => ug.GroupId == groupId)
-                .Select(ug => ug.UserId)
-                .ToListAsync();
+            var items = await (
+                from a in _context.UserGroups
+                join u in _context.Users on a.UserId equals u.Id
+                where a.GroupId == groupId
+                select new GroupUserDTO
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Email = u.Email
+                }
+            ).ToListAsync();
+
+            return items;
         }
+
+
 
         public async Task<List<Guid>> GetPermissionsByGroupIdAsync(Guid groupId)
         {
@@ -200,3 +212,5 @@ namespace TekRemittance.Repository.Implementations
         }
     }
 }
+
+
