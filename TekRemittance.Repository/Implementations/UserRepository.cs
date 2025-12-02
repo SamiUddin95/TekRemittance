@@ -119,7 +119,8 @@ namespace TekRemittance.Repository.Implementations
                 CreatedOn = DateTime.UtcNow,
                 UpdatedBy = dto.UpdatedBy ?? "system",
                 UpdatedOn = DateTime.UtcNow,
-                IsSupervise  = false
+                IsSupervise  = false,
+                UserType=dto.UserType
             };
             await _context.Users.AddAsync(entity);
             await _context.SaveChangesAsync();
@@ -138,7 +139,8 @@ namespace TekRemittance.Repository.Implementations
                 CreatedOn = entity.CreatedOn,
                 UpdatedBy = entity.UpdatedBy,
                 UpdatedOn = entity.UpdatedOn,
-                IsSupervise = entity.IsSupervise
+                IsSupervise = entity.IsSupervise,
+                UserType=entity.UserType
                 
             };
         }
@@ -168,6 +170,7 @@ namespace TekRemittance.Repository.Implementations
             existing.UpdatedBy = dto.UpdatedBy;
             existing.UpdatedOn = DateTime.UtcNow;
             existing.IsSupervise = false;
+            existing.UserType = dto.UserType;
             
 
             await _context.SaveChangesAsync();
@@ -187,6 +190,7 @@ namespace TekRemittance.Repository.Implementations
                 UpdatedBy = existing.UpdatedBy,
                 UpdatedOn = existing.UpdatedOn,
                 IsSupervise = existing.IsSupervise,
+                UserType=existing.UserType
             };
         }
 

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using TekRemittance.Web.Models.dto;
+using TekRemittance.Repository.Models.dto;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -65,5 +66,41 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
+        public async Task<PagedResult<AuditLogDTO>> GetAllAuditLogsAsync(int pageNumber = 1, int pageSize = 10)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.AuditLogs
+                .AsNoTracking()
+                .Select(a => new AuditLogDTO
+                {
+                    Id = a.Id,
+                    EntityName = a.EntityName,
+                    EntityId = a.EntityId,
+                    Action = a.Action,
+                    OldValues = a.OldValues,
+                    NewValues = a.NewValues,
+                    PerformedBy = a.PerformedBy,
+                    PerformedOn = a.PerformedOn
+                });
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(a => a.PerformedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PagedResult<AuditLogDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
     }
 }

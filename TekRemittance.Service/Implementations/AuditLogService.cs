@@ -4,6 +4,7 @@ using TekRemittance.Repository.Interfaces;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models.dto;
 using System;
+using TekRemittance.Repository.Models.dto;
 
 namespace TekRemittance.Service.Implementations
 {
@@ -22,6 +23,11 @@ namespace TekRemittance.Service.Implementations
         public Task<PagedResult<AuditLog>> QueryAsync(string? entityName, Guid? entityId, string? action, string? performedBy, DateTime? from, DateTime? to, int pageNumber = 1, int pageSize = 10)
         {
             return _repository.QueryAsync(entityName, entityId, action, performedBy, from, to, pageNumber, pageSize);
+        }
+
+        public async Task<PagedResult<AuditLogDTO>> GetAllAuditLogs(int pageNumber = 1, int pageSize = 10)
+        {
+            return await _repository.GetAllAuditLogsAsync(pageNumber, pageSize);
         }
     }
 }
