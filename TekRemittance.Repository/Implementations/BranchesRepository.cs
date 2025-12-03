@@ -40,6 +40,7 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = b.Id,
                     AgentId = b.AgentId,
+                    AgentName=b.Agent.AgentName,
                     Code = b.Code,
                     AgentBranchName = b.AgentBranchName,
                     Phone1 = b.Phone1,

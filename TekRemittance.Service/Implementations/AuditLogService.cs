@@ -25,9 +25,9 @@ namespace TekRemittance.Service.Implementations
             return _repository.QueryAsync(entityName, entityId, action, performedBy, from, to, pageNumber, pageSize);
         }
 
-        public async Task<PagedResult<AuditLogDTO>> GetAllAuditLogs(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<AuditLogDTO>> GetAllAuditLogs(int pageNumber = 1, int pageSize = 10, string? action = null, string? performedby = null, string? entityName = null)
         {
-            return await _repository.GetAllAuditLogsAsync(pageNumber, pageSize);
+            return await _repository.GetAllAuditLogsAsync(pageNumber, pageSize,action,performedby,entityName);
         }
     }
 }

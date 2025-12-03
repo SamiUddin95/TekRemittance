@@ -7,6 +7,7 @@ namespace TekRemittance.Repository.DTOs
     {
         public Guid Id { get; set; }
         public Guid AgentId { get; set; }
+        public string AgentName { get; set; }
         public Guid CountryId { get; set; }
         public Guid ProvinceId { get; set; }
         public Guid CityId { get; set; }

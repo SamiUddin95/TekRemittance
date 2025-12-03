@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace TekRemittance.Repository.Models.dto
@@ -10,11 +11,15 @@ namespace TekRemittance.Repository.Models.dto
     {
         public Guid Id { get; set; }
         public string EntityName { get; set; }
-        public Guid EntityId { get; set; }
-        public string Action { get; set; }
-        public string? OldValues { get; set; }
-        public string? NewValues { get; set; }
-        public string PerformedBy { get; set; }
-        public DateTime PerformedOn { get; set; }
+        public string Action { get; set; }        
+        public string User { get; set; }
+        public DateTime Time { get; set; }
+
+        [JsonIgnore]
+        public string OldValues_Internal { get; set; }
+        [JsonIgnore]
+        public string NewValues_Internal { get; set; }
+        public List<FieldChangeDTO> Details { get; set; } = new();
+
     }
 }

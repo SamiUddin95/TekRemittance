@@ -7,6 +7,8 @@ using System;
 using System.Linq;
 using TekRemittance.Web.Models.dto;
 using TekRemittance.Repository.Models.dto;
+using System.Text.Json;
+using TekRemittance.Repository.Enums;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -66,32 +68,46 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<AuditLogDTO>> GetAllAuditLogsAsync(int pageNumber = 1, int pageSize = 10)
+   
+        public async Task<PagedResult<AuditLogDTO>> GetAllAuditLogsAsync(int pageNumber = 1, int pageSize = 10, string? action = null, string? performedby = null,string? entityName=null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.AuditLogs
-                .AsNoTracking()
-                .Select(a => new AuditLogDTO
-                {
-                    Id = a.Id,
-                    EntityName = a.EntityName,
-                    EntityId = a.EntityId,
-                    Action = a.Action,
-                    OldValues = a.OldValues,
-                    NewValues = a.NewValues,
-                    PerformedBy = a.PerformedBy,
-                    PerformedOn = a.PerformedOn
-                });
+
+            var query = _context.AuditLogs.AsNoTracking();
+            if (!string.IsNullOrWhiteSpace(performedby))
+                query = query.Where(a => a.PerformedBy.Contains(performedby.Trim()));
+            if (!string.IsNullOrWhiteSpace(action))
+                query = query.Where(a => a.Action.Contains(action.Trim()));
+            if (!string.IsNullOrWhiteSpace(entityName))
+                query = query.Where(a => a.EntityName.Contains(entityName.Trim()));
 
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderByDescending(a => a.PerformedOn)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+               .OrderByDescending(a => a.EntityName)
+               .Skip((pageNumber - 1) * pageSize)
+               .Take(pageSize)
+                 .Select(a => new AuditLogDTO
+                 {
+                     Id = a.Id,
+                     EntityName = a.EntityName,
+                     Action = a.Action,
+                     User = a.PerformedBy,
+                     Time = a.PerformedOn,
+
+                     OldValues_Internal = a.OldValues,
+                     NewValues_Internal = a.NewValues
+                 }).ToListAsync();
+
+            foreach (var item in items)
+            {
+                item.Details = GetChangedFields(item.OldValues_Internal, item.NewValues_Internal);
+
+                item.OldValues_Internal = null;
+                item.NewValues_Internal = null;
+            }
 
             return new PagedResult<AuditLogDTO>
             {
@@ -100,7 +116,43 @@ namespace TekRemittance.Repository.Implementations
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
+
         }
+
+        private List<FieldChangeDTO> GetChangedFields(string oldJson, string newJson)
+        {
+            if (string.IsNullOrEmpty(oldJson) || string.IsNullOrEmpty(newJson))
+                return new List<FieldChangeDTO>();
+
+            var oldDict = JsonSerializer.Deserialize<Dictionary<string, object>>(oldJson);
+            var newDict = JsonSerializer.Deserialize<Dictionary<string, object>>(newJson);
+
+            var changes = new List<FieldChangeDTO>();
+
+            foreach (var oldItem in oldDict)
+            {
+                var key = oldItem.Key;
+
+                if (newDict.ContainsKey(key))
+                {
+                    string oldVal = oldItem.Value?.ToString();
+                    string newVal = newDict[key]?.ToString();
+
+                    if (oldVal != newVal)
+                    {
+                        changes.Add(new FieldChangeDTO
+                        {
+                            Field = key,
+                            NewValue = newVal
+                        });
+                    }
+                }
+            }
+
+            return changes;
+        }
+
+
 
     }
 }
