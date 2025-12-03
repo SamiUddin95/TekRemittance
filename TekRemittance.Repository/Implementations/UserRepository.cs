@@ -58,7 +58,8 @@ namespace TekRemittance.Repository.Implementations
                     CreatedBy = u.CreatedBy,
                     CreatedOn = u.CreatedOn,
                     UpdatedBy = u.UpdatedBy,
-                    UpdatedOn = u.UpdatedOn
+                    UpdatedOn = u.UpdatedOn,
+                    UserType=u.UserType
                 })
                 .ToListAsync();
 
@@ -89,7 +90,8 @@ namespace TekRemittance.Repository.Implementations
                     UpdatedBy = u.UpdatedBy,
                     UpdatedOn = u.UpdatedOn,
                     password = u.PasswordHash,
-                    IsSupervise = u.IsSupervise
+                    IsSupervise = u.IsSupervise,
+                    UserType=u.UserType
                 }).FirstOrDefaultAsync();
         }
 
