@@ -86,7 +86,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-               .OrderByDescending(a => a.EntityName)
+               .OrderByDescending(a => a.PerformedOn)
                .Skip((pageNumber - 1) * pageSize)
                .Take(pageSize)
                  .Select(a => new AuditLogDTO

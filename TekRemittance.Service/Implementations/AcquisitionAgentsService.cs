@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models.dto;
@@ -14,9 +15,9 @@ namespace TekRemittance.Service.Implementations
             _repo = repo;
         }
 
-        public async Task<PagedResult<acquisitionAgentDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<acquisitionAgentDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? agentname = null, StatusesEnums? status = null)
         {
-            return await _repo.GetAllAsync(pageNumber, pageSize);
+            return await _repo.GetAllAsync(pageNumber, pageSize,code,agentname,status);
         }
 
         public async Task<acquisitionAgentDTO?> GetByIdAsync(Guid id)

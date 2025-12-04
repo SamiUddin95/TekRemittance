@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
+using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Web.Models.dto;
+using static System.Collections.Specialized.BitVector32;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -17,12 +19,24 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        public async Task<PagedResult<acquisitionAgentDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<acquisitionAgentDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? agentname = null, StatusesEnums? status = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
             var query = _context.AcquisitionAgents.AsNoTracking();
+
+            
+            if (!string.IsNullOrWhiteSpace(code))
+                query = query.Where(a => a.Code.Contains(code.Trim()));
+            if (!string.IsNullOrWhiteSpace(agentname))
+                query = query.Where(a => a.AgentName.Contains(agentname.Trim()));
+            if (status == StatusesEnums.Active)
+                query = query.Where(x => x.IsActive == true);
+            if (status == StatusesEnums.Inactive)
+                query = query.Where(x => x.IsActive == false);
+
+
             var totalCount = await query.CountAsync();
 
             var items = await query
