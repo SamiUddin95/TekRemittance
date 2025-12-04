@@ -103,7 +103,10 @@ namespace TekRemittance.Repository.Implementations
 
             foreach (var item in items)
             {
-                item.Details = GetChangedFields(item.OldValues_Internal, item.NewValues_Internal);
+                item.Details = GetChangedFields(item.OldValues_Internal,
+        item.NewValues_Internal,
+        item.EntityName,
+        item.Action);
 
                 item.OldValues_Internal = null;
                 item.NewValues_Internal = null;
@@ -119,38 +122,63 @@ namespace TekRemittance.Repository.Implementations
 
         }
 
-        private List<FieldChangeDTO> GetChangedFields(string oldJson, string newJson)
+        private List<FieldChangeDTO> GetChangedFields(
+    string oldJson,
+    string newJson,
+    string entityName,
+    string action)
         {
-            if (string.IsNullOrEmpty(oldJson) || string.IsNullOrEmpty(newJson))
-                return new List<FieldChangeDTO>();
-
-            var oldDict = JsonSerializer.Deserialize<Dictionary<string, object>>(oldJson);
-            var newDict = JsonSerializer.Deserialize<Dictionary<string, object>>(newJson);
-
             var changes = new List<FieldChangeDTO>();
 
-            foreach (var oldItem in oldDict)
+            string message = $"{entityName} {action} successfully";
+
+            if (string.IsNullOrEmpty(oldJson) && !string.IsNullOrEmpty(newJson))
             {
-                var key = oldItem.Key;
+                changes.Add(new FieldChangeDTO { Field = "Message", NewValue = message });
+                return changes;
+            }
 
-                if (newDict.ContainsKey(key))
+            if (!string.IsNullOrEmpty(oldJson) && string.IsNullOrEmpty(newJson))
+            {
+                changes.Add(new FieldChangeDTO { Field = "Message", NewValue = message });
+                return changes;
+            }
+
+            if (!string.IsNullOrEmpty(oldJson) && !string.IsNullOrEmpty(newJson))
+            {
+                var oldDict = JsonSerializer.Deserialize<Dictionary<string, object>>(oldJson);
+                var newDict = JsonSerializer.Deserialize<Dictionary<string, object>>(newJson);
+
+                foreach (var oldItem in oldDict)
                 {
-                    string oldVal = oldItem.Value?.ToString();
-                    string newVal = newDict[key]?.ToString();
+                    var key = oldItem.Key;
 
-                    if (oldVal != newVal)
+                    if (newDict.ContainsKey(key))
                     {
-                        changes.Add(new FieldChangeDTO
+                        string oldVal = oldItem.Value?.ToString();
+                        string newVal = newDict[key]?.ToString();
+
+                        if (oldVal != newVal)
                         {
-                            Field = key,
-                            NewValue = newVal
-                        });
+                            changes.Add(new FieldChangeDTO
+                            {
+                                Field = key,
+                                NewValue = newVal
+                            });
+                        }
                     }
                 }
             }
 
+            changes.Add(new FieldChangeDTO
+            {
+                Field = "Message",
+                NewValue = message
+            });
+
             return changes;
         }
+
 
 
 
