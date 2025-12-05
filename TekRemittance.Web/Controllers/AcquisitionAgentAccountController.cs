@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Repository.Entities;
+using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
@@ -22,11 +23,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? agentname = null, StatusesEnums? status = null)
         {
             try
             {
-                var result = await _service.GetAllAccounts(pageNumber, pageSize);
+                var result = await _service.GetAllAccounts(pageNumber, pageSize,accountnumber,agentname,status);
                 return Ok(ApiResponse<object>.Success(new
                 {
                     items = result.Items,

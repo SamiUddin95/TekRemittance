@@ -18,7 +18,7 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        public async Task<PagedResult<BranchDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<BranchDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? agentname = null, string? code = null, string? agentbranchname = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
@@ -29,6 +29,13 @@ namespace TekRemittance.Repository.Implementations
                 .Include(b => b.Province)
                 .Include(b => b.City)
                 .AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(agentname))
+                query = query.Where(b => b.Agent.AgentName.Contains(agentname.Trim()));
+            if (!string.IsNullOrWhiteSpace(code))
+                query = query.Where(b => b.Code.Contains(code.Trim()));
+            if (!string.IsNullOrWhiteSpace(agentbranchname))
+                query = query.Where(b => b.AgentBranchName.Contains(agentbranchname.Trim()));
 
             var totalCount = await query.CountAsync();
 

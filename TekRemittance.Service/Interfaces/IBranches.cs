@@ -7,7 +7,7 @@ namespace TekRemittance.Service.Interfaces
 {
     public interface IBranchesService
     {
-        Task<PagedResult<BranchDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10);
+        Task<PagedResult<BranchDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? agentname = null, string? code = null, string? agentbranchname = null);
         Task<BranchDTO?> GetByIdAsync(Guid id);
         Task<BranchDTO> CreateAsync(BranchDTO dto);
         Task<BranchDTO?> UpdateAsync(BranchDTO dto);

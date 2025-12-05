@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
+using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
@@ -21,39 +22,50 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        public async Task<PagedResult<AcquisitionAgentAccountDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<AcquisitionAgentAccountDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10 ,string? accountnumber = null, string? agentname = null, StatusesEnums? status = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.AgentAccounts.AsNoTracking();
+            var query =
+     from a in _context.AgentAccounts.AsNoTracking()
+     join ag in _context.AcquisitionAgents.AsNoTracking()
+         on a.AgentId equals ag.Id
+     select new { a, ag };
+
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+                query = query.Where(x => x.a.AccountNumber.Contains(accountnumber.Trim()));
+
+            if (!string.IsNullOrWhiteSpace(agentname))
+                query = query.Where(x => x.ag.AgentName.Contains(agentname.Trim()));
+
+            if (status == StatusesEnums.Active)
+                query = query.Where(x => x.a.IsActive == true);
+
+            if (status == StatusesEnums.Inactive)
+                query = query.Where(x => x.a.IsActive == false);
+
             var totalCount = await query.CountAsync();
-
-
-
-            var items = await (
-            from a in _context.AgentAccounts
-            join ag in _context.AcquisitionAgents on a.AgentId equals ag.Id
-            orderby a.AccountTitle
-            select new AcquisitionAgentAccountDTO
-            {
-                Id = a.Id,
-                AccountNumber = a.AccountNumber,
-                Approve = a.Approve,
-                AccountTitle = a.AccountTitle,
-                AccountType = a.AccountType,
-                IsActive = a.IsActive,
-                AgentId = a.AgentId,
-                AgentName = ag.AgentName,
-                CreatedBy = a.CreatedBy,
-                CreatedOn = a.CreatedOn,
-                UpdatedBy = a.UpdatedBy,
-                UpdatedOn = a.UpdatedOn
-            }
-        )
-        .Skip((pageNumber - 1) * pageSize)
-        .Take(pageSize)
-        .ToListAsync();
+            var items = await query
+                   .OrderBy(x => x.a.AccountTitle)
+                   .Skip((pageNumber - 1) * pageSize)
+                   .Take(pageSize)
+                   .Select(x => new AcquisitionAgentAccountDTO
+                   {
+                       Id = x.a.Id,
+                       AccountNumber = x.a.AccountNumber,
+                       Approve = x.a.Approve,
+                       AccountTitle = x.a.AccountTitle,
+                       AccountType = x.a.AccountType,
+                       IsActive = x.a.IsActive,
+                       AgentId = x.a.AgentId,
+                       AgentName = x.ag.AgentName,
+                       CreatedBy = x.a.CreatedBy,
+                       CreatedOn = x.a.CreatedOn,
+                       UpdatedBy = x.a.UpdatedBy,
+                       UpdatedOn = x.a.UpdatedOn
+                   })
+                   .ToListAsync();
 
             return new PagedResult<AcquisitionAgentAccountDTO>
             {
