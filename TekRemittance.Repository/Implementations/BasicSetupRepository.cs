@@ -41,7 +41,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(c => c.CountryName)
+                .OrderBy(c => c.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(c => new countryDTO
@@ -199,7 +199,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(p => p.ProvinceName)
+                .OrderBy(p => p.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(p => new provinceDTO
@@ -338,7 +338,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(c => c.CityName)
+                .OrderBy(c => c.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(c => new cityDTO
@@ -488,7 +488,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(b => b.BankName)
+                .OrderBy(b => b.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(b => new bankDTO

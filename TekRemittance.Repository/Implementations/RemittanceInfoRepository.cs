@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Interfaces;
+using TekRemittance.Repository.Models.dto;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -56,19 +57,48 @@ namespace TekRemittance.Repository.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task<(IEnumerable<AgentFileUpload> Items, int TotalCount)> GetByUploadAsync(int pageNumber = 1, int pageSize = 50)
+
+        public async Task<(IEnumerable<AgentFileUploadDTO> Items, int TotalCount)> GetByUploadAsync(int pageNumber = 1, int pageSize = 50, string? templatename = null, string? filename = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
+
             var query = _context.AgentFileUploads
+                .Include(u => u.Template)       
                 .AsNoTracking()
-                .OrderByDescending(u => u.CreatedOn);
+                .OrderByDescending(u => u.CreatedOn)
+                 .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(templatename))
+                query = query.Where(u => u.Template.Name.Contains(templatename.Trim()));
+
+            if (!string.IsNullOrWhiteSpace(filename))
+                query = query.Where(u => u.FileName.Contains(filename.Trim()));
+
             var total = await query.CountAsync();
+
             var items = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Select(u => new AgentFileUploadDTO
+                {
+                    Id = u.Id,
+                    AgentId = u.AgentId,
+                    TemplateName = u.Template.Name,   
+                    TemplateId=u.TemplateId,
+                    FileName = u.FileName,
+                    StoragePath = u.StoragePath,
+                    Status = u.Status,
+                    ErrorMessage = u.ErrorMessage,
+                    RowCount = u.RowCount,
+                    ProcessedAt = u.ProcessedAt,
+                    CreatedOn = u.CreatedOn
+                })
                 .ToListAsync();
+
             return (items, total);
         }
+
+
     }
 }

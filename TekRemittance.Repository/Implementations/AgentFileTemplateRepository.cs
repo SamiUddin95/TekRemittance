@@ -139,39 +139,51 @@ namespace TekRemittance.Repository.Implementations
             return true;
         }
 
-        public async Task<PagedResult<agentFileTemplateDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<agentFileTemplateDTO>> GetAllAsync(int pageNumber = 1, int pageSize = 10, string? name = null, string? agentname = null, string? sheetname = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.AgentFileTemplates.AsNoTracking();
+            var query =
+               from t in _context.AgentFileTemplates
+               join ag in _context.AcquisitionAgents on t.AgentId equals ag.Id
+               select new { t, ag };
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(x => x.t.Name.Contains(name.Trim()));
+
+            if (!string.IsNullOrWhiteSpace(agentname))
+                query = query.Where(x => x.ag.AgentName.Contains(agentname.Trim()));
+
+            if (!string.IsNullOrWhiteSpace(sheetname))
+                query = query.Where(x => x.t.SheetName.Contains(sheetname.Trim()));
+
+
             var totalCount = await query.CountAsync();
 
-            var items = await (
-                 from t in query
-                 join ag in _context.AcquisitionAgents on t.AgentId equals ag.Id
-                 orderby t.Name
-                 select new agentFileTemplateDTO
-                 {
-                     Id = t.Id,
-                     AgentId = t.AgentId,
-                     Name = t.Name,
-                     SheetName = t.SheetName,
-                     Format = t.Format,
-                     IsFixedLength = t.IsFixedLength,
-                     DelimiterEnabled = t.DelimiterEnabled,
-                     Delimiter = t.Delimiter,
-                     IsActive = t.IsActive,
-                     CreatedBy = t.CreatedBy,
-                     CreatedOn = t.CreatedOn,
-                     UpdatedBy = t.UpdatedBy,
-                     UpdatedOn = t.UpdatedOn,
-                     AgentName = ag.AgentName 
-                 }
-             )
-             .Skip((pageNumber - 1) * pageSize)
-             .Take(pageSize)
-             .ToListAsync();
+
+            var items = await query
+                .OrderBy(x => x.t.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new agentFileTemplateDTO
+                {
+                    Id = x.t.Id,
+                    AgentId = x.t.AgentId,
+                    Name = x.t.Name,
+                    SheetName = x.t.SheetName,
+                    Format = x.t.Format,
+                    IsFixedLength = x.t.IsFixedLength,
+                    DelimiterEnabled = x.t.DelimiterEnabled,
+                    Delimiter = x.t.Delimiter,
+                    IsActive = x.t.IsActive,
+                    CreatedBy = x.t.CreatedBy,
+                    CreatedOn = x.t.CreatedOn,
+                    UpdatedBy = x.t.UpdatedBy,
+                    UpdatedOn = x.t.UpdatedOn,
+                    AgentName = x.ag.AgentName
+                })
+                .ToListAsync();
 
             return new PagedResult<agentFileTemplateDTO>
             {
@@ -181,6 +193,7 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
+       
         public async Task<PagedResult<KeyValuePair<string, List<string>>>> GetDataByUploadIdAsync(Guid UploadId, int pageNumber = 1, int pageSize = 50)
         {
             if (pageNumber < 1) pageNumber = 1;

@@ -46,11 +46,11 @@ namespace TekRemittance.Web.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> List([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50)
+        public async Task<IActionResult> List([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50, string? templatename = null, string? filename = null)
         {
             try
              {
-                var (items, total) = await _repo.GetByUploadAsync(pageNumber, pageSize);
+                var (items, total) = await _repo.GetByUploadAsync(pageNumber, pageSize,templatename,filename);
                 return Ok(ApiResponse<object>.Success(new { total, items }, 200));
             }
             catch (Exception ex)

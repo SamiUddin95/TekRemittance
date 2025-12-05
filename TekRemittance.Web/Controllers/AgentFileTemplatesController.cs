@@ -23,11 +23,11 @@ namespace TekRemittance.Web.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? name = null, string? agentname = null,string? sheetname=null)
         {
             try
             {
-                var result = await _service.GetAllAsync(pageNumber, pageSize);
+                var result = await _service.GetAllAsync(pageNumber, pageSize,name,agentname,sheetname);
                 return Ok(ApiResponse<object>.Success(new
                 {
                     items = result.Items,

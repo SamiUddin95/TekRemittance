@@ -47,7 +47,7 @@ namespace TekRemittance.Repository.Implementations
 
             var totalCount = await query.CountAsync();
             var items = await query
-                   .OrderBy(x => x.a.AccountTitle)
+                   .OrderBy(x => x.a.CreatedOn)
                    .Skip((pageNumber - 1) * pageSize)
                    .Take(pageSize)
                    .Select(x => new AcquisitionAgentAccountDTO
