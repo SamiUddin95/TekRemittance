@@ -19,7 +19,7 @@ namespace TekRemittance.Repository.Interfaces
             int pageNumber = 1,
             int pageSize = 10);
 
-        Task<PagedResult<AuditLogDTO>> GetAllAuditLogsAsync(int pageNumber = 1, int pageSize = 10, string? action = null, string? performedby = null, string? entityName = null);
+        Task<PagedResult<AuditLogDTO>> GetAllAuditLogsAsync(int pageNumber = 1, int pageSize = 10, string? search = null);
 
     }
 }

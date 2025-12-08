@@ -9,6 +9,7 @@ using TekRemittance.Web.Models.dto;
 using TekRemittance.Repository.Models.dto;
 using System.Text.Json;
 using TekRemittance.Repository.Enums;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -69,19 +70,26 @@ namespace TekRemittance.Repository.Implementations
             };
         }
    
-        public async Task<PagedResult<AuditLogDTO>> GetAllAuditLogsAsync(int pageNumber = 1, int pageSize = 10, string? action = null, string? performedby = null,string? entityName=null)
+        public async Task<PagedResult<AuditLogDTO>> GetAllAuditLogsAsync(int pageNumber = 1, int pageSize = 10, string? search = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
+            var query = _context.AuditLogs.AsNoTracking().AsQueryable();
 
-            var query = _context.AuditLogs.AsNoTracking();
-            if (!string.IsNullOrWhiteSpace(performedby))
-                query = query.Where(a => a.PerformedBy.Contains(performedby.Trim()));
-            if (!string.IsNullOrWhiteSpace(action))
-                query = query.Where(a => a.Action.Contains(action.Trim()));
-            if (!string.IsNullOrWhiteSpace(entityName))
-                query = query.Where(a => a.EntityName.Contains(entityName.Trim()));
+
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var keyword = search.Trim().ToLower();
+
+                query = query.Where(a =>
+                    a.PerformedBy.ToLower().Contains(keyword) ||
+                    a.Action.ToLower().Contains(keyword) ||
+                    a.EntityName.ToLower().Contains(keyword)
+                );
+            }
+
 
             var totalCount = await query.CountAsync();
 

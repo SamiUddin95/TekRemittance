@@ -67,11 +67,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("Auditlogs")]
-        public async Task<IActionResult> GetAllAuditLogs(int pageNumber = 1, int pageSize = 10, string? action = null, string? performedby = null, string? entityName = null)
+        public async Task<IActionResult> GetAllAuditLogs(int pageNumber = 1, int pageSize = 10, string? search = null)
         {
             try
             {
-                var result = await _service.GetAllAuditLogs(pageNumber, pageSize,action,performedby,entityName);
+                var result = await _service.GetAllAuditLogs(pageNumber, pageSize, search);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
