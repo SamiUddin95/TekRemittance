@@ -33,7 +33,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(g => g.Name)
+                .OrderByDescending(g => g.UpdatedOn??g.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(g => new GroupDTO

@@ -42,7 +42,7 @@ namespace TekRemittance.Repository.Implementations
                 });
             var totalCount = await query.CountAsync();
             var items = await query
-                .OrderBy(p => p.Name)
+                .OrderByDescending(p => p.UpdatedOn??p.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();

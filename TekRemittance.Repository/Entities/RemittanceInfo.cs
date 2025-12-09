@@ -13,5 +13,8 @@ namespace TekRemittance.Repository.Entities
         public string? Error { get; set; }
         public DateTime CreatedOn { get; set; }
         public string Status { get; set; }
+        public string? AccountNumber { get; set; }
+        public string? AccountTitle { get; set; }
+        public string? Xpin { get; set; }
     }
 }

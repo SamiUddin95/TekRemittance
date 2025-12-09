@@ -41,7 +41,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderBy(u => u.Name)
+                .OrderByDescending(u => u.UpdatedOn??u.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(u => new userDTO
@@ -309,7 +309,7 @@ namespace TekRemittance.Repository.Implementations
             var totalcount = await query.CountAsync();
 
             var items = await query
-        .OrderBy(u => u.Name)
+        .OrderBy(u => u.UpdatedOn??u.CreatedOn)
         .Skip((pageNumber - 1) * pageSize)
         .Take(pageSize)
         .Select(u => new userUnAuthorizeDTO

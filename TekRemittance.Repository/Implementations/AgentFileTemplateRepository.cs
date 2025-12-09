@@ -39,7 +39,7 @@ namespace TekRemittance.Repository.Implementations
                     CreatedBy = t.CreatedBy,
                     CreatedOn = t.CreatedOn,
                     UpdatedBy = t.UpdatedBy,
-                    UpdatedOn = t.UpdatedOn
+                    UpdatedOn = t.UpdatedOn,
                 })
                 .FirstOrDefaultAsync();
         }
@@ -163,7 +163,7 @@ namespace TekRemittance.Repository.Implementations
 
 
             var items = await query
-                .OrderBy(x => x.t.Name)
+                .OrderByDescending(x => x.t.UpdatedOn??x.t.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(x => new agentFileTemplateDTO
@@ -193,8 +193,8 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-       
-        public async Task<PagedResult<KeyValuePair<string, List<string>>>> GetDataByUploadIdAsync(Guid UploadId, int pageNumber = 1, int pageSize = 50)
+
+        public async Task<PagedResult<object>> GetDataByUploadIdAsync(Guid UploadId, int pageNumber = 1, int pageSize = 50)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -208,47 +208,57 @@ namespace TekRemittance.Repository.Implementations
                 .OrderBy(a => a.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(a => a.DataJson)
+                .Select(a => new
+                {
+                    a.DataJson,
+                    a.AccountTitle,
+                    a.AccountNumber,
+                    
+                })
                 .ToListAsync();
 
-            var groupedData = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+            var aggregatedDict = new Dictionary<string, List<string>>();
 
-            foreach (var json in records)
+            string accountTitle = "";
+            string accountNumber = "";
+            
+
+            foreach (var record in records)
             {
-                if (string.IsNullOrWhiteSpace(json)) continue;
+                accountTitle = record.AccountTitle ?? "";
+                accountNumber = record.AccountNumber ?? "";
+                
 
-                try
+                var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(record.DataJson);
+                if (dict == null) continue;
+
+                foreach (var kv in dict)
                 {
-                    var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+                    if (!aggregatedDict.ContainsKey(kv.Key))
+                        aggregatedDict[kv.Key] = new List<string>();
 
-                    if (dict == null) continue;
-
-                    foreach (var kv in dict)
-                    {
-                        
-                        var value = kv.Value?.ToString()?.Trim();
-                        if (string.IsNullOrEmpty(value))
-                            continue;
-
-                        if (!groupedData.ContainsKey(kv.Key))
-                            groupedData[kv.Key] = new List<string>();
-
-                        groupedData[kv.Key].Add(value);
-
-                    }
-                }
-                catch
-                {  
+                    aggregatedDict[kv.Key].Add(kv.Value?.ToString() ?? "");
                 }
             }
 
-            return new PagedResult<KeyValuePair<string, List<string>>>
+            var finalList = aggregatedDict.Select(kv => new
             {
-                Items = groupedData.ToList(),
+                key = kv.Key,
+                value = kv.Value,
+                AccountTitle = accountTitle,
+                AccountNumber = accountNumber,
+
+            }).ToList();
+
+            return new PagedResult<object>
+            {
+                Items = finalList,
                 TotalCount = totalCount,
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
         }
+
+
     }
 }
