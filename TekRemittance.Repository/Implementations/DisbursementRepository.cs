@@ -12,6 +12,7 @@ using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -22,17 +23,33 @@ namespace TekRemittance.Repository.Implementations
         {
             _context = context;
         }
-        public async Task<PagedResult<KeyValuePair<string, List<string>>>> GetDataByAgentIdAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<KeyValuePair<string, List<string>>>> GetDataByAgentIdAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
-            var baseQuery = _context.RemittanceInfos
+            var query = _context.RemittanceInfos
                 .Where(a => a.AgentId == agentId);
 
-            var totalCount = await baseQuery.CountAsync();
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+            {
+                string acc = accountnumber.Trim();
+                query = query.Where(x => x.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+            }
 
-            var records = await baseQuery
+            if (!string.IsNullOrWhiteSpace(xpin))
+            {
+                string xp = xpin.Trim();
+                query = query.Where(x => x.DataJson.Contains($"\"XPin\":{xp}"));
+            }
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                query = query.Where(x => x.DataJson.Contains($"\"Date\":\"{date}\""));
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var records = await query
                 .OrderBy(a => a.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)

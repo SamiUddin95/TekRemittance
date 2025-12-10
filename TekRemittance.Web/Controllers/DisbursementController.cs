@@ -22,11 +22,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("{agentId:guid}")]
-        public async Task<IActionResult> GetDisbursementData(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetDisbursementData(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             try
             {
-                var result = await _service.GetDataByAgentIdAsync(agentId, pageNumber, pageSize);
+                var result = await _service.GetDataByAgentIdAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
 
                 if (result == null || !result.Items.Any())
                     return NotFound(ApiResponse<string>.Error("No data found for this agent", 404));
