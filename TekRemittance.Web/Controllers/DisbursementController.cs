@@ -47,11 +47,11 @@ namespace TekRemittance.Web.Controllers
         }
       
         [HttpGet("GetDataByAgent")]
-        public async Task<IActionResult> GetByAgentIdP(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetByAgentIdP(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             try
             {
-                var result = await _service.GetByAgentIdWithStatusPAsync(agentId, pageNumber, pageSize);
+                var result = await _service.GetByAgentIdWithStatusPAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -69,11 +69,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByAuthorize/{agentId:guid}")]
-        public async Task<IActionResult> GetDataByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetDataByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusUAsync(agentId, pageNumber, pageSize);
+                var data = await _service.GetByAgentIdWithStatusUAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -91,11 +91,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByReject/{agentId:guid}")]
-        public async Task<IActionResult> GetDataREByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetDataREByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusREAsync(agentId, pageNumber, pageSize);
+                var data = await _service.GetByAgentIdWithStatusREAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -113,11 +113,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByRepair/{agentId:guid}")]
-        public async Task<IActionResult> GetDataRByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetDataRByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusRAsync(agentId, pageNumber, pageSize);
+                var data = await _service.GetByAgentIdWithStatusRAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -135,11 +135,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByApproved/{agentId:guid}")]
-        public async Task<IActionResult> GetDataAByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetDataAByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize);
+                var data = await _service.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
 
                 return Ok(ApiResponse<object>.Success(new
                 {

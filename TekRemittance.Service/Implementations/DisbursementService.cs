@@ -20,25 +20,25 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.GetDataByAgentIdAsync(agentId, pageNumber, pageSize);
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
-            return await _repo.GetByAgentIdWithStatusPAsync(agentId, pageNumber, pageSize);
+            return await _repo.GetByAgentIdWithStatusPAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
-            return await _repo.GetByAgentIdWithStatusUAsync(agentId, pageNumber, pageSize);
+            return await _repo.GetByAgentIdWithStatusUAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusREAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusREAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
-            return await _repo.GetByAgentIdWithStatusREAsync(agentId, pageNumber, pageSize);
+            return await _repo.GetByAgentIdWithStatusREAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
-            return await _repo.GetByAgentIdWithStatusRAsync(agentId, pageNumber, pageSize);
+            return await _repo.GetByAgentIdWithStatusRAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
-            return await _repo.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize);
+            return await _repo.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
         }
         public async Task<(bool isSuccess, string message,string Xpin)> RemitApproveAsync(string xpin, Guid? userId)
         {

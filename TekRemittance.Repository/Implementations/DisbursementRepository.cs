@@ -73,7 +73,7 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -84,6 +84,26 @@ namespace TekRemittance.Repository.Implementations
                         where r.AgentId == agentId && r.Status == "P"
                         select new { r, a.AgentName };
 
+
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+            {
+                string acc = accountnumber.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+            }
+
+            if (!string.IsNullOrWhiteSpace(xpin))
+            {
+                string xp = xpin.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+            }
+
+
+
             var totalCount = await query.CountAsync();
 
             var items = await query
@@ -113,7 +133,7 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -124,6 +144,23 @@ namespace TekRemittance.Repository.Implementations
                         where r.AgentId == agentId && r.Status == "U"
                         select new { r, a.AgentName };
 
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+            {
+                string acc = accountnumber.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+            }
+
+            if (!string.IsNullOrWhiteSpace(xpin))
+            {
+                string xp = xpin.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+            }
+
             var totalCount = await query.CountAsync();
 
             var items = await query
@@ -153,7 +190,8 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusREAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusREAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -164,6 +202,24 @@ namespace TekRemittance.Repository.Implementations
                         where r.AgentId == agentId && r.Status == "RE"
                         select new { r, a.AgentName };
 
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+            {
+                string acc = accountnumber.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+            }
+
+            if (!string.IsNullOrWhiteSpace(xpin))
+            {
+                string xp = xpin.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+            }
+
+
             var totalCount = await query.CountAsync();
 
             var items = await query
@@ -193,7 +249,7 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -204,6 +260,25 @@ namespace TekRemittance.Repository.Implementations
                         where r.AgentId == agentId && r.Status == "R"
                         select new { r, a.AgentName };
 
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+            {
+                string acc = accountnumber.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+            }
+
+            if (!string.IsNullOrWhiteSpace(xpin))
+            {
+                string xp = xpin.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+            }
+
+
+
             var totalCount = await query.CountAsync();
 
             var items = await query
@@ -233,7 +308,7 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 10)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -243,6 +318,24 @@ namespace TekRemittance.Repository.Implementations
                             on r.AgentId equals a.Id
                         where r.AgentId == agentId && r.Status == "A"
                         select new { r, a.AgentName };
+
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+            {
+                string acc = accountnumber.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+            }
+
+            if (!string.IsNullOrWhiteSpace(xpin))
+            {
+                string xp = xpin.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+            }
+
 
             var totalCount = await query.CountAsync();
 
