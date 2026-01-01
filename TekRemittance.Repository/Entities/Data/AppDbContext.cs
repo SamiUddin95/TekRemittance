@@ -188,7 +188,7 @@ namespace TekRemittance.Repository.Entities.Data
                       .HasMaxLength(100);
 
                 entity.Property(b => b.PhoneNo)
-                      .HasColumnType("int");
+                      .HasMaxLength(20);
 
                 entity.Property(b => b.Description)
                       .HasMaxLength(500);
@@ -316,8 +316,10 @@ namespace TekRemittance.Repository.Entities.Data
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(a => a.IsActive).HasDefaultValue(true);
+                entity.Property(a => a.IsDeleted).HasDefaultValue(false);
+      
                 entity.Property(a => a.CreatedOn).HasDefaultValueSql("GETUTCDATE()");
-            });
+            }); 
 
             modelBuilder.Entity<AgentAccount>(entity =>
             {

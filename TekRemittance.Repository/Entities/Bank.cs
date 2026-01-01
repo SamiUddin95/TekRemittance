@@ -14,7 +14,7 @@ namespace TekRemittance.Repository.Entities
         public string? IMD {  get; set; }
         public string? Website { get; set; }
         public string? Allases { get; set; }
-        public int? PhoneNo { get; set; }
+        public string? PhoneNo { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
         public string CreatedBy { get; set; }

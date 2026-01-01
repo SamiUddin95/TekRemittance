@@ -24,6 +24,9 @@ namespace TekRemittance.Service.Interfaces
 
         Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId);
 
+        Task<RemittanceInfoModelDTO> AmlAsync(string xpin, Guid? userId);
+        Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAMLAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
+
 
 
     }

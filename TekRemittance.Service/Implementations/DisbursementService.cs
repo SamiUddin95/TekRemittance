@@ -63,6 +63,18 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.RemitReverseAsync(xpin, userId);
         }
+
+        public async Task<RemittanceInfoModelDTO> AmlAsync(string xpin, Guid? userId)
+        {
+            return await _repo.RemitAmlAsync(xpin, userId);
+        }
+
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAMLAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        {
+            return await _repo.GetByAgentIdWithStatusAMLAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+        }
+
+
     }
 
 
