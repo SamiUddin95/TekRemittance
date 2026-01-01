@@ -276,6 +276,57 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [HttpPost("AntiMoneyLaundering")]
+        public async Task<IActionResult> AmlHold([FromBody] RemittanceInfoModelDTO dto)
+        {
+            try
+            {
+                if (dto == null)
+                    return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
+
+                var result = await _service.AmlAsync(dto.Xpin, dto.UserId);
+
+                return Ok(ApiResponse<RemittanceInfoModelDTO>.Success(result, 200));
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpGet("GetDataAntiMoneyLaundering/{agentId:guid}")]
+        public async Task<IActionResult> GetDataByAML(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        {
+            try
+            {
+                var data = await _service.GetByAgentIdWithStatusAMLAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = data.Items,
+                    totalCount = data.TotalCount,
+                    pageNumber = data.PageNumber,
+                    pageSize = data.PageSize,
+                    totalPages = data.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+
+
+
 
     }
 }

@@ -24,9 +24,8 @@ namespace TekRemittance.Repository.Implementations
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
 
-            var query = _context.AcquisitionAgents.AsNoTracking();
+            var query = _context.AcquisitionAgents.AsNoTracking().Where(a => a.IsDeleted == false);
 
-            
             if (!string.IsNullOrWhiteSpace(code))
                 query = query.Where(a => a.Code.Contains(code.Trim()));
             if (!string.IsNullOrWhiteSpace(agentname))
@@ -258,11 +257,17 @@ namespace TekRemittance.Repository.Implementations
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            var existing = await _context.AcquisitionAgents.FirstOrDefaultAsync(a => a.Id == id);
+            var existing = await _context.AcquisitionAgents.FirstOrDefaultAsync(a => a.Id == id && !a.IsDeleted);
+
             if (existing == null) return false;
-            _context.AcquisitionAgents.Remove(existing);
+            existing.IsDeleted = true;
+
+            _context.AcquisitionAgents.Update(existing);
             await _context.SaveChangesAsync();
             return true;
         }
+
+      
+
     }
 }

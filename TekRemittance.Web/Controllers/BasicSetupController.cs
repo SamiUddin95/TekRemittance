@@ -46,7 +46,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        [RequirePermission("BasicSetup.Countries.Read")]
+        //[RequirePermission("BasicSetup.Countries.Read")]
         [HttpGet("countrybyId/{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {

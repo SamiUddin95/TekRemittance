@@ -246,7 +246,7 @@ namespace TekRemittance.Repository.Implementations
         {
             // Duplicate Name Validation within the same Country (case-insensitive, trimmed)
             var provinceName = provincedto.ProvinceName?.Trim() ?? string.Empty;
-            if (await _context.Provinces.AnyAsync(p => p.CountryId == provincedto.CountryId && p.ProvinceName.ToLower() == provinceName.ToLower()))
+            if (await _context.Provinces.AnyAsync(p => p.ProvinceName.ToLower() == provinceName.ToLower()))
             {
                 throw new ArgumentException("Province name already exists in the selected country.");
             }
