@@ -91,3 +91,7 @@ Thumbs.db
 /TekRemittance.Repository/Migrations/20251028145618_Branches.cs
 /TekRemittance.Repository/Migrations/20251028145618_Branches.Designer.cs
 /TekRemittance.Web/obj/Debug/net8.0/TekRemittance.Web.csproj.BuildWithSkipAnalyzers
+/TekRemittance.Web/TekRemittance.Web.csproj
+/TekRemittance.Repository/obj/TekRemittance.Repository.csproj.nuget.g.targets
+/TekRemittance.Repository/TekRemittance.Repository.csproj
+/TekRemittance.Service/obj/TekRemittance.Service.csproj.nuget.g.targets
