@@ -298,6 +298,8 @@ namespace TekRemittance.Repository.Implementations
 
             if (!string.IsNullOrWhiteSpace(date))
             {
+                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                   .ToString("dd-MM-yyyy");
                 query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
             }
 
