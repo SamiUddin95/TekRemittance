@@ -51,9 +51,21 @@ namespace TekRemittance.Service.Services
 
             var basePath = reportPath.StartsWith("/", StringComparison.Ordinal) ? reportPath : "/" + reportPath;
             var encodedPath = EncodeReportPath(basePath);
-            var url = $"?{encodedPath}&{string.Join('&', query)}";
+            var pathAndQuery = $"?{encodedPath}&{string.Join('&', query)}";
 
-            using var req = new HttpRequestMessage(HttpMethod.Get, url);
+            Uri requestUri;
+            if (_httpClient.BaseAddress is null)
+            {
+                if (string.IsNullOrWhiteSpace(_options.ServerUrl))
+                    throw new InvalidOperationException("SSRS ServerUrl is not configured. Set Ssrs:ServerUrl in appsettings.");
+                requestUri = new Uri(AppendTrailingSlash(_options.ServerUrl) + pathAndQuery, UriKind.Absolute);
+            }
+            else
+            {
+                requestUri = new Uri(pathAndQuery, UriKind.Relative);
+            }
+
+            using var req = new HttpRequestMessage(HttpMethod.Get, requestUri);
             using var resp = await _httpClient.SendAsync(req, HttpCompletionOption.ResponseContentRead, cancellationToken);
             resp.EnsureSuccessStatusCode();
             var bytes = await resp.Content.ReadAsByteArrayAsync(cancellationToken);
@@ -69,7 +81,7 @@ namespace TekRemittance.Service.Services
                 "EXCEL" or "XLS" or "XLSX" => "EXCEL",
                 "WORD" or "DOC" or "DOCX" => "WORD",
                 "IMAGE" or "PNG" or "JPG" or "JPEG" => "IMAGE",
-                "HTML" or "HTML4.0" or "MHTML" => "HTML4.0",
+                "HTML" or "HTML4.0" or "HTML5" or "MHTML" => "HTML4.0",
                 _ => f
             };
         }
