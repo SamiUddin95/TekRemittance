@@ -35,7 +35,7 @@ namespace TekRemittance.Service.Services
             var fmt = NormalizeFormat(format);
             var (contentType, ext) = GetFormatInfo(fmt);
 
-            var query = new List<string> { $"rs:Format={Uri.EscapeDataString(fmt)}" };
+            var query = new List<string> { $"rs:Command=Render", $"rs:Format={Uri.EscapeDataString(fmt)}" };
             if (parameters != null)
             {
                 foreach (var kv in parameters)
@@ -81,7 +81,8 @@ namespace TekRemittance.Service.Services
                 "EXCEL" or "XLS" or "XLSX" => "EXCEL",
                 "WORD" or "DOC" or "DOCX" => "WORD",
                 "IMAGE" or "PNG" or "JPG" or "JPEG" => "IMAGE",
-                "HTML" or "HTML4.0" or "HTML5" or "MHTML" => "HTML4.0",
+                "MHTML" => "MHTML",
+                "HTML" or "HTML4.0" or "HTML5" => "HTML4.0",
                 _ => f
             };
         }
@@ -95,6 +96,7 @@ namespace TekRemittance.Service.Services
                 "WORD" => ("application/msword", ".doc"),
                 "IMAGE" => ("image/png", ".png"),
                 "HTML4.0" => ("text/html", ".html"),
+                "MHTML" => ("multipart/related", ".mht"),
                 _ => ("application/octet-stream", ".bin")
             };
         }
