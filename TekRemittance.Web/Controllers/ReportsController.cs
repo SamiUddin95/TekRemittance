@@ -1,16 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
 
 namespace TekRemittance.Web.Controllers
 {
+    [EnableCors("AllowFrontend")]
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class ReportsController : ControllerBase
     {
         private readonly ISsrsRenderService _renderService;
