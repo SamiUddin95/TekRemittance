@@ -87,6 +87,7 @@ namespace TekRemittance.Service.Services
                 "WORD" or "DOC" or "DOCX" => "WORD",
                 "IMAGE" or "PNG" or "JPG" or "JPEG" => "IMAGE",
                 "MHTML" => "MHTML",
+                "CSV" => "CSV",
                 "HTML" or "HTML4.0" or "HTML5" => "HTML4.0",
                 _ => f
             };
@@ -101,6 +102,7 @@ namespace TekRemittance.Service.Services
                 "WORD" => ("application/msword", ".doc"),
                 "IMAGE" => ("image/png", ".png"),
                 "HTML4.0" => ("text/html", ".html"),
+                "CSV" => ("text/csv", ".csv"),
                 "MHTML" => ("multipart/related", ".mht"),
                 _ => ("application/octet-stream", ".bin")
             };
