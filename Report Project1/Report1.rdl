@@ -9,7 +9,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>18.1.11312.151</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-01-15T09:11:09.9478250Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-01-16T11:54:37.5434039Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
@@ -24,7 +24,14 @@
     <DataSet Name="DataSet1">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>select RowNumber,Error,Status,AccountNumber,AccountTitle,Xpin from RemittanceInfos</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@AccountNumber">
+            <Value>=Parameters!AccountNumber.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT RowNumber, Error, Status, AccountNumber, AccountTitle, Xpin
+FROM RemittanceInfos
+WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @AccountNumber)</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -586,10 +593,23 @@
       </Page>
     </ReportSection>
   </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="AccountNumber">
+      <DataType>String</DataType>
+      <Prompt>Account Number</Prompt>
+    </ReportParameter>
+  </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>4</NumberOfColumns>
       <NumberOfRows>2</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>AccountNumber</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
   <Language>en-US</Language>

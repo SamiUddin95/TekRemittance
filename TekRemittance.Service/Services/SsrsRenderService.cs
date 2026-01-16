@@ -67,7 +67,12 @@ namespace TekRemittance.Service.Services
 
             using var req = new HttpRequestMessage(HttpMethod.Get, requestUri);
             using var resp = await _httpClient.SendAsync(req, HttpCompletionOption.ResponseContentRead, cancellationToken);
-            resp.EnsureSuccessStatusCode();
+            if (!resp.IsSuccessStatusCode)
+            {
+                var text = await resp.Content.ReadAsStringAsync(cancellationToken);
+                var preview = text?.Length > 1000 ? text.Substring(0, 1000) : text;
+                throw new HttpRequestException($"SSRS error {(int)resp.StatusCode} {resp.ReasonPhrase}: {preview}");
+            }
             var bytes = await resp.Content.ReadAsByteArrayAsync(cancellationToken);
             return (bytes, contentType, ext);
         }
