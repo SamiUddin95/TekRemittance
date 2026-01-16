@@ -12,6 +12,7 @@ namespace TekRemittance.Repository.Interfaces
         Task UpdateUploadAsync(Guid uploadId, int rowCount, bool success, string? errorMessage);
         Task AddRangeAsync(IEnumerable<RemittanceInfo> rows);
         Task<(IEnumerable<AgentFileUploadDTO> Items, int TotalCount)> GetByUploadAsync(int pageNumber = 1, int pageSize = 50, string? templatename = null, string? filename = null);
+        Task<(IEnumerable<RemittanceInfoListItemDTO> Items, int TotalCount)> GetRemittanceInfosAsync(string? accountNumber, int pageNumber = 1, int pageSize = 50);
   
     }
 }
