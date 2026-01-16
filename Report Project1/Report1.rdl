@@ -9,7 +9,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>18.1.11312.151</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-01-16T11:54:37.5434039Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-01-16T14:18:17.8504077Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
@@ -17,7 +17,7 @@
     <DataSource Name="DataSource1">
       <DataSourceReference>DataSource1</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>30dae1be-1dc8-495b-9395-9c74fb47031d</rd:DataSourceID>
+      <rd:DataSourceID>6a50267b-25f1-4b15-8d76-e0b6a36092ec</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -31,7 +31,12 @@
         </QueryParameters>
         <CommandText>SELECT RowNumber, Error, Status, AccountNumber, AccountTitle, Xpin
 FROM RemittanceInfos
-WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @AccountNumber)</CommandText>
+WHERE
+(
+    @AccountNumber IS NULL
+    OR @AccountNumber = ''
+    OR AccountNumber = @AccountNumber
+)</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -73,7 +78,7 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Test Report</Value>
+                    <Value>Report1</Value>
                     <Style>
                       <FontFamily>Segoe UI Light</FontFamily>
                       <FontSize>24pt</FontSize>
@@ -81,9 +86,7 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                     </Style>
                   </TextRun>
                 </TextRuns>
-                <Style>
-                  <TextAlign>Center</TextAlign>
-                </Style>
+                <Style />
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>textbox1</rd:DefaultName>
@@ -149,8 +152,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>textbox2</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -184,8 +190,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>textbox3</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -219,8 +228,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>textbox4</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -254,8 +266,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>textbox5</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -289,8 +304,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>textbox6</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -324,8 +342,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>textbox7</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -362,8 +383,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>RowNumber</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -395,8 +419,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>Error</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -428,8 +455,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>Status</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -461,8 +491,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>AccountNumber</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -494,8 +527,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>AccountTitle</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -527,8 +563,11 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
                           <rd:DefaultName>Xpin</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Style>Solid</Style>
+                              <Color>LightGrey</Color>
                             </Border>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
                             <FontFamily />
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -596,13 +635,15 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
   <ReportParameters>
     <ReportParameter Name="AccountNumber">
       <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
       <Prompt>Account Number</Prompt>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
-      <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
+      <NumberOfColumns>1</NumberOfColumns>
+      <NumberOfRows>1</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -615,5 +656,5 @@ WHERE (@AccountNumber IS NULL OR @AccountNumber = '' OR AccountNumber = @Account
   <Language>en-US</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>820f51fc-0097-4683-b2aa-4ef85d84a413</rd:ReportID>
+  <rd:ReportID>79a0f3a7-1a87-4b75-8c3a-d234fd136476</rd:ReportID>
 </Report>
