@@ -1,17 +1,18 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Web.Models;
 
 namespace TekRemittance.Web.Controllers
 {
+    [EnableCors("AllowFrontend")]
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
     public class RemittanceController : ControllerBase
     {
         private readonly AppDbContext _context;
