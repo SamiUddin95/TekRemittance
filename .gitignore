@@ -95,3 +95,8 @@ Thumbs.db
 /TekRemittance.Repository/obj/TekRemittance.Repository.csproj.nuget.g.targets
 /TekRemittance.Repository/TekRemittance.Repository.csproj
 /TekRemittance.Service/obj/TekRemittance.Service.csproj.nuget.g.targets
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/TekRemittance.Repository/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+/TekRemittance.Service/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs
+/TekRemittance.sln

@@ -11,3 +11,4 @@ namespace TekRemittance.Web.Models.dto
         public int TotalPages => PageSize > 0 ? (TotalCount + PageSize - 1) / PageSize : 0;
     }
 }
+  

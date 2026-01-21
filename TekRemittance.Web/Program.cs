@@ -13,6 +13,9 @@ using TekRemittance.Service.Interfaces;
 using TekRemittance.Service.Implementations;
 using TekRemittance.Service.Services;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using TekRemittance.Service.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
            .EnableDetailedErrors()
            .EnableSensitiveDataLogging());
 builder.Services.AddHttpContextAccessor();
+
+// for SSRS add below line
+builder.Services.AddHttpClient();
+
 
 // Dependency Injection
 builder.Services.AddScoped<IBasicSetupRepository, BasicSetupRepository>();
@@ -52,6 +59,10 @@ builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IPermissionHelperService, PermissionHelperService>();
+builder.Services.AddScoped<IDashboardsService, DashboardsService>();
+builder.Services.AddScoped<IDashboardsRepository, DashboardsRepository>();
+
+
 
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>

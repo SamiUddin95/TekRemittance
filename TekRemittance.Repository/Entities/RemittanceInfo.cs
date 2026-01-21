@@ -1,4 +1,5 @@
 using System;
+using TekRemittance.Repository.Enums;
 
 namespace TekRemittance.Repository.Entities
 {
@@ -16,5 +17,9 @@ namespace TekRemittance.Repository.Entities
         public string? AccountNumber { get; set; }
         public string? AccountTitle { get; set; }
         public string? Xpin { get; set; }
+        public DateTime? Date { get; set; }
+        public ModeOfTransactionEnum? ModeOfTransaction { get; set; }
+        public string? LimitType { get; set; }
+
     }
 }
