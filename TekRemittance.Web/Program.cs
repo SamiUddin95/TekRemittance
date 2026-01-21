@@ -12,6 +12,8 @@ using TekRemittance.Repository.Implementations;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Service.Implementations;
 using TekRemittance.Service.Services;
+using Microsoft.Extensions.Options;
+using System.Net;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using TekRemittance.Service.Services;
@@ -59,10 +61,26 @@ builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IPermissionHelperService, PermissionHelperService>();
-builder.Services.AddScoped<IDashboardsService, DashboardsService>();
-builder.Services.AddScoped<IDashboardsRepository, DashboardsRepository>();
 
-
+builder.Services.Configure<SsrsOptions>(builder.Configuration.GetSection("Ssrs"));
+builder.Services.AddHttpClient<ISsrsRenderService, SsrsRenderService>("Ssrs")
+    .ConfigurePrimaryHttpMessageHandler(sp =>
+    {
+        var opts = sp.GetRequiredService<IOptions<SsrsOptions>>().Value;
+        var handler = new HttpClientHandler();
+        if (opts.UseWindowsAuth)
+        {
+            if (!string.IsNullOrWhiteSpace(opts.Username))
+            {
+                handler.Credentials = new NetworkCredential(opts.Username, opts.Password, opts.Domain);
+            }
+            else
+            {
+                handler.UseDefaultCredentials = true;
+            }
+        }
+        return handler;
+    });
 
 // Swagger & Controllers
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -106,9 +124,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:4200")
+        //policy.AllowAnyOrigin()
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials();
     });
 });
 
