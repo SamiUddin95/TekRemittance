@@ -358,6 +358,16 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.HasIndex(r => r.AgentId);
                 entity.HasIndex(r => r.UploadId);
                 entity.HasIndex(r => r.TemplateId);
+                entity.HasIndex(r => r.AccountNumber);
+                entity.HasIndex(r => r.AccountTitle);
+                entity.HasIndex(r => r.Xpin);
+                entity.HasIndex(r => r.LimitType);
+                entity.HasIndex(r => r.Date);
+                entity.HasIndex(r => r.DataJson);
+
+                entity.Property(a => a.ModeOfTransaction)
+                      .HasConversion<string>()
+                      .HasMaxLength(200);
             });
 
             modelBuilder.Entity<Branches>(entity =>

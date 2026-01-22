@@ -53,6 +53,21 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [HttpGet("dashboard/transactionModeCount")]
+        public async Task<IActionResult> GetTransactionModeCounts([FromQuery] string dateRange)
+        {
+            try
+            {
+                var result = await _service.GetTransactionModeCountsAsync(dateRange);
+                return Ok(ApiResponse<object>.Success(result, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+
 
 
 

@@ -31,6 +31,11 @@ namespace TekRemittance.Service.Implementations
             return await _repo.GetbarChartDataAsync(dateRange);
         }
 
+        public async Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange)
+        {
+            return await _repo.GetTransactionModeCountsAsync(dateRange);
+        }
+
 
 
     }

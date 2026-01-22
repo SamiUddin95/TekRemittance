@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities.Data;
+using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
 
@@ -125,6 +126,47 @@ namespace TekRemittance.Repository.Implementations
                 .FromSqlRaw("EXEC GetBarGraphData @Period", param)
                 .ToListAsync();
         }
+
+        public async Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange)
+        {
+            var query = _context.RemittanceInfos.AsQueryable();
+
+            DateTime today = DateTime.Today;
+            DateTime? startDate = null;
+
+            if (!string.IsNullOrEmpty(dateRange))
+            {
+                switch (dateRange.ToLower())
+                {
+                    case "today": startDate = today; break;
+                    case "weekly": startDate = today.AddDays(-7); break;
+                    case "monthly": startDate = today.AddMonths(-1); break;
+                    case "annual": startDate = today.AddYears(-1); break;
+                    default: throw new ArgumentException("Invalid dateRange value");
+                }
+            }
+
+            if (startDate.HasValue)
+                query = query.Where(x => x.Date.HasValue && x.Date.Value.Date >= startDate.Value.Date);
+
+            var list = await query.ToListAsync();
+
+            int ftCount = list.Count(x => x.ModeOfTransaction.ToString() == "FT");
+            int ibftCount = list.Count(x => x.ModeOfTransaction.ToString() == "IBFT");
+            int rtgsCount = list.Count(x => x.ModeOfTransaction.ToString() == "RTGS");
+
+            return new TransactionModeCountDTO
+            {
+                FTCount = ftCount,
+                IBFTCount = ibftCount,
+                RTGSCount = rtgsCount,
+                //TotalCount = ftCount + ibftCount + rtgsCount
+            };
+
+
+        }
+
+
 
     }
 }

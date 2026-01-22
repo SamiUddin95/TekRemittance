@@ -13,6 +13,8 @@ namespace TekRemittance.Repository.Interfaces
         Task<object> GetDashboardDataAsync(string dateRange);
 
         Task<List<barGraphDto>> GetbarChartDataAsync(string dateRange);
+        Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange);
+
 
     }
 }

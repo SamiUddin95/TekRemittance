@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace TekRemittance.Repository.Enums
 {
+    [Flags]
     public enum ModeOfTransactionEnum
     {
-        FT,
-        IBFT,
-        RTGS
+        
+        FT = 1 << 0,   
+        IBFT = 1 << 1,   
+        RTGS = 1 << 2    
     }
 }
