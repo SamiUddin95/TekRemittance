@@ -18,31 +18,14 @@ namespace TekRemittance.Service.Implementations
         {
             _repo = repo;
         }
-        public async Task<DashBoardsDTO> GetDisbursementDashboardAsync(string dateRange)
+        
+
+        public async Task<object> GetDashboardDataAsync(string dateRange)
         {
-            return await _repo.GetDisbursementDashboardAsync(dateRange);
-        }
-        public async Task<DashBoardsDTO> GetDisbursementDashboardSuccessAsync(string dateRange)
-        {
-            return await _repo.GetDisbursementSuccessAsync(dateRange);
+            return await _repo.GetDashboardDataAsync(dateRange);
         }
 
 
-
-        public async Task<DisbursementCountDTO> GetDisbursementCountAsync(string dateRange)
-        {
-            return await _repo.GetDisbursementCountAsync(dateRange);
-        }
-
-        public async Task<DisbursementCountDTO> GetDisbursementSuccessCountAsync(string dateRange)
-        {
-            return await _repo.GetDisbursementSuccessCountAsync(dateRange);
-        }
-
-        public async Task<DisbursementSuccessPercentageDTO> GetDisbursementSuccessPercentageAsync(string? dateRange)
-        {
-            return await _repo.GetDisbursementSuccessPercentageAsync(dateRange);
-        }
 
 
 

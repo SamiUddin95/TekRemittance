@@ -20,104 +20,7 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        public async Task<DashBoardsDTO> GetDisbursementDashboardAsync(string dateRange)
-        {
-            var query = _context.RemittanceInfos.AsQueryable();
-
-            // Date filter
-            DateTime endDate = DateTime.Today;
-            DateTime startDate = DateTime.MinValue;
-
-            if (!string.IsNullOrEmpty(dateRange))
-            {
-                switch (dateRange.ToLower())
-                {
-                    case "today":
-                        startDate = DateTime.Today;
-                        break;
-                    case "weekly":
-                        startDate = DateTime.Today.AddDays(-7);
-                        break;
-                    case "monthly":
-                        startDate = DateTime.Today.AddMonths(-1);
-                        break;
-                    case "annual":
-                        startDate = DateTime.Today.AddYears(-1);
-                        break;
-                }
-            }
-
-            if (startDate != DateTime.MinValue)
-            {
-                query = query.Where(x => x.Date.HasValue
-                                         && x.Date.Value.Date >= startDate
-                                         && x.Date.Value.Date <= endDate);
-            }
-
-            
-            decimal amlAmount = query
-                .Where(x => x.Status == "AML")
-                .AsEnumerable()
-                .Sum(x => ExtractAmount(x.DataJson));
-
-            decimal rejectAmount = query
-                .Where(x => x.Status == "RE")
-                .AsEnumerable()
-                .Sum(x => ExtractAmount(x.DataJson));
-
-            decimal repairAmount = query
-                .Where(x => x.Status == "R")
-                .AsEnumerable()
-                .Sum(x => ExtractAmount(x.DataJson));
-
-            return new DashBoardsDTO
-            {
-                TotalAmount = amlAmount + rejectAmount + repairAmount
-            };
-        }
-        public async Task<DashBoardsDTO> GetDisbursementSuccessAsync(string dateRange)
-        {
-            var query = _context.RemittanceInfos.AsQueryable();
-
-            DateTime endDate = DateTime.Today;
-            DateTime startDate = DateTime.MinValue;
-
-            if (!string.IsNullOrEmpty(dateRange))
-            {
-                switch (dateRange.ToLower())
-                {
-                    case "today":
-                        startDate = DateTime.Today;
-                        break;
-                    case "weekly":
-                        startDate = DateTime.Today.AddDays(-7);
-                        break;
-                    case "monthly":
-                        startDate = DateTime.Today.AddMonths(-1);
-                        break;
-                    case "annual":
-                        startDate = DateTime.Today.AddYears(-1);
-                        break;
-                }
-            }
-
-            if (startDate != DateTime.MinValue)
-            {
-                query = query.Where(x => x.Date.HasValue
-                                         && x.Date.Value.Date >= startDate
-                                         && x.Date.Value.Date <= endDate);
-            }
-
-            decimal totalAmount = query
-                .Where(x => x.Status == "A")
-                .AsEnumerable()
-                .Sum(x => ExtractAmount(x.DataJson));
-
-            return new DashBoardsDTO
-            {
-                TotalAmount = totalAmount
-            };
-        }
+        
 
         private decimal ExtractAmount(string dataJson)
         {
@@ -149,140 +52,69 @@ namespace TekRemittance.Repository.Implementations
             return 0;
         }
 
-        public async Task<DisbursementCountDTO> GetDisbursementCountAsync(string dateRange)
+        public async Task<object> GetDashboardDataAsync(string dateRange)
         {
             var query = _context.RemittanceInfos.AsQueryable();
 
-            DateTime today = DateTime.Today;
-            DateTime startDate = DateTime.MinValue;
+            var allowedDateRanges = new[] { "today", "weekly", "monthly", "annual" };
 
-            if (!string.IsNullOrEmpty(dateRange))
+            if (!string.IsNullOrEmpty(dateRange) &&
+                !allowedDateRanges.Contains(dateRange.ToLower()))
             {
-                if (dateRange.ToLower() == "today")
-                {
-                    startDate = today;
-                }
-                else if (dateRange.ToLower() == "weekly")
-                {
-                    startDate = today.AddDays(-7);
-                }
-                else if (dateRange.ToLower() == "monthly")
-                {
-                    startDate = today.AddMonths(-1);
-                }
-                else if (dateRange.ToLower() == "annual")
-                {
-                    startDate = today.AddYears(-1);
-                }
+                throw new ArgumentException("Invalid dateRange value");
             }
-
-            if (startDate != DateTime.MinValue)
-            {
-                query = query.Where(x => x.Date != null && x.Date >= startDate);
-            }
-
-            int amlCount = query.Count(x => x.Status == "AML");
-            int rejectCount = query.Count(x => x.Status == "RE");
-            int repairCount = query.Count(x => x.Status == "R");
-
-            return new DisbursementCountDTO
-            {
-                TotalCount = amlCount + rejectCount + repairCount
-            };
-        }
-
-        public async Task<DisbursementCountDTO> GetDisbursementSuccessCountAsync(string dateRange)
-        {
-            var query = _context.RemittanceInfos.AsQueryable();
-
-            DateTime today = DateTime.Today;
-            DateTime startDate = DateTime.MinValue;
-
-            if (!string.IsNullOrEmpty(dateRange))
-            {
-                if (dateRange.ToLower() == "today")
-                {
-                    startDate = today;
-                }
-                else if (dateRange.ToLower() == "weekly")
-                {
-                    startDate = today.AddDays(-7);
-                }
-                else if (dateRange.ToLower() == "monthly")
-                {
-                    startDate = today.AddMonths(-1);
-                }
-                else if (dateRange.ToLower() == "annual")
-                {
-                    startDate = today.AddYears(-1);
-                }
-            }
-
-            if (startDate != DateTime.MinValue)
-            {
-                query = query.Where(x => !x.Date.HasValue || x.Date.Value.Date >= startDate.Date);
-            }
-
-            int amlCount = query.Count(x => x.Status == "A");
-           
-
-            return new DisbursementCountDTO
-            {
-                TotalCount = amlCount 
-            };
-        }
-
-
-        public async Task<DisbursementSuccessPercentageDTO> GetDisbursementSuccessPercentageAsync(string? dateRange)
-        {
-            var query = _context.RemittanceInfos.AsQueryable();
 
             DateTime today = DateTime.Today;
             DateTime? startDate = null;
 
             if (!string.IsNullOrEmpty(dateRange))
             {
-                switch (dateRange.ToLower())
-                {
-                    case "today":
-                        startDate = today;
-                        break;
-                    case "weekly":
-                        startDate = today.AddDays(-7);
-                        break;
-                    case "monthly":
-                        startDate = today.AddMonths(-1);
-                        break;
-                    case "annual":
-                        startDate = today.AddYears(-1);
-                        break;
-                }
+                if (dateRange.ToLower() == "today")
+                    startDate = today;
+                else if (dateRange.ToLower() == "weekly")
+                    startDate = today.AddDays(-7);
+                else if (dateRange.ToLower() == "monthly")
+                    startDate = today.AddMonths(-1);
+                else if (dateRange.ToLower() == "annual")
+                    startDate = today.AddYears(-1);
             }
 
-            
             if (startDate.HasValue)
             {
-                query = query.Where(x => x.Date.HasValue && x.Date.Value.Date >= startDate.Value.Date);
+                query = query.Where(x => x.Date.HasValue &&
+                                         x.Date.Value.Date >= startDate.Value.Date);
             }
 
-            int totalCount = await query.CountAsync();           
-            int successCount = await query.CountAsync(x => x.Status == "A"); 
+            decimal failedAmount =
+                query.Where(x => x.Status == "AML" || x.Status == "R" || x.Status == "RE")
+                     .AsEnumerable()
+                     .Sum(x => ExtractAmount(x.DataJson));
 
-            decimal percentage = totalCount == 0 ? 0 : (decimal)successCount / totalCount * 100;
+            int failedCount = await query.CountAsync(x =>
+                x.Status == "AML" || x.Status == "R" || x.Status == "RE");
 
-            return new DisbursementSuccessPercentageDTO
+            
+            decimal successAmount =
+                query.Where(x => x.Status == "A")
+                     .AsEnumerable()
+                     .Sum(x => ExtractAmount(x.DataJson));
+
+            int successCount = await query.CountAsync(x => x.Status == "A");
+
+            int totalCount = failedCount + successCount;
+
+            decimal successPercentage =
+                totalCount == 0 ? 0 : Math.Round((decimal)successCount / totalCount * 100, 2);
+
+            return new
             {
-                TotalCount = totalCount,
-                SuccessCount = successCount,
-                SuccessPercentage = Math.Round(percentage, 2) 
+                failedAmount,
+                failedCount,
+                successAmount,
+                successCount,
+                successPercentage
             };
         }
-
-
-
-
-
-
 
     }
 }

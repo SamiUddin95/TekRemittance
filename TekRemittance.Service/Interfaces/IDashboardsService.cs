@@ -9,11 +9,10 @@ namespace TekRemittance.Service.Interfaces
 {
     public interface IDashboardsService
     {
-        Task<DashBoardsDTO> GetDisbursementDashboardAsync(string dateRange);
-        Task<DisbursementCountDTO> GetDisbursementCountAsync(string dateRange);
-        Task<DashBoardsDTO> GetDisbursementDashboardSuccessAsync(string dateRange);
-        Task<DisbursementCountDTO> GetDisbursementSuccessCountAsync(string dateRange);
-        Task<DisbursementSuccessPercentageDTO> GetDisbursementSuccessPercentageAsync(string? dateRange);
+       
+
+        Task<object> GetDashboardDataAsync(string dateRange);
+
 
 
 
