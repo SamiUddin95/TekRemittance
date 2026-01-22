@@ -1,13 +1,14 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using TekRemittance.Repository.Entities;
-using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
+using TekRemittance.Repository.Entities;
+using TekRemittance.Repository.Models.dto;
 
 namespace TekRemittance.Repository.Entities.Data
 {
@@ -40,6 +41,8 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
+        public DbSet<barGraphDto> barGraphDtos { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -543,6 +546,9 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.HasIndex(gp => new { gp.GroupId, gp.PermissionId })
                       .IsUnique();
             });
+            modelBuilder.Entity<barGraphDto>().HasNoKey();
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public override int SaveChanges()

@@ -13,4 +13,12 @@ namespace TekRemittance.Repository.Models.dto
         public decimal RepairAmount { get; set; }
         public decimal TotalAmount { get; set; }
     }
+
+    public class barGraphDto
+    {
+        public string Period { get; set; } = null!;
+        public int Complete_Count { get; set; }
+        public int Process_Count { get; set; }
+        public int Cancelled_Count { get; set; }
+    }
 }

@@ -26,6 +26,10 @@ namespace TekRemittance.Service.Implementations
         }
 
 
+        public async Task<object> GetbarChartDataAsync(string dateRange)
+        {
+            return await _repo.GetbarChartDataAsync(dateRange);
+        }
 
 
 
