@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -114,6 +115,15 @@ namespace TekRemittance.Repository.Implementations
                 successCount,
                 successPercentage
             };
+        }
+
+        public async Task<List<barGraphDto>> GetbarChartDataAsync(string dateRange)
+        {
+            var param = new SqlParameter("@Period", dateRange);
+
+            return await _context.barGraphDtos
+                .FromSqlRaw("EXEC GetBarGraphData @Period", param)
+                .ToListAsync();
         }
 
     }
