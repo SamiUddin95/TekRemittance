@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Interfaces;
@@ -6,8 +7,9 @@ using TekRemittance.Web.Models;
 
 namespace TekRemittance.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [EnableCors("AllowFrontend")]
     [ApiController]
+    [Route("api/[controller]")]
     public class DashboardsController : ControllerBase
     {
         private readonly IDashboardsService _service;
@@ -34,11 +36,5 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
-
-
-
-
-
-
     }
 }
