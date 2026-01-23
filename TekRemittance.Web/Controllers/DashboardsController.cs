@@ -69,6 +69,19 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [HttpGet("dashboard/RecentTransactions")]
+        public async Task<IActionResult> GetLast10Remittances()
+        {
+            try
+            {
+                var result = await _service.GetLast10RemittancesAsync();
+                return Ok(ApiResponse<List<RecentTransactionDTO>>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
 
 
 

@@ -36,6 +36,11 @@ namespace TekRemittance.Service.Implementations
             return await _repo.GetTransactionModeCountsAsync(dateRange);
         }
 
+        public async Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync()
+        {
+            return await _repo.GetLast10RemittancesAsync();
+        }
+
 
 
     }

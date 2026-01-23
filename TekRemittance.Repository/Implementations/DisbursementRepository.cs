@@ -141,7 +141,10 @@ namespace TekRemittance.Repository.Implementations
                     DataJson = x.r.DataJson,
                     Error = x.r.Error,
                     Status = x.r.Status,
-                    CreatedOn = x.r.CreatedOn
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn
+
+
                 })
                 .ToListAsync();
 
@@ -200,7 +203,8 @@ namespace TekRemittance.Repository.Implementations
                     DataJson = x.r.DataJson,
                     Error = x.r.Error,
                     Status = x.r.Status,
-                    CreatedOn = x.r.CreatedOn
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn
                 })
                 .ToListAsync();
 
@@ -261,7 +265,8 @@ namespace TekRemittance.Repository.Implementations
                     DataJson = x.r.DataJson,
                     Error = x.r.Error,
                     Status = x.r.Status,
-                    CreatedOn = x.r.CreatedOn
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn
                 })
                 .ToListAsync();
 
@@ -322,7 +327,8 @@ namespace TekRemittance.Repository.Implementations
                     DataJson = x.r.DataJson,
                     Error = x.r.Error,
                     Status = x.r.Status,
-                    CreatedOn = x.r.CreatedOn
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn
                 })
                 .ToListAsync();
 
@@ -382,7 +388,8 @@ namespace TekRemittance.Repository.Implementations
                     DataJson = x.r.DataJson,
                     Error = x.r.Error,
                     Status = x.r.Status,
-                    CreatedOn = x.r.CreatedOn
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn
                 })
                 .ToListAsync();
 
@@ -442,11 +449,13 @@ namespace TekRemittance.Repository.Implementations
             if (!status)
             {
                 remitInfo.Status = "U";
+                remitInfo.UpdatedOn = DateTime.Now;
                 await _context.SaveChangesAsync();
                 return (false, "Remittance unauthorized due to insufficient user limit.", xpin);
             }
 
             remitInfo.Status = "A";
+            remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
             return (true, "Remittance approved successfully.", xpin);
             
@@ -462,6 +471,7 @@ namespace TekRemittance.Repository.Implementations
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
             remitInfo.Status = "RE";
+            remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return new RemittanceInfoModelDTO
@@ -481,6 +491,7 @@ namespace TekRemittance.Repository.Implementations
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
             remitInfo.Status = "A";
+            remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return new RemittanceInfoModelDTO
@@ -501,6 +512,7 @@ namespace TekRemittance.Repository.Implementations
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
             remitInfo.Status = "R";
+            remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return new RemittanceInfoModelDTO
@@ -521,6 +533,7 @@ namespace TekRemittance.Repository.Implementations
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
             remitInfo.Status = "P";
+            remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
 
             return new RemittanceInfoModelDTO
@@ -542,7 +555,8 @@ namespace TekRemittance.Repository.Implementations
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
 
            
-            remitInfo.Status = "AML";  
+            remitInfo.Status = "AML";
+            remitInfo.UpdatedOn = DateTime.Now;
 
             await _context.SaveChangesAsync();
 
@@ -563,6 +577,12 @@ namespace TekRemittance.Repository.Implementations
                             on r.AgentId equals a.Id
                         where r.AgentId == agentId && r.Status == "AML"  
                         select new { r, a.AgentName };
+
+            foreach (var rec in query)
+            {
+                rec.r.UpdatedOn = DateTime.Now;
+            }
+
 
             if (!string.IsNullOrWhiteSpace(accountnumber))
             {
@@ -599,7 +619,8 @@ namespace TekRemittance.Repository.Implementations
                     DataJson = x.r.DataJson,
                     Error = x.r.Error,
                     Status = x.r.Status,
-                    CreatedOn = x.r.CreatedOn
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn
                 })
                 .ToListAsync();
 

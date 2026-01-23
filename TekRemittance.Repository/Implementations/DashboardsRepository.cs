@@ -160,12 +160,51 @@ namespace TekRemittance.Repository.Implementations
                 FTCount = ftCount,
                 IBFTCount = ibftCount,
                 RTGSCount = rtgsCount,
-                //TotalCount = ftCount + ibftCount + rtgsCount
+                
             };
 
 
         }
 
+        public async Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync()
+        {
+            var list = await (
+                from r in _context.RemittanceInfos
+                join a in _context.AcquisitionAgents
+                    on r.AgentId equals a.Id
+                orderby r.UpdatedOn descending
+                select new
+                {
+                    r,
+                    a.AgentName
+                }
+            )
+            .Take(10)
+            .ToListAsync();
+
+            var result = list.Select(x => new RecentTransactionDTO
+            {
+                AgentName = x.AgentName,
+                XPIN = x.r.Xpin,
+                Date = x.r.Date,
+                AccountNumber = x.r.AccountNumber,
+                AccountTitle = x.r.AccountTitle,
+                Amount = ExtractAmount(x.r.DataJson),
+                Status = x.r.Status switch
+                {
+                    "A" => "Completed",
+                    "R" => "Cancelled",
+                    "P" => "Processing",
+                    "AML" => "Cancelled",
+                    "U" => "Processing",
+                    "RE" => "Cancelled",
+                },
+                ModeOfTransaction = x.r.ModeOfTransaction
+            })
+                .ToList();
+
+            return result;
+        }
 
 
     }

@@ -15,6 +15,7 @@ namespace TekRemittance.Service.Interfaces
 
         Task<object> GetbarChartDataAsync(string dateRange);
         Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange);
+        Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync();
 
 
 
