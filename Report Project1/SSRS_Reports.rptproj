@@ -52,6 +52,7 @@
     <DataSource Include="DataSource1.rds" />
   </ItemGroup>
   <ItemGroup>
+    <Report Include="Lab Order.rdl" />
     <Report Include="Report1.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
