@@ -11,6 +11,6 @@ namespace TekRemittance.Repository.Models.dto
         public int FTCount { get; set; }
         public int IBFTCount { get; set; }
         public int RTGSCount { get; set; }
-        //public int TotalCount { get; set; }
+        public int TotalCount { get; set; }
     }
 }

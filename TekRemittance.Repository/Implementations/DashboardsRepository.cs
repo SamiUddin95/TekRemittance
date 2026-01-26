@@ -110,13 +110,18 @@ namespace TekRemittance.Repository.Implementations
             decimal successPercentage =
                 totalCount == 0 ? 0 : Math.Round((decimal)successCount / totalCount * 100, 2);
 
+            decimal totalAmount = query.AsEnumerable().Sum(x => ExtractAmount(x.DataJson));
+ 
             return new
             {
                 failedAmount,
                 failedCount,
                 successAmount,
                 successCount,
-                successPercentage
+                successPercentage,
+                totalCount,
+                totalAmount
+                
             };
         }
 
@@ -156,13 +161,15 @@ namespace TekRemittance.Repository.Implementations
             int ftCount = list.Count(x => x.ModeOfTransaction.ToString() == "FT");
             int ibftCount = list.Count(x => x.ModeOfTransaction.ToString() == "IBFT");
             int rtgsCount = list.Count(x => x.ModeOfTransaction.ToString() == "RTGS");
+            int totalCount = ftCount + ibftCount + rtgsCount;
 
             return new TransactionModeCountDTO
             {
                 FTCount = ftCount,
                 IBFTCount = ibftCount,
                 RTGSCount = rtgsCount,
-                
+                TotalCount= totalCount
+
             };
         }
 
