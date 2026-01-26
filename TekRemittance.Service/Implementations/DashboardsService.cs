@@ -42,7 +42,7 @@ namespace TekRemittance.Service.Implementations
             return await _repo.GetLast10RemittancesAsync();
         }
       
-        public async Task<List<RemittanceInfo>> GetTransactionModeListAsync(string dateRange, string mode)
+        public async Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode)
         {
             return await _repo.GetTransactionModeListAsync(dateRange, mode);
         }

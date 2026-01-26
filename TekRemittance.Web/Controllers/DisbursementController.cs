@@ -163,7 +163,7 @@ namespace TekRemittance.Web.Controllers
                 if (dto == null)
                     return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
 
-                var result = await _service.RemitApproveAsync(dto.Xpin, dto.UserId);
+                var result = await _service.RemitApproveAsync(dto.Xpin, dto.UserId, dto.ModeOfTransaction);
                 return Ok(new { isSuccess = result.isSuccess, message= result.message, Xpin=result.Xpin });
             }
 

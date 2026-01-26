@@ -11,5 +11,7 @@ namespace TekRemittance.Repository.Models.dto
         public Guid? UserId { get; set; }
         public string Xpin { get; set; }
 
+        public string ModeOfTransaction { get; set; }
+
     }
 }

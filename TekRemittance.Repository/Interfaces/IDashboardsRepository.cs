@@ -17,6 +17,6 @@ namespace TekRemittance.Repository.Interfaces
         Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange);
         Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync();
        
-        Task<List<RemittanceInfo>> GetTransactionModeListAsync(string dateRange, string mode);
+        Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode);
     }
 }

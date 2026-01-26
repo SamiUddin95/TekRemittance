@@ -91,7 +91,7 @@ namespace TekRemittance.Web.Controllers
             try
             {
                 var result = await _service.GetTransactionModeListAsync(dateRange, mode);
-                return Ok(ApiResponse<List<RemittanceInfo>>.Success(result, 200));
+                return Ok(ApiResponse<List<RecentTransactionDTO>>.Success(result, 200));
             }
             catch (ArgumentException ex)
             {

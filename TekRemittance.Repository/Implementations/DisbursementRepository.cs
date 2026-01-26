@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TekRemittance.Repository.DTOs;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
+using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
@@ -345,6 +346,7 @@ namespace TekRemittance.Repository.Implementations
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
+
             var query = from r in _context.RemittanceInfos
                         join a in _context.AcquisitionAgents
                             on r.AgentId equals a.Id
@@ -402,7 +404,7 @@ namespace TekRemittance.Repository.Implementations
             };
         }
 
-        public async Task<(bool isSuccess, string message, string Xpin)> RemitApproveAsync(string xpin, Guid? userId)
+        public async Task<(bool isSuccess, string message, string Xpin)> RemitApproveAsync(string xpin, Guid? userId, string modeOfTransaction)
         {
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
@@ -449,12 +451,36 @@ namespace TekRemittance.Repository.Implementations
             if (!status)
             {
                 remitInfo.Status = "U";
+                if (!string.IsNullOrWhiteSpace(modeOfTransaction))
+                {
+                    if (Enum.TryParse<ModeOfTransactionEnum>(modeOfTransaction, true, out var modeEnum))
+                    {
+                        remitInfo.ModeOfTransaction = modeEnum; 
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Invalid ModeOfTransaction value");
+                    }
+                }
+
                 remitInfo.UpdatedOn = DateTime.Now;
                 await _context.SaveChangesAsync();
                 return (false, "Remittance unauthorized due to insufficient user limit.", xpin);
             }
 
             remitInfo.Status = "A";
+            if (!string.IsNullOrWhiteSpace(modeOfTransaction))
+            {
+                if (Enum.TryParse<ModeOfTransactionEnum>(modeOfTransaction, true, out var modeEnum))
+                {
+                    remitInfo.ModeOfTransaction = modeEnum; 
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid ModeOfTransaction value");
+                }
+            }
+
             remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
             return (true, "Remittance approved successfully.", xpin);

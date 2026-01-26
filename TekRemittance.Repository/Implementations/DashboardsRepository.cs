@@ -206,7 +206,9 @@ namespace TekRemittance.Repository.Implementations
             return result;
         }
 
-        public async Task<List<RemittanceInfo>> GetTransactionModeListAsync(string dateRange, string mode)
+        public async Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(
+         string dateRange,
+         string mode)
         {
             var query = _context.RemittanceInfos.AsQueryable();
 
@@ -232,7 +234,20 @@ namespace TekRemittance.Repository.Implementations
                     x.Date.Value.Date >= startDate.Value.Date);
             }
 
-            var list = await query.ToListAsync();
+            var list = await query
+                .OrderByDescending(x => x.Date)
+                .Select(x => new
+                {
+                    x.AgentId,
+                    x.Xpin,
+                    x.Date,
+                    x.AccountNumber,
+                    x.AccountTitle,
+                    x.DataJson,
+                    x.Status,
+                    x.ModeOfTransaction
+                })
+                .ToListAsync();
 
             if (!string.IsNullOrWhiteSpace(mode))
             {
@@ -246,15 +261,24 @@ namespace TekRemittance.Repository.Implementations
                     .ToList();
             }
 
-            return list;
+            var agentIds = list.Select(x => x.AgentId).Distinct().ToList();
+
+            var agents = await _context.AcquisitionAgents
+                .Where(a => agentIds.Contains(a.Id))
+                .ToDictionaryAsync(a => a.Id, a => a.AgentName);
+
+            return list.Select(x => new RecentTransactionDTO
+            {
+                AgentName = agents.ContainsKey(x.AgentId) ? agents[x.AgentId] : null,
+                XPIN = x.Xpin,
+                Date = x.Date,
+                AccountNumber = x.AccountNumber,
+                AccountTitle = x.AccountTitle,
+                Amount = ExtractAmount(x.DataJson),
+                Status = x.Status,
+                ModeOfTransaction = x.ModeOfTransaction
+            }).ToList();
         }
-
-
-
-
-
-
-
 
 
 
