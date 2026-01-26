@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Interfaces;
@@ -36,6 +37,15 @@ namespace TekRemittance.Service.Implementations
             return await _repo.GetTransactionModeCountsAsync(dateRange);
         }
 
+        public async Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync()
+        {
+            return await _repo.GetLast10RemittancesAsync();
+        }
+      
+        public async Task<List<RemittanceInfo>> GetTransactionModeListAsync(string dateRange, string mode)
+        {
+            return await _repo.GetTransactionModeListAsync(dateRange, mode);
+        }
 
 
     }

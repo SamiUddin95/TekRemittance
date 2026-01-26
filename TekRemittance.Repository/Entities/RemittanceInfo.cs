@@ -13,6 +13,7 @@ namespace TekRemittance.Repository.Entities
         public string DataJson { get; set; }
         public string? Error { get; set; }
         public DateTime CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
         public string Status { get; set; }
         public string? AccountNumber { get; set; }
         public string? AccountTitle { get; set; }
@@ -20,6 +21,6 @@ namespace TekRemittance.Repository.Entities
         public DateTime? Date { get; set; }
         public ModeOfTransactionEnum? ModeOfTransaction { get; set; }
         public string? LimitType { get; set; }
-
+        
     }
 }

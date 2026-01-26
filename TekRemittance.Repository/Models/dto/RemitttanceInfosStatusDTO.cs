@@ -17,6 +17,8 @@ namespace TekRemittance.Repository.Models.dto
         public string DataJson { get; set; }
         public string? Error { get; set; }
         public DateTime CreatedOn { get; set; }
+
+        public DateTime? UpdatedOn { get; set; }
         public string Status { get; set; }
     }
 }
