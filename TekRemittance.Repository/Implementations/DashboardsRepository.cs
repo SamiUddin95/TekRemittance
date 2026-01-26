@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
@@ -162,8 +164,6 @@ namespace TekRemittance.Repository.Implementations
                 RTGSCount = rtgsCount,
                 
             };
-
-
         }
 
         public async Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync()
@@ -205,6 +205,57 @@ namespace TekRemittance.Repository.Implementations
 
             return result;
         }
+
+        public async Task<List<RemittanceInfo>> GetTransactionModeListAsync(string dateRange, string mode)
+        {
+            var query = _context.RemittanceInfos.AsQueryable();
+
+            DateTime today = DateTime.Today;
+            DateTime? startDate = null;
+
+            if (!string.IsNullOrWhiteSpace(dateRange))
+            {
+                startDate = dateRange.ToLower() switch
+                {
+                    "today" => today,
+                    "weekly" => today.AddDays(-7),
+                    "monthly" => today.AddMonths(-1),
+                    "annual" => today.AddYears(-1),
+                    _ => throw new ArgumentException("Invalid dateRange value")
+                };
+            }
+
+            if (startDate.HasValue)
+            {
+                query = query.Where(x =>
+                    x.Date.HasValue &&
+                    x.Date.Value.Date >= startDate.Value.Date);
+            }
+
+            var list = await query.ToListAsync();
+
+            if (!string.IsNullOrWhiteSpace(mode))
+            {
+                var modeUpper = mode.ToUpper();
+
+                if (!new[] { "FT", "IBFT", "RTGS" }.Contains(modeUpper))
+                    throw new ArgumentException("Invalid mode value");
+
+                list = list
+                    .Where(x => x.ModeOfTransaction.ToString() == modeUpper)
+                    .ToList();
+            }
+
+            return list;
+        }
+
+
+
+
+
+
+
+
 
 
     }

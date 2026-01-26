@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
@@ -84,8 +85,19 @@ namespace TekRemittance.Web.Controllers
         }
 
 
-
-
+        [HttpGet("dashboard/transactionModeList")]
+        public async Task<IActionResult> GetTransactionModeList([FromQuery] string dateRange, [FromQuery] string mode)
+        {
+            try
+            {
+                var result = await _service.GetTransactionModeListAsync(dateRange, mode);
+                return Ok(ApiResponse<List<RemittanceInfo>>.Success(result, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message));
+            }
+        }
 
     }
 }
