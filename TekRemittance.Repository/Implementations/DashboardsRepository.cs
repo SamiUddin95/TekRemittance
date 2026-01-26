@@ -275,12 +275,20 @@ namespace TekRemittance.Repository.Implementations
                 AccountNumber = x.AccountNumber,
                 AccountTitle = x.AccountTitle,
                 Amount = ExtractAmount(x.DataJson),
-                Status = x.Status,
+                Status = x.Status switch
+                {
+                    "A" => "Completed",
+                    "R" => "Cancelled",
+                    "P" => "Processing",
+                    "AML" => "Cancelled",
+                    "U" => "Processing",
+                    "RE" => "Cancelled",
+                    _ => x.Status
+                },
+
                 ModeOfTransaction = x.ModeOfTransaction
             }).ToList();
         }
-
-
 
     }
 }
