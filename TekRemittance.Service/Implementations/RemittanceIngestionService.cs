@@ -86,76 +86,98 @@ namespace TekRemittance.Service.Implementations
                         first = false;
                         rowNo++;
                         var values = SplitPipe(line);
-                        var (json, error) = MapToJson(values, fields);
-                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error));
-                    }
-                }
-                else if (ext == ".csv")
-                {
-                    using var stream = file.OpenReadStream();
-                    using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
-                    string? line; bool first = true;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (first && hasHeader) { first = false; continue; }
-                        first = false;
-                        rowNo++;
-                        var values = ParseCsvLine(line);
-                        var (json, error) = MapToJson(values, fields);
-                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error));
-                    }
-                }
-                else if (ext == ".xlsx")
-                {
-                    using var stream = file.OpenReadStream();
-                    using var wb = new XLWorkbook(stream);
-                    var ws = !string.IsNullOrEmpty(template.SheetName) ? wb.Worksheet(template.SheetName) : wb.Worksheets.FirstOrDefault();
-                    if (ws == null) throw new InvalidOperationException("Worksheet not found");
-                    var table = ws.RangeUsed();
-                    if (table == null) throw new InvalidOperationException("Worksheet is empty");
-                    int startRow = table.RangeAddress.FirstAddress.RowNumber;
-                    int endRow = table.RangeAddress.LastAddress.RowNumber;
-                    int colCount = fields.Count;
-                    bool skippedHeader = false;
-                    for (int r = startRow; r <= endRow; r++)
-                    {
-                        if (hasHeader && !skippedHeader) { skippedHeader = true; continue; }
-                        rowNo++;
-                        var values = new List<string>(colCount);
-                        for (int i = 0; i < colCount; i++)
+                        var accountNumberIndex = fields.FindIndex(f =>
                         {
-                            var cell = ws.Cell(r, i + 1);
-                            values.Add(cell?.GetString() ?? string.Empty);
+                            if (string.IsNullOrWhiteSpace(f.FieldName))
+                                return false;
+
+                            var normalized = f.FieldName
+                                .ToLower()
+                                .Replace("_", "")
+                                .Replace(" ", "");
+
+                            return normalized.Contains("account")
+                                   && (normalized.Contains("no") || normalized.Contains("number"));
+                        });
+
+                        string? accountNumber = null;
+                        if (accountNumberIndex >= 0 && accountNumberIndex < values.Count)
+                        {
+                            accountNumber = values[accountNumberIndex];
                         }
                         var (json, error) = MapToJson(values, fields);
-                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error));
+                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error, accountNumber));
                     }
                 }
-                else if (ext == ".xls")
-                {
-                    System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-                    using var stream = file.OpenReadStream();
-                    using var excel = ExcelReaderFactory.CreateBinaryReader(stream);
-                    var ds = excel.AsDataSet(new ExcelDataSetConfiguration
-                    {
-                        UseColumnDataType = false,
-                        ConfigureDataTable = _ => new ExcelDataTableConfiguration { UseHeaderRow = hasHeader }
-                    });
-                    var sheet = !string.IsNullOrEmpty(template.SheetName) ? ds.Tables[template.SheetName] : ds.Tables[0];
-                    if (sheet == null) throw new InvalidOperationException("Worksheet not found");
-                    foreach (DataRow row in sheet.Rows)
-                    {
-                        rowNo++;
-                        var values = new List<string>(fields.Count);
-                        for (int i = 0; i < fields.Count; i++)
-                        {
-                            var val = row.ItemArray.Length > i ? row[i]?.ToString() ?? string.Empty : string.Empty;
-                            values.Add(val);
-                        }
-                        var (json, error) = MapToJson(values, fields);
-                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error));
-                    }
-                }
+                //else if (ext == ".csv")
+                //{
+                //    using var stream = file.OpenReadStream();
+                //    using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+                //    string? line; bool first = true;
+                //    while ((line = reader.ReadLine()) != null)
+                //    {
+                //        if (first && hasHeader) { first = false; continue; }
+                //        first = false;
+                //        rowNo++;
+                //        var values = ParseCsvLine(line);
+                //        var accountNumber = values[2];
+                //        var (json, error) = MapToJson(values, fields);
+                //        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error, accountNumber));
+                //    }
+                //}
+                //else if (ext == ".xlsx")
+                //{
+                //    using var stream = file.OpenReadStream();
+                //    using var wb = new XLWorkbook(stream);
+                //    var ws = !string.IsNullOrEmpty(template.SheetName) ? wb.Worksheet(template.SheetName) : wb.Worksheets.FirstOrDefault();
+                //    if (ws == null) throw new InvalidOperationException("Worksheet not found");
+                //    var table = ws.RangeUsed();
+                //    if (table == null) throw new InvalidOperationException("Worksheet is empty");
+                //    int startRow = table.RangeAddress.FirstAddress.RowNumber;
+                //    int endRow = table.RangeAddress.LastAddress.RowNumber;
+                //    int colCount = fields.Count;
+                //    bool skippedHeader = false;
+                //    for (int r = startRow; r <= endRow; r++)
+                //    {
+                //        if (hasHeader && !skippedHeader) { skippedHeader = true; continue; }
+                //        rowNo++;
+                //        var values = new List<string>(colCount);
+                //        var accountNumber = values[2];
+                //        for (int i = 0; i < colCount; i++)
+                //        {
+                //            var cell = ws.Cell(r, i + 1);
+                //            values.Add(cell?.GetString() ?? string.Empty);
+                //        }
+                //        var (json, error) = MapToJson(values, fields);
+                //        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error, accountNumber));
+                //    }
+                //}
+                //else if (ext == ".xls")
+                //{
+                //    System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                //    using var stream = file.OpenReadStream();
+                //    using var excel = ExcelReaderFactory.CreateBinaryReader(stream);
+                //    var ds = excel.AsDataSet(new ExcelDataSetConfiguration
+                //    {
+                //        UseColumnDataType = false,
+                //        ConfigureDataTable = _ => new ExcelDataTableConfiguration { UseHeaderRow = hasHeader }
+                //    });
+                //    var sheet = !string.IsNullOrEmpty(template.SheetName) ? ds.Tables[template.SheetName] : ds.Tables[0];
+                //    if (sheet == null) throw new InvalidOperationException("Worksheet not found");
+                //    foreach (DataRow row in sheet.Rows)
+                //    {
+                //        rowNo++;
+                //        var values = new List<string>(fields.Count);
+                //        var accountNumber = values[2];
+                //        for (int i = 0; i < fields.Count; i++)
+                //        {
+                //            var val = row.ItemArray.Length > i ? row[i]?.ToString() ?? string.Empty : string.Empty;
+                //            values.Add(val);
+                //        }
+                //        var (json, error) = MapToJson(values, fields);
+                //        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error, accountNumber));
+                //    }
+                //}
                 else
                 {
                     throw new NotSupportedException($"Unsupported file extension: {ext}");
@@ -175,7 +197,7 @@ namespace TekRemittance.Service.Implementations
             }
         }
 
-        private static RemittanceInfo BuildRow(Guid agentId, Guid templateId, Guid uploadId, int rowNo, string json, string? error)
+        private static RemittanceInfo BuildRow(Guid agentId, Guid templateId, Guid uploadId, int rowNo, string json, string? error,string accountNumber)
         {
             return new RemittanceInfo
             {
@@ -187,7 +209,10 @@ namespace TekRemittance.Service.Implementations
                 DataJson = json,
                 Error = error,
                 CreatedOn = DateTime.Now,
+                AccountNumber=accountNumber,
+                Date = DateTime.Now,
                 Status = "P"
+                
             };
         }
         private static (string Json, string? Error) MapToJson(IReadOnlyList<string> values, List<agentFileTemplateFieldDTO> fields)

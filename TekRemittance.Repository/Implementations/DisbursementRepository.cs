@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -93,7 +95,13 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(
+     Guid agentId,
+     int pageNumber = 1,
+     int pageSize = 10,
+     string? accountnumber = null,
+     string? xpin = null,
+     string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -103,7 +111,6 @@ namespace TekRemittance.Repository.Implementations
                             on r.AgentId equals a.Id
                         where r.AgentId == agentId && r.Status == "P"
                         select new { r, a.AgentName };
-
 
             if (!string.IsNullOrWhiteSpace(accountnumber))
             {
@@ -119,19 +126,58 @@ namespace TekRemittance.Repository.Implementations
 
             if (!string.IsNullOrWhiteSpace(date))
             {
-                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                   .ToString("dd-MM-yyyy");
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+                var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                            .ToString("dd-MM-yyyy");
+
+                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{formattedDate}\""));
             }
 
-           
             var totalCount = await query.CountAsync();
 
-            var items = await query
+          
+
+            var data = await query
                 .OrderBy(x => x.r.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(x => new RemitttanceInfosStatusDTO
+                .ToListAsync();
+
+            var items = data.Select(x =>
+            {
+                decimal amount = 0;
+
+                if (!string.IsNullOrWhiteSpace(x.r.DataJson))
+                {
+                    using var jsonDoc = JsonDocument.Parse(x.r.DataJson);
+
+                    if (jsonDoc.RootElement.TryGetProperty("Amount", out var amountElement))
+                    {
+                        var amountStr = amountElement.ToString()?.Trim();
+
+                        decimal.TryParse(
+                            amountStr,
+                            NumberStyles.Any,
+                            CultureInfo.InvariantCulture,
+                            out amount
+                        );
+                    }
+                }
+
+
+                decimal limit = 0;
+
+                if (!string.IsNullOrWhiteSpace(x.r.LimitType))
+                {
+                    decimal.TryParse(
+                        x.r.LimitType.Trim(),
+                        NumberStyles.Any,
+                        CultureInfo.InvariantCulture,
+                        out limit
+                    );
+                }
+
+
+                return new RemitttanceInfosStatusDTO
                 {
                     Id = x.r.Id,
                     AgentId = x.r.AgentId,
@@ -143,11 +189,10 @@ namespace TekRemittance.Repository.Implementations
                     Error = x.r.Error,
                     Status = x.r.Status,
                     CreatedOn = x.r.CreatedOn,
-                    UpdatedOn = x.r.UpdatedOn
-
-
-                })
-                .ToListAsync();
+                    UpdatedOn = x.r.UpdatedOn,
+                    LimitMessage = amount <= limit ? "1" : "0"
+                };
+            }).ToList();
 
             return new PagedResult<RemitttanceInfosStatusDTO>
             {
@@ -157,6 +202,7 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
+
         public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
