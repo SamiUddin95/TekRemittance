@@ -105,8 +105,48 @@ namespace TekRemittance.Service.Implementations
                         {
                             accountNumber = values[accountNumberIndex];
                         }
+                        var accountTitleIndex = fields.FindIndex(f =>
+                        {
+                            if (string.IsNullOrWhiteSpace(f.FieldName))
+                                return false;
+
+                            var normalized = f.FieldName
+                                .ToLower()
+                                .Replace("_", "")
+                                .Replace(" ", "");
+
+                            return normalized.Contains("account")
+                                   && normalized.Contains("title");
+                        });
+
+                        string? accountTitle = null;
+                        if (accountTitleIndex >= 0 && accountTitleIndex < values.Count)
+                        {
+                            accountTitle = values[accountTitleIndex];
+                        }
+
+                        var xpinIndex = fields.FindIndex(f =>
+                        {
+                            if (string.IsNullOrWhiteSpace(f.FieldName))
+                                return false;
+
+                            var normalized = f.FieldName
+                                .ToLower()
+                                .Replace("_", "")
+                                .Replace(" ", "");
+
+                            return normalized.Contains("xpin");
+                        });
+
+                        string? xpin = null;
+                        if (xpinIndex >= 0 && xpinIndex < values.Count)
+                        {
+                            xpin = values[xpinIndex];
+                        }
+
+
                         var (json, error) = MapToJson(values, fields);
-                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error, accountNumber));
+                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error, accountNumber, accountTitle, xpin));
                     }
                 }
                 //else if (ext == ".csv")
@@ -197,7 +237,8 @@ namespace TekRemittance.Service.Implementations
             }
         }
 
-        private static RemittanceInfo BuildRow(Guid agentId, Guid templateId, Guid uploadId, int rowNo, string json, string? error,string accountNumber)
+        private static RemittanceInfo BuildRow(Guid agentId, Guid templateId, Guid uploadId, int rowNo, string json, string? error,string accountNumber, string? accountTitle,
+    string? xpin)
         {
             return new RemittanceInfo
             {
@@ -210,6 +251,8 @@ namespace TekRemittance.Service.Implementations
                 Error = error,
                 CreatedOn = DateTime.Now,
                 AccountNumber=accountNumber,
+                AccountTitle=accountTitle,
+                Xpin=xpin, 
                 Date = DateTime.Now,
                 Status = "P"
                 

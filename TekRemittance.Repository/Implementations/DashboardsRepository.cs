@@ -14,6 +14,7 @@ using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
 
+
 namespace TekRemittance.Repository.Implementations
 {
     public class DashboardsRepository:IDashboardsRepository
@@ -24,37 +25,54 @@ namespace TekRemittance.Repository.Implementations
             _context = context;
         }
 
-        
 
-        private decimal ExtractAmount(string dataJson)
+        private decimal ExtractAmount(string? json)
         {
-            if (string.IsNullOrWhiteSpace(dataJson))
-                return 0;
+            if (string.IsNullOrWhiteSpace(json))
+                return 0m;
 
             try
             {
-                using var doc = JsonDocument.Parse(dataJson);
+                var doc = JsonDocument.Parse(json);
 
-                if (doc.RootElement.TryGetProperty("Amount", out JsonElement amountElement))
-                {
-                    var amountStr = amountElement.GetString()?.Trim();
+                if (doc.RootElement.TryGetProperty("Amount", out var amountProp))
+                    return amountProp.GetDecimal();
 
-                    if (decimal.TryParse(
-                        amountStr,
-                        NumberStyles.Any,
-                        CultureInfo.InvariantCulture,
-                        out decimal amount))
-                    {
-                        return amount;
-                    }
-                }
+                if (doc.RootElement.TryGetProperty("amount", out var amountPropLower))
+                    return amountPropLower.GetDecimal();
+
+                return 0m;
             }
             catch
             {
+                return 0m;
             }
-
-            return 0;
         }
+
+        private string? ExtractXpin(string? json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            try
+            {
+                var doc = JsonDocument.Parse(json);
+
+                if (doc.RootElement.TryGetProperty("XPIN", out var xpinProp))
+                    return xpinProp.GetString();
+
+                if (doc.RootElement.TryGetProperty("xpin", out var xpinPropLower))
+                    return xpinPropLower.GetString();
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
 
         public async Task<object> GetDashboardDataAsync(string dateRange)
         {
@@ -192,10 +210,12 @@ namespace TekRemittance.Repository.Implementations
             var result = list.Select(x => new RecentTransactionDTO
             {
                 AgentName = x.AgentName,
-                XPIN = x.r.Xpin,
+                //XPIN = x.r.Xpin,
+                XPIN = ExtractXpin(x.r.DataJson),
                 Date = x.r.Date,
                 AccountNumber = x.r.AccountNumber,
                 AccountTitle = x.r.AccountTitle,
+                //Amount = ExtractAmount(x.r.DataJson),
                 Amount = ExtractAmount(x.r.DataJson),
                 Status = x.r.Status switch
                 {
@@ -281,7 +301,7 @@ namespace TekRemittance.Repository.Implementations
                 Date = x.Date,
                 AccountNumber = x.AccountNumber,
                 AccountTitle = x.AccountTitle,
-                Amount = ExtractAmount(x.DataJson),
+                Amount =ExtractAmount(x.DataJson),
                 Status = x.Status switch
                 {
                     "A" => "Completed",
