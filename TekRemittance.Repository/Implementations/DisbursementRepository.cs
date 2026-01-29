@@ -97,20 +97,34 @@ namespace TekRemittance.Repository.Implementations
         }
         public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(
      Guid agentId,
+     Guid userId,
      int pageNumber = 1,
      int pageSize = 10,
      string? accountnumber = null,
      string? xpin = null,
-     string? date = null)
+     string? date = null
+       )
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
-            var query = from r in _context.RemittanceInfos
-                        join a in _context.AcquisitionAgents
-                            on r.AgentId equals a.Id
-                        where r.AgentId == agentId && r.Status == "P"
-                        select new { r, a.AgentName };
+            var query =
+        from r in _context.RemittanceInfos
+        join a in _context.AcquisitionAgents
+            on r.AgentId equals a.Id
+          
+        where r.AgentId == agentId && r.Status == "P"
+        select new
+        {
+            r,
+            a.AgentName
+        };
+
+            var userLimit = await _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.Limit)
+                .FirstOrDefaultAsync();
+
 
             if (!string.IsNullOrWhiteSpace(accountnumber))
             {
@@ -142,6 +156,8 @@ namespace TekRemittance.Repository.Implementations
                 .Take(pageSize)
                 .ToListAsync();
 
+
+
             var items = data.Select(x =>
             {
                 decimal amount = 0;
@@ -152,10 +168,8 @@ namespace TekRemittance.Repository.Implementations
 
                     if (jsonDoc.RootElement.TryGetProperty("Amount", out var amountElement))
                     {
-                        var amountStr = amountElement.ToString()?.Trim();
-
                         decimal.TryParse(
-                            amountStr,
+                            amountElement.ToString(),
                             NumberStyles.Any,
                             CultureInfo.InvariantCulture,
                             out amount
@@ -163,35 +177,34 @@ namespace TekRemittance.Repository.Implementations
                     }
                 }
 
+                
+                //string limitFlag = amount <= x.UserLimit ? "1" : "0";
+                string limitflag = userLimit >= amount ? "1" : "0";
 
-                decimal limit = 0;
-
-                if (!string.IsNullOrWhiteSpace(x.r.LimitType))
+                if (amount >= userLimit)
                 {
-                    decimal.TryParse(
-                        x.r.LimitType.Trim(),
-                        NumberStyles.Any,
-                        CultureInfo.InvariantCulture,
-                        out limit
-                    );
+                    limitflag = "1"; //Authorizer
+                }
+                else
+                {
+                    limitflag = "0"; //Normal User
                 }
 
-
-                return new RemitttanceInfosStatusDTO
-                {
-                    Id = x.r.Id,
-                    AgentId = x.r.AgentId,
-                    AgentName = x.AgentName,
-                    TemplateId = x.r.TemplateId,
-                    UploadId = x.r.UploadId,
-                    RowNumber = x.r.RowNumber,
-                    DataJson = x.r.DataJson,
-                    Error = x.r.Error,
-                    Status = x.r.Status,
-                    CreatedOn = x.r.CreatedOn,
-                    UpdatedOn = x.r.UpdatedOn,
-                    LimitType = x.r.LimitType
-                };
+                    return new RemitttanceInfosStatusDTO
+                    {
+                        Id = x.r.Id,
+                        AgentId = x.r.AgentId,
+                        AgentName = x.AgentName,
+                        TemplateId = x.r.TemplateId,
+                        UploadId = x.r.UploadId,
+                        RowNumber = x.r.RowNumber,
+                        DataJson = x.r.DataJson,
+                        Error = x.r.Error,
+                        Status = x.r.Status,
+                        CreatedOn = x.r.CreatedOn,
+                        UpdatedOn = x.r.UpdatedOn,
+                        LimitType = limitflag
+                    };
             }).ToList();
 
             return new PagedResult<RemitttanceInfosStatusDTO>
@@ -493,7 +506,7 @@ namespace TekRemittance.Repository.Implementations
                 return (false, "Amount not found in JSON.", xpin);
             }
             bool status = amount <= userLimit ;
-            remitInfo.LimitType = status ? "1" : "0";
+            //remitInfo.LimitType = status ? "1" : "0";
 
             if (!status)
             {

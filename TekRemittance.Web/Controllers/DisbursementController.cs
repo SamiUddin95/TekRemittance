@@ -45,13 +45,13 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
-      
+
         [HttpGet("GetDataByAgent")]
-        public async Task<IActionResult> GetByAgentIdP(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
-        {
+        public async Task<IActionResult> GetByAgentIdP(Guid agentId, Guid userId, int pageNumber = 1, int pageSize = 10,  string? accountnumber = null, string? xpin = null, string? date = null)
+          {
             try
             {
-                var result = await _service.GetByAgentIdWithStatusPAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
+                var result = await _service.GetByAgentIdWithStatusPAsync(agentId, userId, pageNumber, pageSize,accountnumber, xpin,date);
 
                 return Ok(ApiResponse<object>.Success(new
                 {

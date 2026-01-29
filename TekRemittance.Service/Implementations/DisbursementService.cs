@@ -20,9 +20,9 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.GetDataByAgentIdAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusPAsync(Guid agentId, Guid userId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
-            return await _repo.GetByAgentIdWithStatusPAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
+            return await _repo.GetByAgentIdWithStatusPAsync(agentId, userId, pageNumber, pageSize,accountnumber,xpin,date);
         }
         public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
