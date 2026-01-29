@@ -190,7 +190,7 @@ namespace TekRemittance.Repository.Implementations
                     Status = x.r.Status,
                     CreatedOn = x.r.CreatedOn,
                     UpdatedOn = x.r.UpdatedOn,
-                    LimitMessage = amount <= limit ? "1" : "0"
+                    LimitType = x.r.LimitType
                 };
             }).ToList();
 
@@ -493,6 +493,7 @@ namespace TekRemittance.Repository.Implementations
                 return (false, "Amount not found in JSON.", xpin);
             }
             bool status = amount <= userLimit ;
+            remitInfo.LimitType = status ? "1" : "0";
 
             if (!status)
             {

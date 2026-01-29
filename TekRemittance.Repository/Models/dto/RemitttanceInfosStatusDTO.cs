@@ -21,6 +21,6 @@ namespace TekRemittance.Repository.Models.dto
         public DateTime? UpdatedOn { get; set; }
         public string Status { get; set; }
 
-        public string LimitMessage { get; set; }
+        public string LimitType { get; set; }
     }
 }

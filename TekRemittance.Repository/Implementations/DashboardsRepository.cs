@@ -210,12 +210,10 @@ namespace TekRemittance.Repository.Implementations
             var result = list.Select(x => new RecentTransactionDTO
             {
                 AgentName = x.AgentName,
-                //XPIN = x.r.Xpin,
                 XPIN = ExtractXpin(x.r.DataJson),
                 Date = x.r.Date,
                 AccountNumber = x.r.AccountNumber,
                 AccountTitle = x.r.AccountTitle,
-                //Amount = ExtractAmount(x.r.DataJson),
                 Amount = ExtractAmount(x.r.DataJson),
                 Status = x.r.Status switch
                 {
