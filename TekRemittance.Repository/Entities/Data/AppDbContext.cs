@@ -42,6 +42,13 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
         public DbSet<barGraphDto> barGraphDtos { get; set; } = null!;
+        public DbSet<TransactionDetail> TransactionDetail { get; set; }
+        public DbSet<Channels> Channels { get; set; }
+        public DbSet<EPRC> EPRC { get; set; }
+
+
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
