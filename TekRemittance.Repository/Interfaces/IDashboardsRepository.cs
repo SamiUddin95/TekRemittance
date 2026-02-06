@@ -18,5 +18,18 @@ namespace TekRemittance.Repository.Interfaces
         Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync();
        
         Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode);
+
+        Task<List<AgentPerformanceDTO>> GetAgentPerformanceAsync();
+        Task<List<TopBankTransactionDTO>> GetTopBankTransactionAsync();
+        Task<List<TransactionStatusByChannelDTO>> GetTransactionStatusByChannelAsync();
+        Task<SummaryDTO> GetIncomingSummaryAsync();
+        Task<SummaryDTO> GetOutgoingSummaryAsync();
+        Task<List<EPRCDTO>> GetEPRCAsync();
+
+        Task<List<ChannelsDTO>> GetChannelsAsync();
+
+
+
+
     }
 }

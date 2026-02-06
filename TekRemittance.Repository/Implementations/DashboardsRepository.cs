@@ -315,5 +315,181 @@ namespace TekRemittance.Repository.Implementations
             }).ToList();
         }
 
+        
+        public async Task<List<AgentPerformanceDTO>> GetAgentPerformanceAsync()
+        {
+            return await _context.TransactionDetail
+                .GroupBy(x => x.AgentName)
+                .Select(g => new
+                {
+                    AgentName = g.Key,
+                    TotalTransactions = g.Count(),
+                    TotalAmountValue = g.Sum(x =>
+                        string.IsNullOrWhiteSpace(x.Amount)
+                            ? 0
+                            : Convert.ToDecimal(x.Amount))
+                })
+                .OrderByDescending(x => x.TotalAmountValue)
+                .Select(x => new AgentPerformanceDTO
+                {
+                    AgentName = x.AgentName,
+                    TotalTransactions = x.TotalTransactions,
+                    TotalAmount = (x.TotalAmountValue / 1_000_000)
+                                    .ToString("0.00") + "M"
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<TopBankTransactionDTO>> GetTopBankTransactionAsync()
+        {
+            return await _context.TransactionDetail
+                .GroupBy(x => x.BankName)
+                .Select(g => new
+                {
+                    BankName = g.Key,
+                    TotalTransactions = g.Count(),
+                    TotalAmountValue = g.Sum(x =>
+                        string.IsNullOrWhiteSpace(x.Amount)
+                            ? 0
+                            : Convert.ToDecimal(x.Amount))
+                })
+                .OrderByDescending(x => x.TotalAmountValue)
+                .Select(x => new TopBankTransactionDTO
+                {
+                    BankName = x.BankName,
+                    TotalTransactions = x.TotalTransactions,
+                    TotalAmount = (x.TotalAmountValue / 1_000_000m)
+                                    .ToString("0.00") + "M"
+                })
+                .ToListAsync();
+        }
+
+
+        public async Task<List<TransactionStatusByChannelDTO>> GetTransactionStatusByChannelAsync()
+        {
+            var data = await _context.TransactionDetail
+                .GroupBy(x => x.TransactionType)
+                .Select(g => new
+                {
+                    TransactionType = g.Key,
+                    Total = g.Count(),
+
+                    IncomingCount = g.Count(x => x.ChannelType == "Incoming"),
+                    OutgoingCount = g.Count(x => x.ChannelType == "Outgoing"),
+                    PendingCount = g.Count(x => x.Status == "Pending")
+                })
+                .ToListAsync();
+
+            return data.Select(x => new TransactionStatusByChannelDTO
+            {
+                TransactionType = x.TransactionType,
+
+                IncomingPercentage = x.Total == 0 ? 0 :
+                    Math.Round((decimal)x.IncomingCount / x.Total * 100, 2),
+
+                OutgoingPercentage = x.Total == 0 ? 0 :
+                    Math.Round((decimal)x.OutgoingCount / x.Total * 100, 2),
+
+                PendingPercentage = x.Total == 0 ? 0 :
+                    Math.Round((decimal)x.PendingCount / x.Total * 100, 2)
+
+            }).ToList();
+        }
+        public async Task<SummaryDTO> GetIncomingSummaryAsync()
+        {
+            var data = await _context.TransactionDetail
+                .Where(x => x.ChannelType == "Incoming")
+                .ToListAsync();
+
+            var totalCount = data.Count;
+
+            var totalAmountValue = data.Sum(x =>
+                string.IsNullOrWhiteSpace(x.Amount)
+                    ? 0
+                    : Convert.ToDecimal(x.Amount));
+
+            var successCount = data.Count(x => x.Status == "Success");
+            var failureCount = data.Count(x => x.Status == "Failure");
+
+            var validStatusCount = successCount + failureCount;
+
+            return new SummaryDTO
+            {
+                TotalCount = totalCount,
+
+               
+                TotalAmount = (totalAmountValue / 1_000_000m).ToString("0.00") + "M",
+
+                SuccessPercentage = validStatusCount == 0 ? 0 :
+                    Math.Round((decimal)successCount / validStatusCount * 100, 2),
+
+                FailurePercentage = validStatusCount == 0 ? 0 :
+                    Math.Round((decimal)failureCount / validStatusCount * 100, 2)
+            };
+        }
+
+        public async Task<SummaryDTO> GetOutgoingSummaryAsync()
+        {
+            var data = await _context.TransactionDetail
+                .Where(x => x.ChannelType == "Outgoing")
+                .ToListAsync();
+
+            var totalCount = data.Count;
+
+            var totalAmountValue = data.Sum(x =>
+                string.IsNullOrWhiteSpace(x.Amount)
+                    ? 0
+                    : Convert.ToDecimal(x.Amount));
+
+            var successCount = data.Count(x => x.Status == "Success");
+            var failureCount = data.Count(x => x.Status == "Failure");
+
+            var validStatusCount = successCount + failureCount;
+
+            return new SummaryDTO
+            {
+                TotalCount = totalCount,
+
+                TotalAmount = (totalAmountValue / 1_000_000m).ToString("0.00") + "M",
+
+                SuccessPercentage = validStatusCount == 0 ? 0 :
+                    Math.Round((decimal)successCount / validStatusCount * 100, 2),
+
+                FailurePercentage = validStatusCount == 0 ? 0 :
+                    Math.Round((decimal)failureCount / validStatusCount * 100, 2)
+            };
+        }
+
+        public async Task<List<EPRCDTO>> GetEPRCAsync()
+        {
+            return await _context.EPRC
+                .Select(x => new EPRCDTO
+                {
+                    Id = x.Id,
+                    TotalEPRCGenerated = x.TotalEPRCGenerated,
+                    EPRCVerified = x.EPRCVerified,
+                    NotVerfied = x.NotVerfied
+                })
+                .ToListAsync();
+        }
+        public async Task<List<ChannelsDTO>> GetChannelsAsync()
+        {
+            return await _context.Channels
+                .Select(x => new ChannelsDTO
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    CreatedBy = x.CreatedBy,
+                    UpdatedBy = x.UpdatedBy,
+                    CreatedOn = x.CreatedOn,
+                    UpdatedOn = x.UpdatedOn
+                })
+                .ToListAsync();
+        }
+
+
+
+
     }
 }

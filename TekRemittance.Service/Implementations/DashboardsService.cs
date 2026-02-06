@@ -46,6 +46,38 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.GetTransactionModeListAsync(dateRange, mode);
         }
+        public async Task<List<AgentPerformanceDTO>> GetAgentPerformanceAsync()
+        {
+            return await _repo.GetAgentPerformanceAsync();
+        }
+        public async Task<List<TopBankTransactionDTO>> GetTopBankTransactionAsync()
+        {
+            return await _repo.GetTopBankTransactionAsync();
+        }
+        public async Task<List<TransactionStatusByChannelDTO>> GetTransactionStatusByChannelAsync()
+        {
+            return await _repo.GetTransactionStatusByChannelAsync();
+        }
+        public async Task<SummaryDTO> GetIncomingSummaryAsync()
+        {
+            return await _repo.GetIncomingSummaryAsync();
+        }
+        public async Task<SummaryDTO> GetOutgoingSummaryAsync()
+        {
+            return await _repo.GetOutgoingSummaryAsync();
+        }
+        public async Task<List<EPRCDTO>> GetEPRCAsync()
+        {
+            return await _repo.GetEPRCAsync();
+        }
+        public async Task<List<ChannelsDTO>> GetChannelsAsync()
+        {
+            return await _repo.GetChannelsAsync();
+        }
+
+
+
+
 
 
     }

@@ -98,6 +98,101 @@ namespace TekRemittance.Web.Controllers
                 return BadRequest(ApiResponse<string>.Error(ex.Message));
             }
         }
+        [HttpGet("dashboard/agent-performance")]
+        public async Task<IActionResult> GetAgentPerformance()
+        {
+            try
+            {
+                var result = await _service.GetAgentPerformanceAsync();
+                return Ok(ApiResponse<List<AgentPerformanceDTO>>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        [HttpGet("dashboard/top-bank-transaction")]
+        public async Task<IActionResult> GetTopBankTransaction()
+        {
+            try
+            {
+                var result = await _service.GetTopBankTransactionAsync();
+                return Ok(ApiResponse<List<TopBankTransactionDTO>>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        [HttpGet("dashboard/transaction-status-by-channel")]
+        public async Task<IActionResult> GetTransactionStatusByChannel()
+        {
+            try
+            {
+                var result = await _service.GetTransactionStatusByChannelAsync();
+                return Ok(ApiResponse<List<TransactionStatusByChannelDTO>>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        [HttpGet("dashboard/incoming")]
+        public async Task<IActionResult> GetIncomingSummary()
+        {
+            try
+            {
+                var result = await _service.GetIncomingSummaryAsync();
+                return Ok(ApiResponse<SummaryDTO>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        [HttpGet("dashboard/outgoing")]
+        public async Task<IActionResult> GetOutgoingSummary()
+        {
+            try
+            {
+                var result = await _service.GetOutgoingSummaryAsync();
+                return Ok(ApiResponse<SummaryDTO>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        [HttpGet("dashboard/eprc")]
+        public async Task<IActionResult> GetEPRC()
+        {
+            try
+            {
+                var result = await _service.GetEPRCAsync();
+                return Ok(ApiResponse<List<EPRCDTO>>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        [HttpGet("dashboard/channels")]
+        public async Task<IActionResult> GetChannels()
+        {
+            try
+            {
+                var result = await _service.GetChannelsAsync();
+                return Ok(ApiResponse<List<ChannelsDTO>>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+
+
+
 
     }
 }
