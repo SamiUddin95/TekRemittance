@@ -463,7 +463,7 @@ namespace TekRemittance.Repository.Implementations
             };
         }
 
-        public async Task<(bool isSuccess, string message, string Xpin)> RemitApproveAsync(string xpin, Guid? userId, string modeOfTransaction)
+        public async Task<(bool isSuccess, string message, string Xpin)> RemitApproveAsync(string xpin, Guid? userId)
         {
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
@@ -511,17 +511,17 @@ namespace TekRemittance.Repository.Implementations
             if (!status)
             {
                 remitInfo.Status = "U";
-                if (!string.IsNullOrWhiteSpace(modeOfTransaction))
-                {
-                    if (Enum.TryParse<ModeOfTransactionEnum>(modeOfTransaction, true, out var modeEnum))
-                    {
-                        remitInfo.ModeOfTransaction = modeEnum; 
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Invalid ModeOfTransaction value");
-                    }
-                }
+                //if (!string.IsNullOrWhiteSpace(modeOfTransaction))
+                //{
+                //    if (Enum.TryParse<ModeOfTransactionEnum>(modeOfTransaction, true, out var modeEnum))
+                //    {
+                //        remitInfo.ModeOfTransaction = modeEnum; 
+                //    }
+                //    else
+                //    {
+                //        throw new ArgumentException("Invalid ModeOfTransaction value");
+                //    }
+                //}
 
                 remitInfo.UpdatedOn = DateTime.Now;
                 await _context.SaveChangesAsync();
@@ -529,17 +529,17 @@ namespace TekRemittance.Repository.Implementations
             }
 
             remitInfo.Status = "A";
-            if (!string.IsNullOrWhiteSpace(modeOfTransaction))
-            {
-                if (Enum.TryParse<ModeOfTransactionEnum>(modeOfTransaction, true, out var modeEnum))
-                {
-                    remitInfo.ModeOfTransaction = modeEnum; 
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid ModeOfTransaction value");
-                }
-            }
+            //if (!string.IsNullOrWhiteSpace(modeOfTransaction))
+            //{
+            //    if (Enum.TryParse<ModeOfTransactionEnum>(modeOfTransaction, true, out var modeEnum))
+            //    {
+            //        remitInfo.ModeOfTransaction = modeEnum; 
+            //    }
+            //    else
+            //    {
+            //        throw new ArgumentException("Invalid ModeOfTransaction value");
+            //    }
+            //}
 
             remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();

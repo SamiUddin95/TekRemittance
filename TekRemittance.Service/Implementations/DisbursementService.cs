@@ -40,9 +40,9 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
         }
-        public async Task<(bool isSuccess, string message,string Xpin)> RemitApproveAsync(string xpin, Guid? userId, string modeOfTransaction)
+        public async Task<(bool isSuccess, string message,string Xpin)> RemitApproveAsync(string xpin, Guid? userId)
         {
-            return await _repo.RemitApproveAsync(xpin, userId, modeOfTransaction);
+            return await _repo.RemitApproveAsync(xpin, userId);
         }
         public async Task<RemittanceInfoModelDTO> RemitRejectAsync(string xpin, Guid? userId)
         {

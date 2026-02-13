@@ -15,7 +15,7 @@ namespace TekRemittance.Service.Interfaces
         Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusREAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
         Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
         Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
-        Task<(bool isSuccess, string message,string Xpin)> RemitApproveAsync(string xpin, Guid? userId, string modeOfTransaction);
+        Task<(bool isSuccess, string message,string Xpin)> RemitApproveAsync(string xpin, Guid? userId);
 
         Task<RemittanceInfoModelDTO> RemitRejectAsync(string xpin, Guid? userId);
 
