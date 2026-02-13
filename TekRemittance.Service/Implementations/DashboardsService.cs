@@ -21,31 +21,31 @@ namespace TekRemittance.Service.Implementations
         }
         
 
-        public async Task<object> GetDashboardDataAsync(string dateRange)
-        {
-            return await _repo.GetDashboardDataAsync(dateRange);
-        }
+        //public async Task<object> GetDashboardDataAsync(string dateRange)
+        //{
+        //    return await _repo.GetDashboardDataAsync(dateRange);
+        //}
 
 
-        public async Task<object> GetbarChartDataAsync(string dateRange)
-        {
-            return await _repo.GetbarChartDataAsync(dateRange);
-        }
+        //public async Task<object> GetbarChartDataAsync(string dateRange)
+        //{
+        //    return await _repo.GetbarChartDataAsync(dateRange);
+        //}
 
-        public async Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange)
-        {
-            return await _repo.GetTransactionModeCountsAsync(dateRange);
-        }
+        //public async Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange)
+        //{
+        //    return await _repo.GetTransactionModeCountsAsync(dateRange);
+        //}
 
-        public async Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync()
-        {
-            return await _repo.GetLast10RemittancesAsync();
-        }
+        //public async Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync()
+        //{
+        //    return await _repo.GetLast10RemittancesAsync();
+        //}
       
-        public async Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode)
-        {
-            return await _repo.GetTransactionModeListAsync(dateRange, mode);
-        }
+        //public async Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode)
+        //{
+        //    return await _repo.GetTransactionModeListAsync(dateRange, mode);
+        //}
         public async Task<List<AgentPerformanceDTO>> GetAgentPerformanceAsync()
         {
             return await _repo.GetAgentPerformanceAsync();

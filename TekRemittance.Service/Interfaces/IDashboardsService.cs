@@ -12,13 +12,13 @@ namespace TekRemittance.Service.Interfaces
     {
        
 
-        Task<object> GetDashboardDataAsync(string dateRange);
+        //Task<object> GetDashboardDataAsync(string dateRange);
 
-        Task<object> GetbarChartDataAsync(string dateRange);
-        Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange);
-        Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync();
+        //Task<object> GetbarChartDataAsync(string dateRange);
+        //Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange);
+        //Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync();
 
-        Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode);
+        //Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode);
         Task<List<AgentPerformanceDTO>> GetAgentPerformanceAsync();
         Task<List<TopBankTransactionDTO>> GetTopBankTransactionAsync();
         Task<List<TransactionStatusByChannelDTO>> GetTransactionStatusByChannelAsync();

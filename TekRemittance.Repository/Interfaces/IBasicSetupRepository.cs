@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Enums;
+using TekRemittance.Repository.Models.dto;
 using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Interfaces
@@ -38,5 +39,12 @@ namespace TekRemittance.Repository.Interfaces
         Task<bankDTO> AddBankAsync(bankDTO bank);
         Task<Bank?> UpdateBankAsync(bankDTO bank);
         Task<bool> DeleteBankAsync(Guid id);
+
+
+        Task<PagedResult<AmlDataDTO>> GetAllAsync(int pageNumber, int pageSize, string? cnic, string? accountName);
+        Task<AmlDataDTO?> GetByIdAsyncAml(Guid id);
+        Task<AmlDataDTO> AddAsync(AmlDataDTO dto);
+        Task<AmlData?> UpdateAsync(AmlDataDTO dto);
+        Task<bool> DeleteAsyncAml(Guid id);
     }
 }

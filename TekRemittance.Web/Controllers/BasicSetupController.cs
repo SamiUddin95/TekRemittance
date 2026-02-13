@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Repository.Entities;
+using TekRemittance.Repository.Enums;
+using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Implementations;
 using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
-using TekRemittance.Web.Attributes;
-using TekRemittance.Repository.Enums;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -422,6 +423,111 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+        [HttpGet("AmlData")]
+        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? cnic = null, string? accountName = null)
+
+
+        {
+            try
+            {
+                var result = await _service.GetAllAmlDataAsync(pageNumber, pageSize, cnic, accountName);
+
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        
+        [HttpGet("AmlbyId/{id:guid}")]
+        public async Task<IActionResult> GetByIdAml(Guid id)
+        {
+            try
+            {
+                var data = await _service.GetAmlDataByIdAsync(id);
+
+                if (data == null)
+                    return NotFound(ApiResponse<string>.Error("Data not found", 404));
+
+                return Ok(ApiResponse<AmlDataDTO>.Success(data, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        
+        [HttpPost("CreateAml")]
+        public async Task<IActionResult> Create([FromBody] AmlDataDTO dto)
+        {
+            try
+            {
+                var created = await _service.CreateAmlDataAsync(dto);
+                return Ok(ApiResponse<AmlDataDTO>.Success(created, 201));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+       
+        [HttpPut("UpdateAml")]
+        public async Task<IActionResult> Update([FromBody] AmlDataDTO dto)
+        {
+            try
+            {
+                var updated = await _service.UpdateAmlDataAsync(dto);
+
+                if (updated == null)
+                    return NotFound(ApiResponse<string>.Error("Data not found", 404));
+
+                return Ok(ApiResponse<AmlDataDTO>.Success(updated, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        
+        [HttpDelete("DeleteAml/{id:guid}")]
+        public async Task<IActionResult> DeleteAml(Guid id)
+        {
+            try
+            {
+                var result = await _service.DeleteAmlDataAsync(id);
+
+                if (!result)
+                    return NotFound(ApiResponse<string>.Error("Data not found", 404));
+
+                return Ok(ApiResponse<string>.Success("Data deleted successfully", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
 
         #endregion
 

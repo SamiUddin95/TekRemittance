@@ -11,13 +11,13 @@ namespace TekRemittance.Repository.Interfaces
     public interface IDashboardsRepository
     {
        
-        Task<object> GetDashboardDataAsync(string dateRange);
+        //Task<object> GetDashboardDataAsync(string dateRange);
 
-        Task<List<barGraphDto>> GetbarChartDataAsync(string dateRange);
-        Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange);
-        Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync();
+        //Task<List<barGraphDto>> GetbarChartDataAsync(string dateRange);
+        //Task<TransactionModeCountDTO> GetTransactionModeCountsAsync(string dateRange);
+        //Task<List<RecentTransactionDTO>> GetLast10RemittancesAsync();
        
-        Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode);
+        //Task<List<RecentTransactionDTO>> GetTransactionModeListAsync(string dateRange, string mode);
 
         Task<List<AgentPerformanceDTO>> GetAgentPerformanceAsync();
         Task<List<TopBankTransactionDTO>> GetTopBankTransactionAsync();

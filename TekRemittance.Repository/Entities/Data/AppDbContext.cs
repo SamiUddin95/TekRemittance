@@ -45,6 +45,7 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<TransactionDetail> TransactionDetail { get; set; }
         public DbSet<Channels> Channels { get; set; }
         public DbSet<EPRC> EPRC { get; set; }
+        public DbSet<AmlData> AmlData { get; set; }
 
 
 
@@ -523,7 +524,7 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.HasOne(ug => ug.User)
                       .WithMany()
                       .HasForeignKey(ug => ug.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                      .OnDelete(DeleteBehavior.Cascade);    
 
                 entity.HasOne(ug => ug.Group)
                       .WithMany(g => g.UserGroups)
@@ -539,8 +540,32 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.HasIndex(ug => new { ug.UserId, ug.GroupId })
                       .IsUnique();
             });
+            modelBuilder.Entity<AmlData>(entity =>
+            {
+                entity.HasKey(a => a.Id);
 
-            modelBuilder.Entity<GroupPermission>(entity =>
+                entity.Property(a => a.CNIC)
+                      .HasMaxLength(15);
+
+                entity.Property(a => a.AccountName)
+                      .HasMaxLength(200);
+
+                entity.Property(a => a.Address)
+                      .HasMaxLength(500);
+
+                entity.Property(a => a.CreatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(a => a.CreatedOn)
+                      .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.Property(a => a.UpdatedBy)
+                      .HasMaxLength(100);
+
+                entity.Property(a => a.UpdatedOn);
+            });
+
+                modelBuilder.Entity<GroupPermission>(entity =>
             {
                 entity.HasKey(gp => gp.Id);
 

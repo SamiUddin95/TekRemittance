@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Enums;
-using TekRemittance.Repository.Interfaces;
-using TekRemittance.Web.Models.dto;
 using TekRemittance.Repository.Enums;
+using TekRemittance.Repository.Interfaces;
+using TekRemittance.Repository.Models.dto;
+using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Implementations
 {
@@ -41,7 +42,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderByDescending(c => c.UpdatedOn??c.CreatedOn)
+                .OrderByDescending(c => c.UpdatedOn ?? c.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(c => new countryDTO
@@ -199,7 +200,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderByDescending(p => p.UpdatedOn?? p.CreatedOn)
+                .OrderByDescending(p => p.UpdatedOn ?? p.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(p => new provinceDTO
@@ -273,7 +274,7 @@ namespace TekRemittance.Repository.Implementations
                 ProvinceCode = province.ProvinceCode,
                 ProvinceName = province.ProvinceName,
                 CountryId = province.CountryId,
-                IsActive= province.IsActive,
+                IsActive = province.IsActive,
                 CreatedOn = province.CreatedOn
             }; ;
         }
@@ -338,7 +339,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderByDescending(c => c.UpdatedOn?? c.CreatedOn)
+                .OrderByDescending(c => c.UpdatedOn ?? c.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(c => new cityDTO
@@ -450,7 +451,7 @@ namespace TekRemittance.Repository.Implementations
             await _context.SaveChangesAsync();
             return existing;
         }
-        
+
         public async Task<bool> DeleteCityAsync(Guid id)
         {
             var existing = await _context.Cities.FirstOrDefaultAsync(c => c.Id == id);
@@ -488,7 +489,7 @@ namespace TekRemittance.Repository.Implementations
             var totalCount = await query.CountAsync();
 
             var items = await query
-                .OrderByDescending(b => b.UpdatedOn?? b.CreatedOn)
+                .OrderByDescending(b => b.UpdatedOn ?? b.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(b => new bankDTO
@@ -627,5 +628,127 @@ namespace TekRemittance.Repository.Implementations
             return true;
         }
         #endregion
+
+        public async Task<PagedResult<AmlDataDTO>> GetAllAsync(int pageNumber, int pageSize, string? cnic, string? accountName)
+        {
+            
+            
+                if (pageNumber < 1) pageNumber = 1;
+                if (pageSize < 1) pageSize = 10;
+
+                var query = _context.AmlData.AsNoTracking();
+
+                if (!string.IsNullOrWhiteSpace(cnic))
+                    query = query.Where(a => a.CNIC.Contains(cnic.Trim()));
+
+                if (!string.IsNullOrWhiteSpace(accountName))
+                    query = query.Where(a => a.AccountName.Contains(accountName.Trim()));
+
+                var totalCount = await query.CountAsync();
+
+                var items = await query
+                    .OrderByDescending(a => a.UpdatedOn ?? a.CreatedOn)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(a => new AmlDataDTO
+                    {
+                        Id = a.Id,
+                        CNIC = a.CNIC,
+                        AccountName = a.AccountName,
+                        Address = a.Address,
+                        CreatedBy = a.CreatedBy,
+                        CreatedOn = a.CreatedOn,
+                        UpdatedBy = a.UpdatedBy,
+                        UpdatedOn = a.UpdatedOn
+                    })
+                    .ToListAsync();
+
+                return new PagedResult<AmlDataDTO>
+                {
+                    Items = items,
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                };
+           
+        }
+
+        public async Task<AmlDataDTO?> GetByIdAsyncAml(Guid id)
+        {
+            
+                return await _context.AmlData
+                    .AsNoTracking()
+                    .Where(a => a.Id == id)
+                    .Select(a => new AmlDataDTO
+                    {
+                        Id = a.Id,
+                        CNIC = a.CNIC,
+                        AccountName = a.AccountName,
+                        Address = a.Address,
+                        CreatedBy = a.CreatedBy,
+                        CreatedOn = a.CreatedOn,
+                        UpdatedBy = a.UpdatedBy,
+                        UpdatedOn = a.UpdatedOn
+                    })
+                    .FirstOrDefaultAsync();
+          
+        }
+
+        public async Task<AmlDataDTO> AddAsync(AmlDataDTO dto)
+        {
+            var entity = new AmlData
+            {
+                Id = Guid.NewGuid(),
+                CNIC = dto.CNIC,
+                AccountName = dto.AccountName,
+                Address = dto.Address,
+                CreatedBy = dto.CreatedBy,
+                CreatedOn = DateTime.Now,
+                UpdatedBy = dto.UpdatedBy,
+                UpdatedOn = DateTime.Now
+            };
+
+            await _context.AmlData.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            //dto.Id = entity.Id;
+            //dto.CreatedOn = entity.CreatedOn;
+            //dto.UpdatedOn = entity.UpdatedOn;
+
+            return dto;
+        }
+
+
+        public async Task<AmlData?> UpdateAsync(AmlDataDTO dto)
+        {
+
+            var existing = await _context.AmlData.FirstOrDefaultAsync(a => a.Id == dto.Id);
+            if (existing == null) return null;
+
+            existing.CNIC = dto.CNIC;
+            existing.AccountName = dto.AccountName;
+            existing.Address = dto.Address;
+            existing.UpdatedBy = dto.UpdatedBy;
+            existing.UpdatedOn = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+
+            return existing;
+        }
+
+    
+
+        public async Task<bool> DeleteAsyncAml(Guid id)
+        {
+           
+                var existing = await _context.AmlData.FirstOrDefaultAsync(a => a.Id == id);
+                if (existing == null) return false;
+
+                _context.AmlData.Remove(existing);
+                await _context.SaveChangesAsync();
+                return true;
+            
+          
+        }
     }
 }

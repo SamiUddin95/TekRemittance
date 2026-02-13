@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
+using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models.dto;
 
@@ -185,6 +186,45 @@ namespace TekRemittance.Service.Implementations
             return await _repository.DeleteCityAsync(id);
         }
         #endregion
+
+        public async Task<PagedResult<AmlDataDTO>> GetAllAmlDataAsync(int pageNumber, int pageSize, string? cnic, string? accountName)
+        {
+            return await _repository.GetAllAsync(pageNumber, pageSize, cnic, accountName);
+        }
+
+        public async Task<AmlDataDTO?> GetAmlDataByIdAsync(Guid id)
+        {
+            return await _repository.GetByIdAsyncAml(id);
+        }
+
+        public async Task<AmlDataDTO> CreateAmlDataAsync(AmlDataDTO dto)
+        {
+            return await _repository.AddAsync(dto);
+        }
+
+        public async Task<AmlDataDTO?> UpdateAmlDataAsync(AmlDataDTO dto)
+        {
+            var updated = await _repository.UpdateAsync(dto);
+
+            if (updated == null) return null;
+
+            return new AmlDataDTO
+            {
+                Id = updated.Id,
+                CNIC = updated.CNIC,
+                AccountName = updated.AccountName,
+                Address = updated.Address,
+                CreatedBy = updated.CreatedBy,
+                CreatedOn = updated.CreatedOn,
+                UpdatedBy = updated.UpdatedBy,
+                UpdatedOn = updated.UpdatedOn
+            };
+        }
+
+        public async Task<bool> DeleteAmlDataAsync(Guid id)
+        {
+            return await _repository.DeleteAsyncAml(id);
+        }
 
     }
 }
