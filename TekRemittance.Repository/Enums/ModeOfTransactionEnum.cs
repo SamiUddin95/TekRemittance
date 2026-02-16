@@ -12,6 +12,7 @@ namespace TekRemittance.Repository.Enums
         
         FT = 1 << 0,   
         IBFT = 1 << 1,   
-        RTGS = 1 << 2    
+        RTGS = 1 << 2,
+        RAAST = 1 << 3
     }
 }
