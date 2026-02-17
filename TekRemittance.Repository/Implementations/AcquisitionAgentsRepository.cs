@@ -60,8 +60,7 @@ namespace TekRemittance.Repository.Implementations
                     CutOffTimeEnd = a.CutOffTimeEnd,
                     RIN = a.RIN,
                     Process = a.Process,
-                    AcquisitionModes = a.AcquisitionModes,
-                    DisbursementModes = a.DisbursementModes,
+                   
                     DirectIntegration = a.DirectIntegration,
                     IsActive = a.IsActive,
                     InquiryURL = a.InquiryURL,
@@ -105,8 +104,8 @@ namespace TekRemittance.Repository.Implementations
                     CutOffTimeEnd = a.CutOffTimeEnd,
                     RIN = a.RIN,
                     Process = a.Process,
-                    AcquisitionModes = a.AcquisitionModes,
-                    DisbursementModes = a.DisbursementModes,
+                    //AcquisitionModes = a.AcquisitionModes,
+                    //DisbursementModes = a.DisbursementModes,
                     DirectIntegration = a.DirectIntegration,
                     IsActive = a.IsActive,
                     InquiryURL = a.InquiryURL,
@@ -153,8 +152,8 @@ namespace TekRemittance.Repository.Implementations
                 CutOffTimeEnd = dto.CutOffTimeEnd,
                 RIN = dto.RIN,
                 Process = dto.Process,
-                AcquisitionModes = dto.AcquisitionModes,
-                DisbursementModes = dto.DisbursementModes,
+                //AcquisitionModes = dto.AcquisitionModes,
+                //DisbursementModes = dto.DisbursementModes,
                 DirectIntegration = dto.DirectIntegration,
                 IsActive = dto.IsActive,
                 InquiryURL = dto.InquiryURL,
@@ -211,8 +210,8 @@ namespace TekRemittance.Repository.Implementations
             existing.CutOffTimeEnd = dto.CutOffTimeEnd;
             existing.RIN = dto.RIN;
             existing.Process = dto.Process;
-            existing.AcquisitionModes = dto.AcquisitionModes;
-            existing.DisbursementModes = dto.DisbursementModes;
+            //existing.AcquisitionModes = dto.AcquisitionModes;
+            //existing.DisbursementModes = dto.DisbursementModes;
             existing.DirectIntegration = dto.DirectIntegration;
             existing.IsActive = dto.IsActive;
             existing.InquiryURL = dto.InquiryURL;
@@ -241,8 +240,8 @@ namespace TekRemittance.Repository.Implementations
                 CutOffTimeEnd = existing.CutOffTimeEnd,
                 RIN = existing.RIN,
                 Process = existing.Process,
-                AcquisitionModes = existing.AcquisitionModes,
-                DisbursementModes = existing.DisbursementModes,
+                //AcquisitionModes = existing.AcquisitionModes,
+                //DisbursementModes = existing.DisbursementModes,
                 DirectIntegration = existing.DirectIntegration,
                 IsActive = existing.IsActive,
                 InquiryURL = existing.InquiryURL,

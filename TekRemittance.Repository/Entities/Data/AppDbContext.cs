@@ -304,12 +304,12 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.Property(a => a.Process)
                       .HasConversion<string>()
                       .HasMaxLength(50);
-                entity.Property(a => a.AcquisitionModes)
-                      .HasConversion<string>()
-                      .HasMaxLength(200);
-                entity.Property(a => a.DisbursementModes)
-                      .HasConversion<string>()
-                      .HasMaxLength(200);
+                //entity.Property(a => a.AcquisitionModes)
+                //      .HasConversion<string>()
+                //      .HasMaxLength(200);
+                //entity.Property(a => a.DisbursementModes)
+                //      .HasConversion<string>()
+                //      .HasMaxLength(200);
 
                 entity.HasOne(a => a.Country)
                       .WithMany()
