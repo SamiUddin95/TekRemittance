@@ -528,6 +528,24 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [HttpPost("UploadAmlFile")]
+        public async Task<IActionResult> UploadAmlFile(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest(ApiResponse<string>.Error("File is empty", 400));
+
+            try
+            {
+                var createdRecords = await _service.ProcessAmlFileAsync(file);
+                return Ok(ApiResponse<List<AmlDataDTO>>.Success(createdRecords, 201));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+
 
         #endregion
 

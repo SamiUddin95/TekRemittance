@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -225,6 +226,86 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repository.DeleteAsyncAml(id);
         }
+
+        public async Task<List<AmlDataDTO>> ProcessAmlFileAsync(IFormFile file)
+        {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+
+            var extension = Path.GetExtension(file.FileName).ToLower();
+            var amlDataList = new List<AmlDataDTO>();
+
+            if (extension == ".csv")
+            {
+                using var reader = new StreamReader(file.OpenReadStream());
+                bool skippedHeader = false;
+                while (!reader.EndOfStream)
+                {
+                    var line = await reader.ReadLineAsync();
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    
+                    if (!skippedHeader)
+                    {
+                        skippedHeader = true;
+                        continue;
+                    }
+
+                    var values = line.Split(',');
+                    if (values.Length < 3) continue;
+
+                    amlDataList.Add(new AmlDataDTO
+                    {
+                        CNIC = values[0].Trim(),
+                        AccountName = values[1].Trim(),
+                        Address = values[2].Trim()
+                    });
+                }
+            }
+            else if (extension == ".xlsx")
+            {
+                using var stream = file.OpenReadStream();
+                using var wb = new ClosedXML.Excel.XLWorkbook(stream);
+                var ws = wb.Worksheets.FirstOrDefault();
+                if (ws == null) throw new InvalidOperationException("Worksheet not found");
+
+                var table = ws.RangeUsed();
+                if (table == null) throw new InvalidOperationException("Worksheet is empty");
+
+                int startRow = table.RangeAddress.FirstAddress.RowNumber;
+                int endRow = table.RangeAddress.LastAddress.RowNumber;
+
+                bool skippedHeader = false;
+                for (int r = startRow; r <= endRow; r++)
+                {
+                    if (!skippedHeader)
+                    {
+                        skippedHeader = true; 
+                        continue;
+                    }
+
+                    var cnic = ws.Cell(r, 1).GetString().Trim();
+                    var accountName = ws.Cell(r, 2).GetString().Trim();
+                    var address = ws.Cell(r, 3).GetString().Trim();
+
+                    amlDataList.Add(new AmlDataDTO
+                    {
+                        CNIC = cnic,
+                        AccountName = accountName,
+                        Address = address
+                    });
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Only CSV or Excel files are allowed");
+            }
+
+           
+            var createdRecords = await _repository.AddRangeAsync(amlDataList);
+            return createdRecords;
+        }
+
+
 
     }
 }

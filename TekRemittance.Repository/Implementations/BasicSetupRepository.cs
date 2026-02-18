@@ -750,5 +750,32 @@ namespace TekRemittance.Repository.Implementations
             
           
         }
+
+       
+
+        public async Task<List<AmlDataDTO>> AddRangeAsync(List<AmlDataDTO> dtos)
+        {
+            var entities = dtos.Select(dto => new AmlData
+            {
+                Id = Guid.NewGuid(),
+                CNIC = dto.CNIC,
+                AccountName = dto.AccountName,
+                Address = dto.Address,
+                CreatedOn = DateTime.Now,
+                UpdatedOn = DateTime.Now
+            }).ToList();
+
+            await _context.AmlData.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+
+            for (int i = 0; i < dtos.Count; i++)
+            {
+                dtos[i].Id = entities[i].Id;
+                dtos[i].CreatedOn = entities[i].CreatedOn;
+                dtos[i].UpdatedOn = entities[i].UpdatedOn;
+            }
+
+            return dtos;
+        }
     }
 }

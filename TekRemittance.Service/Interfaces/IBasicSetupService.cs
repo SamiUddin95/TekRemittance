@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,5 +49,7 @@ namespace TekRemittance.Service.Interfaces
         Task<AmlDataDTO> CreateAmlDataAsync(AmlDataDTO dto);
         Task<AmlDataDTO?> UpdateAmlDataAsync(AmlDataDTO dto);
         Task<bool> DeleteAmlDataAsync(Guid id);
+
+        Task<List<AmlDataDTO>> ProcessAmlFileAsync(IFormFile file);
     }
 }

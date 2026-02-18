@@ -28,6 +28,9 @@ namespace TekRemittance.Repository.Interfaces
 
 
 
+        Task<List<RemitApproveBulkResponseDTO>> RemitApproveBulkAsync(RemitApproveBulkDTO dto);
+
+
 
 
     }

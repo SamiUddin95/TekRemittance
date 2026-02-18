@@ -46,5 +46,8 @@ namespace TekRemittance.Repository.Interfaces
         Task<AmlDataDTO> AddAsync(AmlDataDTO dto);
         Task<AmlData?> UpdateAsync(AmlDataDTO dto);
         Task<bool> DeleteAsyncAml(Guid id);
+
+        //Task<AmlDataDTO> AddAsync(AmlDataDTO dto);
+        Task<List<AmlDataDTO>> AddRangeAsync(List<AmlDataDTO> dtos);
     }
 }

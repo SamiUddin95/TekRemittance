@@ -506,7 +506,6 @@ namespace TekRemittance.Repository.Implementations
                 return (false, "Amount not found in JSON.", xpin);
             }
             bool status = amount <= userLimit ;
-            //remitInfo.LimitType = status ? "1" : "0";
 
             if (!status)
             {
@@ -718,6 +717,90 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
+
+        public async Task<List<RemitApproveBulkResponseDTO>> RemitApproveBulkAsync(RemitApproveBulkDTO dto)
+
+        {
+            if (dto.UserId == null)
+                throw new ArgumentNullException(nameof(dto.UserId), "UserId cannot be null");
+
+            var userLimit = await _context.Users
+                .Where(u => u.Id == dto.UserId.Value)
+                .Select(u => u.Limit)
+                .FirstOrDefaultAsync();
+
+          
+
+            var results = new List<RemitApproveBulkResponseDTO>();
+
+            foreach (var xpin in dto.Xpins)
+            {
+                var remitInfo = await _context.RemittanceInfos
+                    .FirstOrDefaultAsync(r => r.DataJson.Contains(xpin));
+
+              
+
+                var jsonDoc = JsonDocument.Parse(remitInfo.DataJson);
+                decimal amount = 0;
+
+                if (jsonDoc.RootElement.TryGetProperty("Amount", out JsonElement amountElement))
+                {
+                    if (amountElement.ValueKind == JsonValueKind.String &&
+                        !decimal.TryParse(amountElement.GetString()?.Trim(), out amount))
+                    {
+                        results.Add(new RemitApproveBulkResponseDTO
+                        {
+                            //Xpin = xpin,
+                            //IsSuccess = false,
+                            Message = "Invalid amount format."
+                        });
+                        continue;
+                    }
+                    else if (amountElement.ValueKind == JsonValueKind.Number)
+                    {
+                        amount = amountElement.GetDecimal();
+                    }
+                }
+                else
+                {
+                    results.Add(new RemitApproveBulkResponseDTO
+                    {
+                       
+                        Message = "Amount not found."
+                    });
+                    continue;
+                }
+
+                if (amount <= userLimit)
+                {
+                    remitInfo.Status = "A";
+
+                    results.Add(new RemitApproveBulkResponseDTO
+                    {
+                       
+                        Message = "Approved successfully."
+                    });
+                }
+                else
+                {
+                    remitInfo.Status = "U";
+
+                    results.Add(new RemitApproveBulkResponseDTO
+                    {
+                       
+                        Message = "Insufficient limit."
+                    });
+                }
+
+                remitInfo.ModeOfTransaction = dto.ModeOfTransaction;
+                remitInfo.UpdatedOn = DateTime.Now;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return results;
+        }
+
 
 
 

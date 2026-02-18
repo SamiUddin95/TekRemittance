@@ -73,6 +73,13 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.GetByAgentIdWithStatusAMLAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
         }
+    
+        public async Task<List<RemitApproveBulkResponseDTO>> RemitApproveBulkAsync(RemitApproveBulkDTO dto)
+
+        {
+            return await _repo.RemitApproveBulkAsync(dto);
+        }
+
 
 
     }
