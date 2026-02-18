@@ -575,7 +575,7 @@ namespace TekRemittance.Repository.Implementations
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
-            remitInfo.Status = "A";
+            remitInfo.Status = "U";
             remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
 
