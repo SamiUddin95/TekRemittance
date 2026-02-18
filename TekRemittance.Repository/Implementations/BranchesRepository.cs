@@ -58,8 +58,8 @@ namespace TekRemittance.Repository.Implementations
                     CountryId = b.CountryId,
                     ProvinceId = b.ProvinceId,
                     CityId = b.CityId,
-                    AcquisitionModes = b.AcquisitionModes,
-                    DisbursementModes = b.DisbursementModes,
+                    //AcquisitionModes = b.AcquisitionModes,
+                    //DisbursementModes = b.DisbursementModes,
                     CreatedBy = b.CreatedBy,
                     CreatedOn = b.CreatedOn,
                     UpdatedBy = b.UpdatedBy,
@@ -99,8 +99,8 @@ namespace TekRemittance.Repository.Implementations
                     CountryId = b.CountryId,
                     ProvinceId = b.ProvinceId,
                     CityId = b.CityId,
-                    AcquisitionModes = b.AcquisitionModes,
-                    DisbursementModes = b.DisbursementModes,
+                    //AcquisitionModes = b.AcquisitionModes,
+                    //DisbursementModes = b.DisbursementModes,
                     CreatedBy = b.CreatedBy,
                     CreatedOn = b.CreatedOn,
                     UpdatedBy = b.UpdatedBy,
@@ -138,8 +138,8 @@ namespace TekRemittance.Repository.Implementations
                 CountryId = dto.CountryId,
                 ProvinceId = dto.ProvinceId,
                 CityId = dto.CityId,
-                AcquisitionModes = dto.AcquisitionModes,
-                DisbursementModes = dto.DisbursementModes,
+                //AcquisitionModes = dto.AcquisitionModes,
+                //DisbursementModes = dto.DisbursementModes,
                 CreatedBy = dto.CreatedBy ?? "system",
                 CreatedOn = DateTime.UtcNow,
                 UpdatedBy = dto.UpdatedBy ?? "system",
@@ -187,8 +187,8 @@ namespace TekRemittance.Repository.Implementations
             existing.CountryId = dto.CountryId;
             existing.ProvinceId = dto.ProvinceId;
             existing.CityId = dto.CityId;
-            existing.AcquisitionModes = dto.AcquisitionModes;
-            existing.DisbursementModes = dto.DisbursementModes;
+            //existing.AcquisitionModes = dto.AcquisitionModes;
+            //existing.DisbursementModes = dto.DisbursementModes;
             existing.UpdatedBy = dto.UpdatedBy ?? "system";
             existing.UpdatedOn = DateTime.UtcNow;
 

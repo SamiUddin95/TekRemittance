@@ -26,8 +26,8 @@ namespace TekRemittance.Repository.Entities
         public TimeSpan CutOffTimeEnd { get; set; }
         public RinType RIN { get; set; }
         public ProcessType Process { get; set; }
-        //public AcquisitionModes AcquisitionModes { get; set; }
-        //public DisbursementModes DisbursementModes { get; set; }
+        public AcquisitionModes AcquisitionModes { get; set; }
+        public DisbursementModes DisbursementModes { get; set; }
         public bool DirectIntegration { get; set; }
         public bool IsActive { get; set; }
         public string InquiryURL { get; set; }

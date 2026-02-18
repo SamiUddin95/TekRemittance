@@ -24,8 +24,8 @@ namespace TekRemittance.Repository.Entities
         public Country Country { get; set; }
         public Province Province { get; set; }
         public City City { get; set; }
-        public AcquisitionModes AcquisitionModes { get; set; }
-        public DisbursementModes DisbursementModes { get; set; }
+        //public AcquisitionModes AcquisitionModes { get; set; }
+        //public DisbursementModes DisbursementModes { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
         public string? UpdatedBy { get; set; }
