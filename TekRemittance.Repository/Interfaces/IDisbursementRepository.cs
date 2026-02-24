@@ -29,7 +29,7 @@ namespace TekRemittance.Repository.Interfaces
 
 
         Task<List<RemitApproveBulkResponseDTO>> RemitApproveBulkAsync(RemitApproveBulkDTO dto);
-        Task<List<AgentXPinDTO>> GetXPinsByAgentAsync(Guid agentId);
+        
 
 
 

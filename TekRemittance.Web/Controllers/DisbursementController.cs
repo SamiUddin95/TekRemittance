@@ -343,23 +343,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        [HttpGet("GetAllXPins")]
-        public async Task<IActionResult> GetAllXPins(Guid agentId)
-        {
-            try
-            {
-                var result = await _service.GetXPinsByAgentAsync(agentId);
-
-                return Ok(ApiResponse<object>.Success(result, 200));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
-            }
-        }
-
-
-
+       
 
 
     }

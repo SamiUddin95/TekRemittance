@@ -80,10 +80,6 @@ namespace TekRemittance.Service.Implementations
             return await _repo.RemitApproveBulkAsync(dto);
         }
 
-        public async Task<List<AgentXPinDTO>> GetXPinsByAgentAsync(Guid agentId)
-        {
-            return await _repo.GetXPinsByAgentAsync(agentId);
-        }
 
 
 

@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
@@ -721,97 +723,108 @@ namespace TekRemittance.Repository.Implementations
         public async Task<List<RemitApproveBulkResponseDTO>> RemitApproveBulkAsync(RemitApproveBulkDTO dto)
 
         {
-            if (dto.UserId == null)
-                throw new ArgumentNullException(nameof(dto.UserId), "UserId cannot be null");
-
-            var userLimit = await _context.Users
-                .Where(u => u.Id == dto.UserId.Value)
-                .Select(u => u.Limit)
-                .FirstOrDefaultAsync();
-
-          
-
-            var results = new List<RemitApproveBulkResponseDTO>();
-
-            foreach (var xpin in dto.Xpins)
+            if (dto.IsTrue == true)
             {
-                var remitInfo = await _context.RemittanceInfos
-                    .FirstOrDefaultAsync(r => r.DataJson.Contains(xpin));
+                var getRecods = await _context.RemittanceInfos.Where(x => x.ModeOfTransaction == dto.ModeOfTransaction && x.Status == "P" && x.AgentId == dto.AgentId).ToListAsync();
 
-              
-
-                var jsonDoc = JsonDocument.Parse(remitInfo.DataJson);
-                decimal amount = 0;
-
-                if (jsonDoc.RootElement.TryGetProperty("Amount", out JsonElement amountElement))
+                foreach (var item in getRecods)
                 {
-                    if (amountElement.ValueKind == JsonValueKind.String &&
-                        !decimal.TryParse(amountElement.GetString()?.Trim(), out amount))
+                    item.Status = "A";
+                }
+                await _context.SaveChangesAsync();
+
+                return new List<RemitApproveBulkResponseDTO>
+                  {
+                   new RemitApproveBulkResponseDTO { Message = "success" }
+                  };
+            }
+
+
+            else
+            {
+                if (dto.UserId == null)
+                    throw new ArgumentNullException(nameof(dto.UserId), "UserId cannot be null");
+
+                var userLimit = await _context.Users
+                    .Where(u => u.Id == dto.UserId.Value)
+                    .Select(u => u.Limit)
+                    .FirstOrDefaultAsync();
+
+
+
+                var results = new List<RemitApproveBulkResponseDTO>();
+
+                foreach (var xpin in dto.Xpins)
+                {
+                    var remitInfo = await _context.RemittanceInfos
+                        .FirstOrDefaultAsync(r => r.DataJson.Contains(xpin));
+
+                    var jsonDoc = JsonDocument.Parse(remitInfo.DataJson);
+                    decimal amount = 0;
+
+                    if (jsonDoc.RootElement.TryGetProperty("Amount", out JsonElement amountElement))
+                    {
+                        if (amountElement.ValueKind == JsonValueKind.String &&
+                            !decimal.TryParse(amountElement.GetString()?.Trim(), out amount))
+                        {
+                            results.Add(new RemitApproveBulkResponseDTO
+                            {
+                                //Xpin = xpin,
+                                //IsSuccess = false,
+                                Message = "Invalid amount format."
+                            });
+                            continue;
+                        }
+                        else if (amountElement.ValueKind == JsonValueKind.Number)
+                        {
+                            amount = amountElement.GetDecimal();
+                        }
+                    }
+                    else
                     {
                         results.Add(new RemitApproveBulkResponseDTO
                         {
-                            //Xpin = xpin,
-                            //IsSuccess = false,
-                            Message = "Invalid amount format."
+
+                            Message = "Amount not found."
                         });
                         continue;
                     }
-                    else if (amountElement.ValueKind == JsonValueKind.Number)
+
+                    if (amount <= userLimit)
                     {
-                        amount = amountElement.GetDecimal();
+                        remitInfo.Status = "A";
+
+                        results.Add(new RemitApproveBulkResponseDTO
+                        {
+
+                            Message = "Approved successfully."
+                        });
                     }
-                }
-                else
-                {
-                    results.Add(new RemitApproveBulkResponseDTO
+                    else
                     {
-                       
-                        Message = "Amount not found."
-                    });
-                    continue;
+                        remitInfo.Status = "U";
+
+                        results.Add(new RemitApproveBulkResponseDTO
+                        {
+
+                            Message = "Insufficient limit."
+                        });
+                    }
+
+                    remitInfo.ModeOfTransaction = dto.ModeOfTransaction;
+                    remitInfo.UpdatedOn = DateTime.Now;
                 }
 
-                if (amount <= userLimit)
-                {
-                    remitInfo.Status = "A";
+                await _context.SaveChangesAsync();
 
-                    results.Add(new RemitApproveBulkResponseDTO
-                    {
-                       
-                        Message = "Approved successfully."
-                    });
-                }
-                else
-                {
-                    remitInfo.Status = "U";
-
-                    results.Add(new RemitApproveBulkResponseDTO
-                    {
-                       
-                        Message = "Insufficient limit."
-                    });
-                }
-
-                remitInfo.ModeOfTransaction = dto.ModeOfTransaction;
-                remitInfo.UpdatedOn = DateTime.Now;
+                return results;
             }
 
-            await _context.SaveChangesAsync();
 
-            return results;
+
+            
         }
 
-        public async Task<List<AgentXPinDTO>> GetXPinsByAgentAsync(Guid agentId)
-        {
-            return await _context.RemittanceInfos
-                .Where(r => r.AgentId == agentId && r.Xpin != null)
-                .Select(r => new AgentXPinDTO
-                {
-                    XPin = r.Xpin
-                })
-                .Distinct()
-                .ToListAsync();
-        }
 
 
     }
