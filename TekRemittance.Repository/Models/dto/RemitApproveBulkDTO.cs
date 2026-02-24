@@ -12,5 +12,6 @@ namespace TekRemittance.Repository.Models.dto
         public List<string> Xpins { get; set; } = new();
         public Guid? UserId { get; set; }
         public ModeOfTransactionEnum? ModeOfTransaction { get; set; }
+        //public string ModeOfTransaction { get; set; }
     }
 }

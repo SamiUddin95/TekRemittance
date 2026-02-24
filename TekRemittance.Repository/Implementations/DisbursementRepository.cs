@@ -801,7 +801,17 @@ namespace TekRemittance.Repository.Implementations
             return results;
         }
 
-
+        public async Task<List<AgentXPinDTO>> GetXPinsByAgentAsync(Guid agentId)
+        {
+            return await _context.RemittanceInfos
+                .Where(r => r.AgentId == agentId && r.Xpin != null)
+                .Select(r => new AgentXPinDTO
+                {
+                    XPin = r.Xpin
+                })
+                .Distinct()
+                .ToListAsync();
+        }
 
 
     }

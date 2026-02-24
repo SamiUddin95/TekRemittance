@@ -28,6 +28,7 @@ namespace TekRemittance.Service.Interfaces
         Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAMLAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
 
         Task<List<RemitApproveBulkResponseDTO>> RemitApproveBulkAsync(RemitApproveBulkDTO dto);
+        Task<List<AgentXPinDTO>> GetXPinsByAgentAsync(Guid agentId);
 
 
 
