@@ -5,6 +5,7 @@ using TekRemittance.Service.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using TekRemittance.Repository.Models.dto;
 using Microsoft.AspNetCore.Http.HttpResults;
+using TekRemittance.Repository.Enums;
 
 
 namespace TekRemittance.Web.Controllers
@@ -47,7 +48,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByAgent")]
-        public async Task<IActionResult> GetByAgentIdP(Guid agentId, Guid userId, int pageNumber = 1, int pageSize = 10,  string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<IActionResult> GetByAgentIdP(Guid agentId, Guid userId, int pageNumber = 1, int pageSize = 10,  string? accountnumber = null, string? xpin = null, string? date = null )
           {
             try
             {

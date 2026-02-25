@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Enums;
 
 namespace TekRemittance.Repository.Models.dto
 {
@@ -22,5 +23,7 @@ namespace TekRemittance.Repository.Models.dto
         public string Status { get; set; }
 
         public string LimitType { get; set; }
+        public ModeOfTransactionEnum? ModeOfTransaction { get; set; }
+
     }
 }

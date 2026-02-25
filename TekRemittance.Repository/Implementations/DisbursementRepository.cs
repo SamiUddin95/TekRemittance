@@ -205,7 +205,8 @@ namespace TekRemittance.Repository.Implementations
                         Status = x.r.Status,
                         CreatedOn = x.r.CreatedOn,
                         UpdatedOn = x.r.UpdatedOn,
-                        LimitType = limitflag
+                        LimitType = limitflag,
+                        ModeOfTransaction= x.r.ModeOfTransaction,
                     };
             }).ToList();
 
