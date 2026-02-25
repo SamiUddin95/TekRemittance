@@ -324,18 +324,16 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-       
+
         [HttpPost("RemitApproveBulk")]
         public async Task<IActionResult> RemitApproveBulk([FromBody] RemitApproveBulkDTO dto)
         {
             try
             {
-                if (dto == null || dto.UserId == null || dto.Xpins == null || !dto.Xpins.Any())
-                    return BadRequest(ApiResponse<string>.Error("Invalid request data", 400));
-
                 await _service.RemitApproveBulkAsync(dto);
 
                 return Ok(ApiResponse<string>.Success("Success", 200));
+           
             }
             catch (Exception ex)
             {
