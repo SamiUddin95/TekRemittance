@@ -757,65 +757,71 @@ namespace TekRemittance.Repository.Implementations
                 foreach (var xpin in dto.Xpins)
                 {
                     var remitInfo = await _context.RemittanceInfos
-                        .FirstOrDefaultAsync(r => r.DataJson.Contains(xpin));
+                        .Where(r => r.DataJson.Contains(xpin) && r.ModeOfTransaction == dto.ModeOfTransaction && r.Status == "P").FirstOrDefaultAsync();
 
-                    var jsonDoc = JsonDocument.Parse(remitInfo.DataJson);
-                    decimal amount = 0;
-
-                    if (jsonDoc.RootElement.TryGetProperty("Amount", out JsonElement amountElement))
+                    if (remitInfo != null)
                     {
-                        if (amountElement.ValueKind == JsonValueKind.String &&
-                            !decimal.TryParse(amountElement.GetString()?.Trim(), out amount))
+
+                        var jsonDoc = JsonDocument.Parse(remitInfo.DataJson);
+                        decimal amount = 0;
+
+                        if (jsonDoc.RootElement.TryGetProperty("Amount", out JsonElement amountElement))
+                        {
+                            if (amountElement.ValueKind == JsonValueKind.String &&
+                                !decimal.TryParse(amountElement.GetString()?.Trim(), out amount))
+                            {
+                                results.Add(new RemitApproveBulkResponseDTO
+                                {
+                                    //Xpin = xpin,
+                                    //IsSuccess = false,
+                                    Message = "Invalid amount format."
+                                });
+                                continue;
+                            }
+                            else if (amountElement.ValueKind == JsonValueKind.Number)
+                            {
+                                amount = amountElement.GetDecimal();
+                            }
+                        }
+                        else
                         {
                             results.Add(new RemitApproveBulkResponseDTO
                             {
-                                //Xpin = xpin,
-                                //IsSuccess = false,
-                                Message = "Invalid amount format."
+
+                                Message = "Amount not found."
                             });
                             continue;
                         }
-                        else if (amountElement.ValueKind == JsonValueKind.Number)
+
+                        if (amount <= userLimit)
                         {
-                            amount = amountElement.GetDecimal();
+                            remitInfo.Status = "A";
+
+                            results.Add(new RemitApproveBulkResponseDTO
+                            {
+
+                                Message = "Approved successfully."
+                            });
                         }
-                    }
-                    else
-                    {
-                        results.Add(new RemitApproveBulkResponseDTO
+                        else
                         {
+                            remitInfo.Status = "U";
 
-                            Message = "Amount not found."
-                        });
-                        continue;
+                            results.Add(new RemitApproveBulkResponseDTO
+                            {
+
+                                Message = "Insufficient limit."
+                            });
+                        }
+
+                        remitInfo.ModeOfTransaction = dto.ModeOfTransaction;
+                        remitInfo.UpdatedOn = DateTime.Now;
+
+                        await _context.SaveChangesAsync();
                     }
-
-                    if (amount <= userLimit)
-                    {
-                        remitInfo.Status = "A";
-
-                        results.Add(new RemitApproveBulkResponseDTO
-                        {
-
-                            Message = "Approved successfully."
-                        });
-                    }
-                    else
-                    {
-                        remitInfo.Status = "U";
-
-                        results.Add(new RemitApproveBulkResponseDTO
-                        {
-
-                            Message = "Insufficient limit."
-                        });
-                    }
-
-                    remitInfo.ModeOfTransaction = dto.ModeOfTransaction;
-                    remitInfo.UpdatedOn = DateTime.Now;
                 }
-
-                await _context.SaveChangesAsync();
+                
+             
 
                 return results;
             }
