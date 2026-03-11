@@ -32,5 +32,7 @@ namespace TekRemittance.Web.Models.dto
         public DateTime CreatedOn { get; set; }
         public string? UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public int? XPINType { get; set; }
+        public int? PercentSharing { get; set; }
     }
 }

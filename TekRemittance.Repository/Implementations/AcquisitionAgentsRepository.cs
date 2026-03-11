@@ -70,7 +70,9 @@ namespace TekRemittance.Repository.Implementations
                     CreatedBy = a.CreatedBy,
                     CreatedOn = a.CreatedOn,
                     UpdatedBy = a.UpdatedBy,
-                    UpdatedOn = a.UpdatedOn
+                    UpdatedOn = a.UpdatedOn,
+                    XPINType= a.XPINType,
+                    PercentSharing = a.PercentSharing
                 })
                 .ToListAsync();
 
@@ -115,7 +117,9 @@ namespace TekRemittance.Repository.Implementations
                     CreatedBy = a.CreatedBy,
                     CreatedOn = a.CreatedOn,
                     UpdatedBy = a.UpdatedBy,
-                    UpdatedOn = a.UpdatedOn
+                    UpdatedOn = a.UpdatedOn,
+                    XPINType = a.XPINType,
+                    PercentSharing = a.PercentSharing
                 })
                 .FirstOrDefaultAsync();
         }
@@ -163,7 +167,9 @@ namespace TekRemittance.Repository.Implementations
                 CreatedBy = dto.CreatedBy ?? "system",
                 CreatedOn = DateTime.UtcNow,
                 UpdatedBy = dto.UpdatedBy ?? "system",
-                UpdatedOn = DateTime.UtcNow
+                UpdatedOn = DateTime.UtcNow,
+                XPINType = dto.XPINType,
+                PercentSharing = dto.PercentSharing
             };
 
             await _context.AcquisitionAgents.AddAsync(entity);
@@ -220,6 +226,8 @@ namespace TekRemittance.Repository.Implementations
             existing.UnlockURL = dto.UnlockURL;
             existing.UpdatedBy = dto.UpdatedBy;
             existing.UpdatedOn = DateTime.UtcNow;
+            existing.XPINType = dto.XPINType;
+            existing.PercentSharing = dto.PercentSharing;
 
             await _context.SaveChangesAsync();
 
@@ -251,7 +259,9 @@ namespace TekRemittance.Repository.Implementations
                 CreatedBy = existing.CreatedBy,
                 CreatedOn = existing.CreatedOn,
                 UpdatedBy = existing.UpdatedBy,
-                UpdatedOn = existing.UpdatedOn
+                UpdatedOn = existing.UpdatedOn,
+                XPINType = existing.XPINType,
+                PercentSharing = existing.PercentSharing
             };
         }
 

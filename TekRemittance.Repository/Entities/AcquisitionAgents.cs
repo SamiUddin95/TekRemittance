@@ -38,6 +38,9 @@ namespace TekRemittance.Repository.Entities
         public string? UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public bool IsDeleted { get; set; }
+        public int? XPINType { get; set; }
+        public int? PercentSharing { get; set; }
+
 
     }
 }
