@@ -20,7 +20,7 @@ namespace TekRemittance.Repository.Interfaces
         Task<RemittanceInfoModelDTO> RemitAuthorizeAsync(string xpin, Guid? userId);
         Task<RemittanceInfoModelDTO> RemitRepairAsync(string xpin, Guid? userId);
 
-        Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId);
+        Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId, string remarks);
 
         Task<RemittanceInfoModelDTO> RemitAmlAsync(string xpin, Guid? userId);
 

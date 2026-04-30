@@ -59,9 +59,9 @@ namespace TekRemittance.Service.Implementations
             return await _repo.RemitRepairAsync(xpin, userId);
         }
 
-        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId)
+        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId, string remarks)
         {
-            return await _repo.RemitReverseAsync(xpin, userId);
+            return await _repo.RemitReverseAsync(xpin, userId, remarks);
         }
 
         public async Task<RemittanceInfoModelDTO> AmlAsync(string xpin, Guid? userId)

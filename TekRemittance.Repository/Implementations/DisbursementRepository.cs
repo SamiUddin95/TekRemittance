@@ -192,22 +192,23 @@ namespace TekRemittance.Repository.Implementations
                     limitflag = "0"; //Normal User
                 }
 
-                    return new RemitttanceInfosStatusDTO
-                    {
-                        Id = x.r.Id,
-                        AgentId = x.r.AgentId,
-                        AgentName = x.AgentName,
-                        TemplateId = x.r.TemplateId,
-                        UploadId = x.r.UploadId,
-                        RowNumber = x.r.RowNumber,
-                        DataJson = x.r.DataJson,
-                        Error = x.r.Error,
-                        Status = x.r.Status,
-                        CreatedOn = x.r.CreatedOn,
-                        UpdatedOn = x.r.UpdatedOn,
-                        LimitType = limitflag,
-                        ModeOfTransaction= x.r.ModeOfTransaction,
-                    };
+                return new RemitttanceInfosStatusDTO
+                {
+                    Id = x.r.Id,
+                    AgentId = x.r.AgentId,
+                    AgentName = x.AgentName,
+                    TemplateId = x.r.TemplateId,
+                    UploadId = x.r.UploadId,
+                    RowNumber = x.r.RowNumber,
+                    DataJson = x.r.DataJson,
+                    Error = x.r.Error,
+                    Status = x.r.Status,
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn,
+                    LimitType = limitflag,
+                    ModeOfTransaction = x.r.ModeOfTransaction,
+                    remarks = x.r.Remarks
+                };
             }).ToList();
 
             return new PagedResult<RemitttanceInfosStatusDTO>
@@ -578,7 +579,7 @@ namespace TekRemittance.Repository.Implementations
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
-            remitInfo.Status = "U";
+            remitInfo.Status = "A";
             remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
 
@@ -610,7 +611,7 @@ namespace TekRemittance.Repository.Implementations
             };
         }
 
-        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId)
+        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId, string remarks)
         {
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
@@ -621,6 +622,7 @@ namespace TekRemittance.Repository.Implementations
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
             remitInfo.Status = "P";
+            remitInfo.Remarks = remarks;
             remitInfo.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
 
@@ -758,7 +760,7 @@ namespace TekRemittance.Repository.Implementations
                 foreach (var xpin in dto.Xpins)
                 {
                     var remitInfo = await _context.RemittanceInfos
-                        .Where(r => r.DataJson.Contains(xpin) && r.ModeOfTransaction == dto.ModeOfTransaction && r.Status == "P").FirstOrDefaultAsync();
+                        .Where(r => r.DataJson.Contains(xpin) && r.Status == "P").FirstOrDefaultAsync();
 
                     if (remitInfo != null)
                     {

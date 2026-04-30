@@ -1033,6 +1033,9 @@ namespace TekRemittance.Repository.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RowNumber")
                         .HasColumnType("int");
 
