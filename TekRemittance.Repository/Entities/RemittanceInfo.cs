@@ -22,6 +22,6 @@ namespace TekRemittance.Repository.Entities
         public DateTime? Date { get; set; }
         public ModeOfTransactionEnum? ModeOfTransaction { get; set; }
         public string? LimitType { get; set; }
-        
+        public string? Remarks { get; set; }
     }
 }
