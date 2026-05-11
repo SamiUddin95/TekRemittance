@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using TekRemittance.Repository.Enums;
 
 namespace TekRemittance.Repository.Entities
@@ -22,6 +24,11 @@ namespace TekRemittance.Repository.Entities
         public DateTime? Date { get; set; }
         public ModeOfTransactionEnum? ModeOfTransaction { get; set; }
         public string? LimitType { get; set; }
-        
+
+        [StringLength(3)]
+        public string? BankCode { get; set; }
+
+        [ForeignKey("BankCode")]
+        public  Bank? Bank { get; set; }
     }
 }

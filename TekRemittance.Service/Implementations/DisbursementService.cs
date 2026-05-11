@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
+using TekRemittance.Repository.Models.DTOs;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models.dto;
 
@@ -79,7 +80,11 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.RemitApproveBulkAsync(dto);
         }
-
+       
+        public async Task<PagedResult<DisbursementQueueDto>> GetDisbursementQueueAsync(int pageNumber = 1, int pageSize = 10, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            return await _repo.GetDisbursementQueueAsync(pageNumber, pageSize, fromDate, toDate);
+        }
 
 
 

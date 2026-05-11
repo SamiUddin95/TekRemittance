@@ -342,7 +342,29 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-       
+        [HttpGet("disbursement-queue")]
+        public async Task<IActionResult> GetDisbursementQueue(int pageNumber = 1, int pageSize = 10, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            try
+            {
+                var result = await _service.GetDisbursementQueueAsync(pageNumber, pageSize, fromDate, toDate);
+                if (result == null || !result.Items.Any())
+                    return NotFound(ApiResponse<string>.Error("No data found for this bank", 404));
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
 
 
     }

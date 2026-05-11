@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
@@ -17,6 +18,7 @@ using TekRemittance.Repository.Entities.Data;
 using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
+using TekRemittance.Repository.Models.DTOs;
 using TekRemittance.Web.Models.dto;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -26,9 +28,11 @@ namespace TekRemittance.Repository.Implementations
     public class DisbursementRepository : IDisbursementRepository
     {
         private readonly AppDbContext _context;
-        public DisbursementRepository(AppDbContext context)
+        private readonly IConfiguration _configuration;
+        public DisbursementRepository(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
         public async Task<PagedResult<KeyValuePair<string, List<string>>>> GetDataByAgentIdAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
@@ -832,7 +836,51 @@ namespace TekRemittance.Repository.Implementations
             
         }
 
+       
+        public async Task<PagedResult<DisbursementQueueDto>> GetDisbursementQueueAsync(int pageNumber = 1, int pageSize = 10, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 50;
 
+            var bankCode = _configuration["BankCode"];
+
+            var query = _context.RemittanceInfos
+                .Where(x => x.BankCode == bankCode);
+
+            if (fromDate.HasValue)
+                query = query.Where(x => x.Date.Value.Date >= fromDate.Value.Date);
+            if (toDate.HasValue)
+                query = query.Where(x => x.Date.Value.Date <= toDate.Value.Date);
+
+            var totalCount = await query.CountAsync();
+
+            var records = await query
+                .OrderBy(a => a.RowNumber)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(a => new DisbursementQueueDto
+                {
+                    Id = a.Id,
+                    AccountNumber = a.AccountNumber,
+                    AccountTitle = a.AccountTitle,
+                    BankCode = a.BankCode,
+                    BankName = a.Bank.BankName,
+                    Status = a.Status,
+                    Date = a.Date,
+                    RowNumber = a.RowNumber,
+                    DataJson = a.DataJson,
+                    CreatedOn = a.CreatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<DisbursementQueueDto>
+            {
+                Items = records,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
 
     }
 }

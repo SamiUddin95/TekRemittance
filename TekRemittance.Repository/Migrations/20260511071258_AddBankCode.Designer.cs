@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TekRemittance.Repository.Entities.Data;
 
@@ -11,9 +12,11 @@ using TekRemittance.Repository.Entities.Data;
 namespace TekRemittance.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260511071258_AddBankCode")]
+    partial class AddBankCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -457,8 +460,8 @@ namespace TekRemittance.Repository.Migrations
 
                     b.Property<string>("BankCode")
                         .IsRequired()
-                        .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("BankName")
                         .IsRequired()
@@ -1064,8 +1067,6 @@ namespace TekRemittance.Repository.Migrations
 
                     b.HasIndex("AgentId");
 
-                    b.HasIndex("BankCode");
-
                     b.HasIndex("DataJson");
 
                     b.HasIndex("Date");
@@ -1445,16 +1446,6 @@ namespace TekRemittance.Repository.Migrations
                         .IsRequired();
 
                     b.Navigation("Country");
-                });
-
-            modelBuilder.Entity("TekRemittance.Repository.Entities.RemittanceInfo", b =>
-                {
-                    b.HasOne("TekRemittance.Repository.Entities.Bank", "Bank")
-                        .WithMany()
-                        .HasForeignKey("BankCode")
-                        .HasPrincipalKey("BankCode");
-
-                    b.Navigation("Bank");
                 });
 
             modelBuilder.Entity("TekRemittance.Repository.Entities.UserGroup", b =>
