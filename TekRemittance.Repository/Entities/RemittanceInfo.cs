@@ -24,6 +24,7 @@ namespace TekRemittance.Repository.Entities
         public DateTime? Date { get; set; }
         public ModeOfTransactionEnum? ModeOfTransaction { get; set; }
         public string? LimitType { get; set; }
+        public string? Remarks { get; set; }
 
         [StringLength(3)]
         public string? BankCode { get; set; }

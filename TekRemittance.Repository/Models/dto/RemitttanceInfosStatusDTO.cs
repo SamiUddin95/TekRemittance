@@ -23,6 +23,7 @@ namespace TekRemittance.Repository.Models.dto
         public string Status { get; set; }
 
         public string LimitType { get; set; }
+        public string remarks { get; set; }
         public ModeOfTransactionEnum? ModeOfTransaction { get; set; }
 
     }
