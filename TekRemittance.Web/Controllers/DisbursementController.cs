@@ -342,7 +342,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        [HttpGet("disbursement-queue")]
+        [HttpGet("InternalBankAccounts")]
         public async Task<IActionResult> GetDisbursementQueue(int pageNumber = 1, int pageSize = 10, DateTime? fromDate = null, DateTime? toDate = null)
         {
             try
