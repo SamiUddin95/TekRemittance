@@ -26,10 +26,14 @@ namespace TekRemittance.Repository.Entities
         public string? LimitType { get; set; }
         public string? Remarks { get; set; }
 
-        [StringLength(3)]
-        public string? BankCode { get; set; }
+        //[StringLength(3)]
+        //public string? BankCode { get; set; }
 
-        [ForeignKey("BankCode")]
+        //[ForeignKey("BankCode")]
+        //public  Bank? Bank { get; set; }
+        public Guid? BankId { get; set; }
+
+        [ForeignKey("BankId")]
         public  Bank? Bank { get; set; }
     }
 }

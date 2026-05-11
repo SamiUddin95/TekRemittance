@@ -378,10 +378,9 @@ namespace TekRemittance.Repository.Entities.Data
                       .HasMaxLength(200);
                 entity.HasOne(r => r.Bank)
                       .WithMany()
-                      .HasForeignKey(r => r.BankCode)
-                      .HasPrincipalKey(b => b.BankCode)
+                      .HasForeignKey(r => r.BankId)
                       .IsRequired(false);
-            });
+                           });
 
             modelBuilder.Entity<Branches>(entity =>
             {
