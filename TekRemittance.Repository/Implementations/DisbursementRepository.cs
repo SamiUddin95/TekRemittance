@@ -839,97 +839,68 @@ namespace TekRemittance.Repository.Implementations
         }
 
 
-        //public async Task<PagedResult<DisbursementQueueDto>> GetDisbursementQueueAsync(int pageNumber = 1, int pageSize = 10, DateTime? fromDate = null, DateTime? toDate = null)
-        //{
-        //    if (pageNumber < 1) pageNumber = 1;
-        //    if (pageSize < 1) pageSize = 50;
-
-        //    var bankCode = _configuration["BankCode"];
-
-        //    var query = _context.RemittanceInfos
-        //        .Where(x => x.BankCode == bankCode);
-
-        //    if (fromDate.HasValue)
-        //        query = query.Where(x => x.Date.Value.Date >= fromDate.Value.Date);
-        //    if (toDate.HasValue)
-        //        query = query.Where(x => x.Date.Value.Date <= toDate.Value.Date);
-
-        //    var totalCount = await query.CountAsync();
-
-        //    var records = await query
-        //        .OrderBy(a => a.RowNumber)
-        //        .Skip((pageNumber - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .Select(a => new DisbursementQueueDto
-        //        {
-        //            Id = a.Id,
-        //            AccountNumber = a.AccountNumber,
-        //            AccountTitle = a.AccountTitle,
-        //            BankCode = a.BankCode,
-        //            BankName = a.Bank.BankName,
-        //            Status = a.Status,
-        //            Date = a.Date,
-        //            RowNumber = a.RowNumber,
-        //            DataJson = a.DataJson,
-        //            CreatedOn = a.CreatedOn
-        //        })
-        //        .ToListAsync();
-
-        //    return new PagedResult<DisbursementQueueDto>
-        //    {
-        //        Items = records,
-        //        TotalCount = totalCount,
-        //        PageNumber = pageNumber,
-        //        PageSize = pageSize
-        //    };
-        //}
-        public async Task<PagedResult<DisbursementQueueDto>> GetDisbursementQueueAsync(int pageNumber = 1, int pageSize = 10, DateTime? fromDate = null, DateTime? toDate = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAndBankAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
 
             var bankCode = _configuration["BankCode"];
-
-            // Pehle Bank dhundo
             var bank = await _context.Banks
                 .FirstOrDefaultAsync(x => x.BankCode == bankCode);
 
             if (bank == null)
                 throw new Exception("Bank not found for given BankCode in appsettings.");
 
-            // BankId se filter karo
-            var query = _context.RemittanceInfos
-                .Where(x => x.BankId == bank.Id);
+            var query = from r in _context.RemittanceInfos
+                        join a in _context.AcquisitionAgents
+                            on r.AgentId equals a.Id
+                        where r.AgentId == agentId
+                            && r.Status == "A"
+                            && r.BankId == bank.Id
+                        select new { r, a.AgentName };
 
-            if (fromDate.HasValue)
-                query = query.Where(x => x.Date.Value.Date >= fromDate.Value.Date);
-            if (toDate.HasValue)
-                query = query.Where(x => x.Date.Value.Date <= toDate.Value.Date);
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+            {
+                string acc = accountnumber.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+            }
+            if (!string.IsNullOrWhiteSpace(xpin))
+            {
+                string xp = xpin.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+            }
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                   .ToString("dd-MM-yyyy");
+                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+            }
 
             var totalCount = await query.CountAsync();
 
-            var records = await query
-                .OrderBy(a => a.RowNumber)
+            var items = await query
+                .OrderBy(x => x.r.RowNumber)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(a => new DisbursementQueueDto
+                .Select(x => new RemitttanceInfosStatusDTO
                 {
-                    Id = a.Id,
-                    AccountNumber = a.AccountNumber,
-                    AccountTitle = a.AccountTitle,
-                    BankId = a.BankId,
-                    BankName = a.Bank.BankName,
-                    Status = a.Status,
-                    Date = a.Date,
-                    RowNumber = a.RowNumber,
-                    DataJson = a.DataJson,
-                    CreatedOn = a.CreatedOn
+                    Id = x.r.Id,
+                    AgentId = x.r.AgentId,
+                    AgentName = x.AgentName,
+                    TemplateId = x.r.TemplateId,
+                    UploadId = x.r.UploadId,
+                    RowNumber = x.r.RowNumber,
+                    DataJson = x.r.DataJson,
+                    Error = x.r.Error,
+                    Status = x.r.Status,
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn
                 })
                 .ToListAsync();
 
-            return new PagedResult<DisbursementQueueDto>
+            return new PagedResult<RemitttanceInfosStatusDTO>
             {
-                Items = records,
+                Items = items,
                 TotalCount = totalCount,
                 PageNumber = pageNumber,
                 PageSize = pageSize

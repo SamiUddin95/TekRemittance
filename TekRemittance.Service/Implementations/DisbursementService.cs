@@ -81,12 +81,12 @@ namespace TekRemittance.Service.Implementations
             return await _repo.RemitApproveBulkAsync(dto);
         }
        
-        public async Task<PagedResult<DisbursementQueueDto>> GetDisbursementQueueAsync(int pageNumber = 1, int pageSize = 10, DateTime? fromDate = null, DateTime? toDate = null)
+      
+
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAndBankAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
-            return await _repo.GetDisbursementQueueAsync(pageNumber, pageSize, fromDate, toDate);
+            return await _repo.GetByAgentIdWithStatusAndBankAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
         }
-
-
 
     }
 

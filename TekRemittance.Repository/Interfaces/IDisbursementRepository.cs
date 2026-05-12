@@ -30,10 +30,9 @@ namespace TekRemittance.Repository.Interfaces
 
 
         Task<List<RemitApproveBulkResponseDTO>> RemitApproveBulkAsync(RemitApproveBulkDTO dto);
-        Task<PagedResult<DisbursementQueueDto>> GetDisbursementQueueAsync(int pageNumber = 1, int pageSize = 10, DateTime? fromDate = null, DateTime? toDate = null);
 
 
-
+        Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAndBankAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
 
     }
 }
