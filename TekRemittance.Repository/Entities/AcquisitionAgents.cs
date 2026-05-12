@@ -40,6 +40,9 @@ namespace TekRemittance.Repository.Entities
         public bool IsDeleted { get; set; }
         public int? XPINType { get; set; }
         public int? PercentSharing { get; set; }
+        public int? StartIndex { get; set; }
+        public int? Length { get; set; }
+        public int? XPinMapCode { get; set; }
 
 
     }
