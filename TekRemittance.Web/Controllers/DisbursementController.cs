@@ -343,7 +343,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         
-        [HttpGet("GetDataByApprovedAndSameBank/{agentId:guid}")]
+        [HttpGet("InternalBankAccounts/{agentId:guid}")]
         public async Task<IActionResult> GetDataByApprovedAndBank(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
             try
