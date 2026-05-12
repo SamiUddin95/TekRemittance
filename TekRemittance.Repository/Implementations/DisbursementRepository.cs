@@ -859,21 +859,21 @@ namespace TekRemittance.Repository.Implementations
                             && r.BankId == bank.Id
                         select new { r, a.AgentName };
 
+           
             if (!string.IsNullOrWhiteSpace(accountnumber))
             {
                 string acc = accountnumber.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+                query = query.Where(x => x.r.AccountNumber == acc);
             }
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+                query = query.Where(x => x.r.Xpin == xp);
             }
             if (!string.IsNullOrWhiteSpace(date))
             {
-                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                   .ToString("dd-MM-yyyy");
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+                var parsedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                query = query.Where(x => x.r.Date.Value.Date == parsedDate.Date);
             }
 
             var totalCount = await query.CountAsync();
