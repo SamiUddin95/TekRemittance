@@ -859,11 +859,11 @@ namespace TekRemittance.Repository.Implementations
                             && r.BankId == bank.Id
                         select new { r, a.AgentName };
 
-           
+
             if (!string.IsNullOrWhiteSpace(accountnumber))
             {
                 string acc = accountnumber.Trim();
-                query = query.Where(x => x.r.AccountNumber == acc);
+                query = query.Where(x => x.r.AccountNumber.Contains(acc));
             }
             if (!string.IsNullOrWhiteSpace(xpin))
             {
