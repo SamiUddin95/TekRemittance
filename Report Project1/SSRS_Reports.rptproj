@@ -49,11 +49,23 @@
     <Reports>@(Report)</Reports>
   </PropertyGroup>
   <ItemGroup>
-    <DataSource Include="DataSource1.rds" />
+    <DataSet Include="DailyRemittanceReport.rsd" />
+    <DataSet Include="DailySettlement.rsd" />
+    <DataSet Include="RemittanceStatusTracking.rsd" />
+    <DataSet Include="RemittanceTransactionDetail.rsd" />
+    <DataSet Include="TransactionModeAnalysis.rsd" />
   </ItemGroup>
   <ItemGroup>
+    <DataSource Include="DataSource2.rds" />
+  </ItemGroup>
+  <ItemGroup>
+    <Report Include="DailyRemittanceReport.rdl" />
+    <Report Include="DailySettlement.rdl" />
     <Report Include="Lab Order.rdl" />
+    <Report Include="RemittanceStatusTracking.rdl" />
+    <Report Include="RemittanceTransactionDetail.rdl" />
     <Report Include="Report1.rdl" />
+    <Report Include="TransationModeAnalysis.rdl" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>

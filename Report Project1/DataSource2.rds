@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="DataSource2">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=10.0.0.1;Initial Catalog=TekRemittance</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>227e9d4f-81c0-4aa3-94a1-e64c0c0c648b</DataSourceID>
+</RptDataSource>
