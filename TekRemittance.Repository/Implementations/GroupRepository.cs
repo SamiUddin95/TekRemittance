@@ -222,7 +222,7 @@ namespace TekRemittance.Repository.Implementations
             _context.UserGroups.Remove(entity);
             await _context.SaveChangesAsync();
             return true;
-        } public
+        }
     }
 }
 
