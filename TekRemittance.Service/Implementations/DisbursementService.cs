@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Repository.Models.dto;
+using TekRemittance.Repository.Models.DTOs;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models.dto;
 
@@ -79,9 +80,13 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.RemitApproveBulkAsync(dto);
         }
+       
+      
 
-
-
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAndBankAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        {
+            return await _repo.GetByAgentIdWithStatusAndBankAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+        }
 
     }
 

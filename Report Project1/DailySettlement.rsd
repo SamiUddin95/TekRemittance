@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>DataSource2</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="@SettlementDate">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>true</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Date</rd:DbType>
+        </DataSetParameter>
+        <DataSetParameter Name="@AgentId">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>true</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Guid</rd:DbType>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandType>StoredProcedure</CommandType>
+      <CommandText>sp_DailySettlement</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="SettlementDate">
+        <DataField>SettlementDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="AgentName">
+        <DataField>AgentName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="AgentCode">
+        <DataField>AgentCode</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="AgentEmail">
+        <DataField>AgentEmail</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="AgentPhone">
+        <DataField>AgentPhone</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="BankName">
+        <DataField>BankName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="TotalAuthorizedTransactions">
+        <DataField>TotalAuthorizedTransactions</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="TotalSettlementAmount">
+        <DataField>TotalSettlementAmount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="FT_Amount">
+        <DataField>FT_Amount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="IBFT_Amount">
+        <DataField>IBFT_Amount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="RTGS_Amount">
+        <DataField>RTGS_Amount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="RAAST_Amount">
+        <DataField>RAAST_Amount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="FT_Count">
+        <DataField>FT_Count</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="IBFT_Count">
+        <DataField>IBFT_Count</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="RTGS_Count">
+        <DataField>RTGS_Count</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="RAAST_Count">
+        <DataField>RAAST_Count</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="SettlementAccountNumber">
+        <DataField>SettlementAccountNumber</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SettlementAccountTitle">
+        <DataField>SettlementAccountTitle</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SettlementAccountType">
+        <DataField>SettlementAccountType</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

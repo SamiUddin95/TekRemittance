@@ -342,7 +342,27 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-       
+        
+        [HttpGet("InternalBankAccounts/{agentId:guid}")]
+        public async Task<IActionResult> GetDataByApprovedAndBank(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        {
+            try
+            {
+                var data = await _service.GetByAgentIdWithStatusAndBankAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = data.Items,
+                    totalCount = data.TotalCount,
+                    pageNumber = data.PageNumber,
+                    pageSize = data.PageSize,
+                    totalPages = data.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
 
 
     }

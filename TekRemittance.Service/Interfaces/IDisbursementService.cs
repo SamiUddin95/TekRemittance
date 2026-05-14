@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Models.dto;
+using TekRemittance.Repository.Models.DTOs;
 using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Service.Interfaces
@@ -28,9 +29,8 @@ namespace TekRemittance.Service.Interfaces
         Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAMLAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
 
         Task<List<RemitApproveBulkResponseDTO>> RemitApproveBulkAsync(RemitApproveBulkDTO dto);
-      
 
-
+        Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAndBankAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
 
     }
 

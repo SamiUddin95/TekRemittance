@@ -183,7 +183,7 @@ namespace TekRemittance.Repository.Entities.Data
 
                 entity.Property(b => b.BankCode)
                       .IsRequired()
-                      .HasMaxLength(20);
+                      .HasMaxLength(3);
 
                 entity.Property(b => b.BankName)
                       .IsRequired()
@@ -376,7 +376,11 @@ namespace TekRemittance.Repository.Entities.Data
                 entity.Property(a => a.ModeOfTransaction)
                       .HasConversion<string>()
                       .HasMaxLength(200);
-            });
+                entity.HasOne(r => r.Bank)
+                      .WithMany()
+                      .HasForeignKey(r => r.BankId)
+                      .IsRequired(false);
+                           });
 
             modelBuilder.Entity<Branches>(entity =>
             {

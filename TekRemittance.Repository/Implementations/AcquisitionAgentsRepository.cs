@@ -72,7 +72,10 @@ namespace TekRemittance.Repository.Implementations
                     UpdatedBy = a.UpdatedBy,
                     UpdatedOn = a.UpdatedOn,
                     XPINType= a.XPINType,
-                    PercentSharing = a.PercentSharing
+                    PercentSharing = a.PercentSharing,
+                    StartIndex=a.StartIndex,
+                    Length=a.Length,
+                    XPinMapCode=a.XPinMapCode
                 })
                 .ToListAsync();
 
@@ -119,7 +122,10 @@ namespace TekRemittance.Repository.Implementations
                     UpdatedBy = a.UpdatedBy,
                     UpdatedOn = a.UpdatedOn,
                     XPINType = a.XPINType,
-                    PercentSharing = a.PercentSharing
+                    PercentSharing = a.PercentSharing,
+                    StartIndex = a.StartIndex,
+                    Length = a.Length,
+                    XPinMapCode = a.XPinMapCode
                 })
                 .FirstOrDefaultAsync();
         }
@@ -169,7 +175,10 @@ namespace TekRemittance.Repository.Implementations
                 UpdatedBy = dto.UpdatedBy ?? "system",
                 UpdatedOn = DateTime.UtcNow,
                 XPINType = dto.XPINType,
-                PercentSharing = dto.PercentSharing
+                PercentSharing = dto.PercentSharing,
+                StartIndex= dto.StartIndex,
+                Length= dto.Length,
+                XPinMapCode= dto.XPinMapCode
             };
 
             await _context.AcquisitionAgents.AddAsync(entity);
@@ -228,6 +237,9 @@ namespace TekRemittance.Repository.Implementations
             existing.UpdatedOn = DateTime.UtcNow;
             existing.XPINType = dto.XPINType;
             existing.PercentSharing = dto.PercentSharing;
+            existing.StartIndex = dto.StartIndex;
+            existing.Length = dto.Length;
+            existing.XPinMapCode = dto.XPinMapCode;
 
             await _context.SaveChangesAsync();
 
@@ -261,7 +273,10 @@ namespace TekRemittance.Repository.Implementations
                 UpdatedBy = existing.UpdatedBy,
                 UpdatedOn = existing.UpdatedOn,
                 XPINType = existing.XPINType,
-                PercentSharing = existing.PercentSharing
+                PercentSharing = existing.PercentSharing,
+                StartIndex= existing.StartIndex,
+                Length= existing.Length,
+                XPinMapCode= existing.XPinMapCode
             };
         }
 

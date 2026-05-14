@@ -25,7 +25,7 @@ namespace TekRemittance.Web.Controllers
 
         #region Country
 
-        //[RequirePermission("BasicSetup.Countries.Read")]
+        [RequirePermission("BasicSetUp.CountryManagement")]
         [HttpGet("countries")]
         public async Task<IActionResult> GetAllCountries(int pageNumber = 1, int pageSize = 10, string? countryCode = null, string? countryName = null, StatusesEnums? status = null)
         {

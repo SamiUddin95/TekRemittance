@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>DataSource2</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="@StartDate">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>true</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Date</rd:DbType>
+        </DataSetParameter>
+        <DataSetParameter Name="@EndDate">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>true</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Date</rd:DbType>
+        </DataSetParameter>
+        <DataSetParameter Name="@AgentId">
+          <ReadOnly>false</ReadOnly>
+          <Nullable>true</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Guid</rd:DbType>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandType>StoredProcedure</CommandType>
+      <CommandText>sp_TransactionModeAnalysis</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="TransactionMode">
+        <DataField>TransactionMode</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="TransactionCount">
+        <DataField>TransactionCount</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="TotalAmount">
+        <DataField>TotalAmount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="PercentageByCount">
+        <DataField>PercentageByCount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="PercentageByAmount">
+        <DataField>PercentageByAmount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="AverageTransactionValue">
+        <DataField>AverageTransactionValue</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="AuthorizedCount">
+        <DataField>AuthorizedCount</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="RejectedCount">
+        <DataField>RejectedCount</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="PendingCount">
+        <DataField>PendingCount</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="UnauthorizedCount">
+        <DataField>UnauthorizedCount</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="AuthorizedAmount">
+        <DataField>AuthorizedAmount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="RejectedAmount">
+        <DataField>RejectedAmount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="SuccessRate">
+        <DataField>SuccessRate</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="RejectionRate">
+        <DataField>RejectionRate</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

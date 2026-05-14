@@ -551,7 +551,11 @@ namespace TekRemittance.Repository.Implementations
             {
                 throw new ArgumentException("Bank name already exists.");
             }
-
+            var bankCode = bank.BankCode?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(bankCode) || bankCode.Length != 3)
+            {
+                throw new ArgumentException("Bank code must be exactly 3 characters.");
+            }
             var entity = new Bank
             {
                 Id = Guid.NewGuid(),
@@ -600,6 +604,11 @@ namespace TekRemittance.Repository.Implementations
             if (await _context.Banks.AnyAsync(b => b.Id != bank.Id && b.BankName.ToLower() == bankName.ToLower()))
             {
                 throw new ArgumentException("Bank name already exists.");
+            }
+            var bankCode = bank.BankCode?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(bankCode) || bankCode.Length != 3)
+            {
+                throw new ArgumentException("Bank code must be exactly 3 characters.");
             }
 
             existing.BankCode = bank.BankCode;
