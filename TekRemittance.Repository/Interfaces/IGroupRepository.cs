@@ -17,5 +17,6 @@ namespace TekRemittance.Repository.Interfaces
         Task<bool> SetPermissionsAsync(Guid groupId, IEnumerable<Guid> permissionIds);
         Task<List<GroupUserDTO>> GetUsersByGroupIdAsync(Guid groupId);
         Task<List<Guid>> GetPermissionsByGroupIdAsync(Guid groupId);
+        Task<bool> UserGroupDeleteAsync(Guid id);
     }
 }

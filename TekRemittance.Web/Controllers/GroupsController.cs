@@ -170,5 +170,20 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+        [HttpDelete("{id:guid}/userGroup")]
+        public async Task<IActionResult> userGroupDelete(Guid id)
+        {
+            try
+            {
+                var ok = await _service.UserGroupDeleteAsync(id);
+                if (!ok) return NotFound(ApiResponse<string>.Error("User Group not found", 404));
+                return Ok(ApiResponse<string>.Success("User Group deleted successfully", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
     }
 }
