@@ -56,6 +56,7 @@
     <DataSet Include="TransactionModeAnalysis.rsd" />
   </ItemGroup>
   <ItemGroup>
+    <DataSource Include="DataSource1.rds" />
     <DataSource Include="DataSource2.rds" />
   </ItemGroup>
   <ItemGroup>
