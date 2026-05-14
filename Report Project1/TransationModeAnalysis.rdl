@@ -9,7 +9,7 @@
 			<am:Name>SSDTRS</am:Name>
 			<am:Version>18.1.11312.151</am:Version>
 		</am:UpdatedBy>
-		<am:LastModifiedTimestamp>2026-05-13T13:18:08.9124606Z</am:LastModifiedTimestamp>
+		<am:LastModifiedTimestamp>2026-05-14T06:47:24.6503063Z</am:LastModifiedTimestamp>
 	</am:AuthoringMetadata>
 	<df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
 	<AutoRefresh>0</AutoRefresh>
@@ -97,46 +97,46 @@
 						<TablixBody>
 							<TablixColumns>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.56567cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.52333cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>2.973cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.989cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>4.32767cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>4.85684cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.33283cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.227cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.07883cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.862cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.69266cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>3.18466cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.64cm</Width>
+									<Width>2.95184cm</Width>
 								</TablixColumn>
 								<TablixColumn>
-									<Width>5.68cm</Width>
+									<Width>2.78016cm</Width>
 								</TablixColumn>
 							</TablixColumns>
 							<TablixRows>
@@ -1196,103 +1196,226 @@
 							</TablixMembers>
 						</TablixRowHierarchy>
 						<DataSetName>DataSet1</DataSetName>
-						<Top>2.5cm</Top>
+						<Top>0.62653cm</Top>
 						<Height>1.2cm</Height>
-						<Width>79cm</Width>
+						<Width>49.34549cm</Width>
 						<Style>
 							<Border>
 								<Style>None</Style>
 							</Border>
 						</Style>
 					</Tablix>
-					<Rectangle Name="HeaderRectangle">
-						<ReportItems>
-							<Textbox Name="ReportTitle">
-								<CanGrow>true</CanGrow>
-								<KeepTogether>true</KeepTogether>
-								<Paragraphs>
-									<Paragraph>
-										<TextRuns>
-											<TextRun>
-												<Value>TRANSACTION MODE ANALYSIS REPORT</Value>
-												<Style>
-													<FontSize>18pt</FontSize>
-													<FontWeight>Bold</FontWeight>
-												</Style>
-											</TextRun>
-										</TextRuns>
-										<Style>
-											<TextAlign>Center</TextAlign>
-										</Style>
-									</Paragraph>
-								</Paragraphs>
-								<rd:DefaultName>ReportTitle</rd:DefaultName>
-								<Top>0.2cm</Top>
-								<Height>1cm</Height>
-								<Width>79cm</Width>
-								<Style>
-									<Border>
-										<Style>None</Style>
-									</Border>
-									<PaddingLeft>2pt</PaddingLeft>
-									<PaddingRight>2pt</PaddingRight>
-									<PaddingTop>2pt</PaddingTop>
-									<PaddingBottom>2pt</PaddingBottom>
-								</Style>
-							</Textbox>
-							<Textbox Name="ParameterInfo">
-								<CanGrow>true</CanGrow>
-								<KeepTogether>true</KeepTogether>
-								<Paragraphs>
-									<Paragraph>
-										<TextRuns>
-											<TextRun>
-												<Value>="Date From: " &amp; IIF(IsNothing(Parameters!StartDate.Value), "All", Format(Parameters!StartDate.Value, "dd-MMM-yyyy")) &amp; "  |  Date To: " &amp; IIF(IsNothing(Parameters!EndDate.Value), "All", Format(Parameters!EndDate.Value, "dd-MMM-yyyy")) &amp; "  |  Agent: " &amp; IIF(IsNothing(Parameters!AgentId.Value) OR Parameters!AgentId.Value = "", "All Agents", Parameters!AgentId.Value)</Value>
-												<Style>
-													<FontSize>9pt</FontSize>
-													<FontWeight>Bold</FontWeight>
-													<Color>#2c3e50</Color>
-												</Style>
-											</TextRun>
-										</TextRuns>
-										<Style>
-											<TextAlign>Center</TextAlign>
-										</Style>
-									</Paragraph>
-								</Paragraphs>
-								<Top>1.2cm</Top>
-								<Height>0.50367cm</Height>
-								<Width>79cm</Width>
-								<ZIndex>1</ZIndex>
-								<Style>
-									<Border>
-										<Style>None</Style>
-									</Border>
-									<BackgroundColor>#e7f0ff</BackgroundColor>
-									<PaddingLeft>2pt</PaddingLeft>
-									<PaddingRight>2pt</PaddingRight>
-									<PaddingTop>2pt</PaddingTop>
-									<PaddingBottom>2pt</PaddingBottom>
-								</Style>
-							</Textbox>
-						</ReportItems>
-						<KeepTogether>true</KeepTogether>
-						<Height>2cm</Height>
-						<Width>79cm</Width>
-						<ZIndex>1</ZIndex>
-						<Style>
-							<Border>
-								<Style>None</Style>
-							</Border>
-							<BackgroundColor>#2e5090</BackgroundColor>
-						</Style>
-					</Rectangle>
 				</ReportItems>
 				<Height>10cm</Height>
 				<Style />
 			</Body>
 			<Width>79cm</Width>
 			<Page>
+				<PageHeader>
+					<Height>4cm</Height>
+					<PrintOnFirstPage>true</PrintOnFirstPage>
+					<PrintOnLastPage>true</PrintOnLastPage>
+					<ReportItems>
+						<Rectangle Name="HeaderRectangle">
+							<ReportItems>
+								<Textbox Name="ReportDate">
+									<CanGrow>true</CanGrow>
+									<KeepTogether>true</KeepTogether>
+									<Paragraphs>
+										<Paragraph>
+											<TextRuns>
+												<TextRun>
+													<Value>="Report Generated: " &amp; Format(Now(), "dd-MMM-yyyy HH:mm")</Value>
+													<Style>
+														<FontSize>8pt</FontSize>
+														<Color>#5d6d7e</Color>
+													</Style>
+												</TextRun>
+											</TextRuns>
+											<Style>
+												<TextAlign>Right</TextAlign>
+											</Style>
+										</Paragraph>
+									</Paragraphs>
+									<Top>2.1cm</Top>
+									<Height>0.5cm</Height>
+									<Width>49.34549cm</Width>
+									<Style>
+										<Border>
+											<Style>None</Style>
+										</Border>
+										<PaddingLeft>2pt</PaddingLeft>
+										<PaddingRight>2pt</PaddingRight>
+										<PaddingTop>2pt</PaddingTop>
+										<PaddingBottom>2pt</PaddingBottom>
+									</Style>
+								</Textbox>
+								<Textbox Name="ReportSubtitle">
+									<CanGrow>true</CanGrow>
+									<KeepTogether>true</KeepTogether>
+									<Paragraphs>
+										<Paragraph>
+											<TextRuns>
+												<TextRun>
+													<Value>Transaction Volume and Success Analysis by Mode</Value>
+													<Style>
+														<FontStyle>Italic</FontStyle>
+														<Color>#5d6d7e</Color>
+													</Style>
+												</TextRun>
+											</TextRuns>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Paragraph>
+									</Paragraphs>
+									<Top>1.3cm</Top>
+									<Height>0.6cm</Height>
+									<Width>49.34549cm</Width>
+									<ZIndex>1</ZIndex>
+									<Style>
+										<Border>
+											<Style>None</Style>
+										</Border>
+										<PaddingLeft>2pt</PaddingLeft>
+										<PaddingRight>2pt</PaddingRight>
+										<PaddingTop>2pt</PaddingTop>
+										<PaddingBottom>2pt</PaddingBottom>
+									</Style>
+								</Textbox>
+								<Textbox Name="ReportTitle">
+									<CanGrow>true</CanGrow>
+									<KeepTogether>true</KeepTogether>
+									<Paragraphs>
+										<Paragraph>
+											<TextRuns>
+												<TextRun>
+													<Value>TRANSACTION MODE ANALYSIS REPORT</Value>
+													<Style>
+														<FontSize>18pt</FontSize>
+														<FontWeight>Bold</FontWeight>
+														<Color>Black</Color>
+													</Style>
+												</TextRun>
+											</TextRuns>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Paragraph>
+									</Paragraphs>
+									<Top>0.3cm</Top>
+									<Height>1cm</Height>
+									<Width>49.34549cm</Width>
+									<ZIndex>2</ZIndex>
+									<Style>
+										<Border>
+											<Style>None</Style>
+										</Border>
+										<PaddingLeft>2pt</PaddingLeft>
+										<PaddingRight>2pt</PaddingRight>
+										<PaddingTop>2pt</PaddingTop>
+										<PaddingBottom>2pt</PaddingBottom>
+									</Style>
+								</Textbox>
+								<Textbox Name="ParameterInfo">
+									<CanGrow>true</CanGrow>
+									<KeepTogether>true</KeepTogether>
+									<Paragraphs>
+										<Paragraph>
+											<TextRuns>
+												<TextRun>
+													<Value>="Date From: " &amp; IIF(IsNothing(Parameters!StartDate.Value), "All", Format(Parameters!StartDate.Value, "dd-MMM-yyyy")) &amp; "  |  Date To: " &amp; IIF(IsNothing(Parameters!EndDate.Value), "All", Format(Parameters!EndDate.Value, "dd-MMM-yyyy")) &amp; "  |  Agent: " &amp; IIF(IsNothing(Parameters!AgentId.Value) OR Parameters!AgentId.Value = "", "All Agents", Parameters!AgentId.Value)</Value>
+													<Style>
+														<FontFamily>Segoe UI</FontFamily>
+														<FontSize>9pt</FontSize>
+														<FontWeight>Bold</FontWeight>
+														<Color>#2C3E50</Color>
+													</Style>
+												</TextRun>
+											</TextRuns>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Paragraph>
+									</Paragraphs>
+									<Top>2.7cm</Top>
+									<Left>0cm</Left>
+									<Height>0.6cm</Height>
+									<Width>49.34549cm</Width>
+									<ZIndex>3</ZIndex>
+									<Style>
+										<Border>
+											<Style>None</Style>
+										</Border>
+										<BackgroundColor>#E7F0FF</BackgroundColor>
+										<PaddingLeft>2pt</PaddingLeft>
+										<PaddingRight>2pt</PaddingRight>
+										<PaddingTop>2pt</PaddingTop>
+										<PaddingBottom>2pt</PaddingBottom>
+									</Style>
+								</Textbox>
+							</ReportItems>
+							<KeepTogether>true</KeepTogether>
+							<Height>3.5cm</Height>
+							<Width>49.34549cm</Width>
+							<Style>
+								<Border>
+									<Style>None</Style>
+								</Border>
+								<BackgroundColor>#2E5090</BackgroundColor>
+							</Style>
+						</Rectangle>
+					</ReportItems>
+					<Style>
+						<Border>
+							<Style>None</Style>
+						</Border>
+					</Style>
+				</PageHeader>
+				<PageFooter>
+					<Height>1.5cm</Height>
+					<PrintOnFirstPage>true</PrintOnFirstPage>
+					<PrintOnLastPage>true</PrintOnLastPage>
+					<ReportItems>
+						<Textbox Name="PageNumber">
+							<CanGrow>true</CanGrow>
+							<KeepTogether>true</KeepTogether>
+							<Paragraphs>
+								<Paragraph>
+									<TextRuns>
+										<TextRun>
+											<Value>="Page " &amp; Globals!PageNumber &amp; " of " &amp; Globals!TotalPages</Value>
+											<Style>
+												<FontSize>8pt</FontSize>
+												<Color>#5d6d7e</Color>
+											</Style>
+										</TextRun>
+									</TextRuns>
+									<Style>
+										<TextAlign>Center</TextAlign>
+									</Style>
+								</Paragraph>
+							</Paragraphs>
+							<Top>0.5cm</Top>
+							<Height>0.5cm</Height>
+							<Width>49.34549cm</Width>
+							<Style>
+								<Border>
+									<Style>None</Style>
+								</Border>
+								<PaddingLeft>2pt</PaddingLeft>
+								<PaddingRight>2pt</PaddingRight>
+								<PaddingTop>4pt</PaddingTop>
+								<PaddingBottom>2pt</PaddingBottom>
+							</Style>
+						</Textbox>
+					</ReportItems>
+					<Style>
+						<Border>
+							<Style>None</Style>
+						</Border>
+					</Style>
+				</PageFooter>
 				<PageHeight>29.7cm</PageHeight>
 				<PageWidth>80cm</PageWidth>
 				<LeftMargin>0.5cm</LeftMargin>
