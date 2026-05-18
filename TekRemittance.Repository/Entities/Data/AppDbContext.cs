@@ -47,6 +47,7 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<EPRC> EPRC { get; set; }
         public DbSet<AmlData> AmlData { get; set; }
 
+        public DbSet<ApplicationConfig>ApplicationConfig { get; set; }
 
 
 
@@ -595,6 +596,8 @@ namespace TekRemittance.Repository.Entities.Data
             modelBuilder.Entity<barGraphDto>().HasNoKey();
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ApplicationConfig>().ToTable("ApplicationConfig");
         }
 
         public override int SaveChanges()

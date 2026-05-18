@@ -87,7 +87,14 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.GetByAgentIdWithStatusAndBankAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
         }
-
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdCOCPayoutAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        {
+            return await _repo.GetByAgentIdCOCPayoutAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+        }
+        public async Task SetCOCPayoutInquiryAsync(string xpin)
+        {
+            await _repo.SetCOCPayoutInquiryAsync(xpin);
+        }
     }
 
 

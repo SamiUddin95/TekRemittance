@@ -906,5 +906,80 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdCOCPayoutAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 50;
+
+            var query = from r in _context.RemittanceInfos
+                        join a in _context.AcquisitionAgents
+                            on r.AgentId equals a.Id
+                        where r.AgentId == agentId
+                           && r.Status == "P"          
+                           && r.IsInquiry == true      
+                        select new { r, a.AgentName };
+
+            if (!string.IsNullOrWhiteSpace(accountnumber))
+            {
+                string acc = accountnumber.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
+            }
+
+            if (!string.IsNullOrWhiteSpace(xpin))
+            {
+                string xp = xpin.Trim();
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                    .ToString("dd-MM-yyyy");
+                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(x => x.r.RowNumber)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new RemitttanceInfosStatusDTO
+                {
+                    Id = x.r.Id,
+                    AgentId = x.r.AgentId,
+                    AgentName = x.AgentName,
+                    TemplateId = x.r.TemplateId,
+                    UploadId = x.r.UploadId,
+                    RowNumber = x.r.RowNumber,
+                    DataJson = x.r.DataJson,
+                    Error = x.r.Error,
+                    Status = x.r.Status,
+                    CreatedOn = x.r.CreatedOn,
+                    UpdatedOn = x.r.UpdatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<RemitttanceInfosStatusDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+        public async Task SetCOCPayoutInquiryAsync(string xpin)
+        {
+            var entity = await _context.RemittanceInfos
+                .FirstOrDefaultAsync(x => x.Xpin == xpin.Trim());
+
+            if (entity == null)
+                throw new Exception("Record not found for given Xpin.");
+
+            entity.IsInquiry = true;
+            entity.UpdatedOn = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

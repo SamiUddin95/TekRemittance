@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using TekRemittance.Web.Models;
-using TekRemittance.Service.Interfaces;
-using Microsoft.AspNetCore.Cors;
-using TekRemittance.Repository.Models.dto;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Repository.Enums;
+using TekRemittance.Repository.Models.dto;
+using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
+using TekRemittance.Web.Models;
 
 
 namespace TekRemittance.Web.Controllers
@@ -69,6 +70,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [RequirePermission("Disbursement.AuthorizationQueue")]
         [HttpGet("GetDataByAuthorize/{agentId:guid}")]
         public async Task<IActionResult> GetDataByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
@@ -91,6 +93,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [RequirePermission("Disbursement.RejectedQueue")]
         [HttpGet("GetDataByReject/{agentId:guid}")]
         public async Task<IActionResult> GetDataREByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
@@ -135,6 +138,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [RequirePermission("Disbursement.ApprovedQueue")]
         [HttpGet("GetDataByApproved/{agentId:guid}")]
         public async Task<IActionResult> GetDataAByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
@@ -303,6 +307,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+
         [HttpGet("GetDataAntiMoneyLaundering/{agentId:guid}")]
         public async Task<IActionResult> GetDataByAML(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
@@ -342,7 +347,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        
+        [RequirePermission("Disbursement.InternalBanksAccount")]
         [HttpGet("InternalBankAccounts/{agentId:guid}")]
         public async Task<IActionResult> GetDataByApprovedAndBank(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
         {
@@ -364,6 +369,40 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [RequirePermission("Disbursement.COCpayout")]
+        [HttpGet("GetCOCPayout/{agentId:guid}")]
+        public async Task<IActionResult> GetCOCPayout(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        {
+            try
+            {
+                var data = await _service.GetByAgentIdCOCPayoutAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = data.Items,
+                    totalCount = data.TotalCount,
+                    pageNumber = data.PageNumber,
+                    pageSize = data.PageSize,
+                    totalPages = data.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        [HttpPost("SetCOCPayoutInquiry")]
+        public async Task<IActionResult> SetCOCPayoutInquiry(string xpin)
+        {
+            try
+            {
+                await _service.SetCOCPayoutInquiryAsync(xpin);
+                return Ok(ApiResponse<object>.Success("IsInquiry updated successfully.", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
 
     }
 }

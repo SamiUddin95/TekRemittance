@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
 
@@ -66,6 +67,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [RequirePermission("GeneralFeatures.AuditLogs")]
         [HttpGet("Auditlogs")]
         public async Task<IActionResult> GetAllAuditLogs(int pageNumber = 1, int pageSize = 10, string? search = null)
         {

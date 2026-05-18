@@ -25,7 +25,7 @@ namespace TekRemittance.Web.Controllers
 
         #region Country
 
-        //[RequirePermission("BasicSetup.Countries.Read")]
+        [RequirePermission("BasicSetUp.CountryManagement")]
         [HttpGet("countries")]
         public async Task<IActionResult> GetAllCountries(int pageNumber = 1, int pageSize = 10, string? countryCode = null, string? countryName = null, StatusesEnums? status = null)
         {
@@ -129,7 +129,7 @@ namespace TekRemittance.Web.Controllers
 
         #region Province
 
-        //[RequirePermission("BasicSetup.Provinces.Read")]
+        [RequirePermission("BasicSetUp.ProvinceManagement")]
         [HttpGet("provinces")]
         public async Task<IActionResult> GetAllProvinces(int pageNumber = 1, int pageSize = 10, string? provinceCode = null, string? provinceName = null, StatusesEnums? status = null)
         {
@@ -424,6 +424,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [RequirePermission("BasicSetUp.AMLList")]
         [HttpGet("AmlData")]
         public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? cnic = null, string? accountName = null)
 
