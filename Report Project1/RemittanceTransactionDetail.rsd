@@ -40,18 +40,6 @@
           <OmitFromQuery>false</OmitFromQuery>
           <rd:DbType>AnsiString</rd:DbType>
         </DataSetParameter>
-        <DataSetParameter Name="@PageNumber">
-          <ReadOnly>false</ReadOnly>
-          <Nullable>true</Nullable>
-          <OmitFromQuery>false</OmitFromQuery>
-          <rd:DbType>Int32</rd:DbType>
-        </DataSetParameter>
-        <DataSetParameter Name="@PageSize">
-          <ReadOnly>false</ReadOnly>
-          <Nullable>true</Nullable>
-          <OmitFromQuery>false</OmitFromQuery>
-          <rd:DbType>Int32</rd:DbType>
-        </DataSetParameter>
       </DataSetParameters>
       <CommandType>StoredProcedure</CommandType>
       <CommandText>sp_RemittanceTransactionDetail</CommandText>

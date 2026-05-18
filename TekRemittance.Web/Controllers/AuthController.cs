@@ -1,21 +1,22 @@
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using TekRemittance.Repository.Entities;
+using TekRemittance.Repository.Interfaces;
+using TekRemittance.Service.Implementations;
 using TekRemittance.Service.Interfaces;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
-using TekRemittance.Repository.Interfaces;
-using TekRemittance.Repository.Entities;
-using System.Text.Json;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -29,14 +30,17 @@ namespace TekRemittance.Web.Controllers
         private readonly ITokenRevocationRepository _revocationRepo;
         private readonly IAuditLogService _audit;
         private readonly IPermissionHelperService _permissionHelper;
+        private readonly ILicenseService _licenseService;
 
-        public AuthController(IUserService userService, IConfiguration config, ITokenRevocationRepository revocationRepo, IAuditLogService audit, IPermissionHelperService permissionHelper)
+
+        public AuthController(IUserService userService, IConfiguration config, ITokenRevocationRepository revocationRepo, IAuditLogService audit, IPermissionHelperService permissionHelper, ILicenseService licenseService)
         {
             _userService = userService;
             _config = config;
             _revocationRepo = revocationRepo;
             _audit = audit;
             _permissionHelper = permissionHelper;
+            _licenseService = licenseService;
         }
 
         [AllowAnonymous]
@@ -60,6 +64,12 @@ namespace TekRemittance.Web.Controllers
                     return Unauthorized(ApiResponse<string>.Error("You are not authorized to log in. Your Status Is InActive.", 201));
                 }
 
+                var licenseStatus = await _licenseService.GetLicenseStatusAsync();
+                if (licenseStatus.IsExpired)
+                {
+                    return StatusCode(402, ApiResponse<LicenseStatusDTO>.Error(
+                        licenseStatus.Message, 402, licenseStatus));
+                }
                 var token = await GenerateJwtTokenAsync(user);
                 try
                 {

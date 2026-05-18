@@ -35,5 +35,7 @@ namespace TekRemittance.Repository.Entities
 
         [ForeignKey("BankId")]
         public  Bank? Bank { get; set; }
+
+        public bool? IsInquiry { get; set; }
     }
 }

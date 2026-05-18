@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
 using TekRemittance.Web.Models;
 
 namespace TekRemittance.Web.Controllers
@@ -19,85 +20,86 @@ namespace TekRemittance.Web.Controllers
             _service = service;
         }
 
-      //  [HttpGet("dashboard/disbursement")]
-      //  public async Task<IActionResult> GetDisbursementDashboard(
-      //[FromQuery] string dateRange)
-      //  {
-      //      try
-      //      {
-      //          var result = await _service.GetDashboardDataAsync(dateRange);
-      //          return Ok(ApiResponse<object>.Success(result, 200));
-      //      }
-      //      catch (ArgumentException ex)
-      //      {
-      //          return BadRequest(ApiResponse<string>.Error(ex.Message));
-      //      }
-      //      catch (Exception ex)
-      //      {
-      //          return StatusCode(500, ApiResponse<string>.Error(ex.Message));
-      //      }
-      //  }
+        //  [HttpGet("dashboard/disbursement")]
+        //  public async Task<IActionResult> GetDisbursementDashboard(
+        //[FromQuery] string dateRange)
+        //  {
+        //      try
+        //      {
+        //          var result = await _service.GetDashboardDataAsync(dateRange);
+        //          return Ok(ApiResponse<object>.Success(result, 200));
+        //      }
+        //      catch (ArgumentException ex)
+        //      {
+        //          return BadRequest(ApiResponse<string>.Error(ex.Message));
+        //      }
+        //      catch (Exception ex)
+        //      {
+        //          return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+        //      }
+        //  }
 
-      //  [HttpGet("barGraphDashboard")]
-      //  public async Task<IActionResult> barGraphDashboard([FromQuery] string dateRange)
-      //  {
-      //      try
-      //      {
-      //          var result = await _service.GetbarChartDataAsync(dateRange);
-      //          return Ok(ApiResponse<object>.Success(result, 200));
-      //      }
-      //      catch (ArgumentException ex)
-      //      {
-      //          return BadRequest(ApiResponse<string>.Error(ex.Message));
-      //      }
-      //      catch (Exception ex)
-      //      {
-      //          return StatusCode(500, ApiResponse<string>.Error(ex.Message));
-      //      }
-      //  }
+        //  [HttpGet("barGraphDashboard")]
+        //  public async Task<IActionResult> barGraphDashboard([FromQuery] string dateRange)
+        //  {
+        //      try
+        //      {
+        //          var result = await _service.GetbarChartDataAsync(dateRange);
+        //          return Ok(ApiResponse<object>.Success(result, 200));
+        //      }
+        //      catch (ArgumentException ex)
+        //      {
+        //          return BadRequest(ApiResponse<string>.Error(ex.Message));
+        //      }
+        //      catch (Exception ex)
+        //      {
+        //          return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+        //      }
+        //  }
 
-      //  [HttpGet("dashboard/transactionModeCount")]
-      //  public async Task<IActionResult> GetTransactionModeCounts([FromQuery] string dateRange)
-      //  {
-      //      try
-      //      {
-      //          var result = await _service.GetTransactionModeCountsAsync(dateRange);
-      //          return Ok(ApiResponse<object>.Success(result, 200));
-      //      }
-      //      catch (ArgumentException ex)
-      //      {
-      //          return BadRequest(ApiResponse<string>.Error(ex.Message));
-      //      }
-      //  }
+        //  [HttpGet("dashboard/transactionModeCount")]
+        //  public async Task<IActionResult> GetTransactionModeCounts([FromQuery] string dateRange)
+        //  {
+        //      try
+        //      {
+        //          var result = await _service.GetTransactionModeCountsAsync(dateRange);
+        //          return Ok(ApiResponse<object>.Success(result, 200));
+        //      }
+        //      catch (ArgumentException ex)
+        //      {
+        //          return BadRequest(ApiResponse<string>.Error(ex.Message));
+        //      }
+        //  }
 
-      //  [HttpGet("dashboard/RecentTransactions")]
-      //  public async Task<IActionResult> GetLast10Remittances()
-      //  {
-      //      try
-      //      {
-      //          var result = await _service.GetLast10RemittancesAsync();
-      //          return Ok(ApiResponse<List<RecentTransactionDTO>>.Success(result, 200));
-      //      }
-      //      catch (Exception ex)
-      //      {
-      //          return StatusCode(500, ApiResponse<string>.Error(ex.Message));
-      //      }
-      //  }
+        //  [HttpGet("dashboard/RecentTransactions")]
+        //  public async Task<IActionResult> GetLast10Remittances()
+        //  {
+        //      try
+        //      {
+        //          var result = await _service.GetLast10RemittancesAsync();
+        //          return Ok(ApiResponse<List<RecentTransactionDTO>>.Success(result, 200));
+        //      }
+        //      catch (Exception ex)
+        //      {
+        //          return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+        //      }
+        //  }
 
 
-      //  [HttpGet("dashboard/transactionModeList")]
-      //  public async Task<IActionResult> GetTransactionModeList([FromQuery] string dateRange, [FromQuery] string mode)
-      //  {
-      //      try
-      //      {
-      //          var result = await _service.GetTransactionModeListAsync(dateRange, mode);
-      //          return Ok(ApiResponse<List<RecentTransactionDTO>>.Success(result, 200));
-      //      }
-      //      catch (ArgumentException ex)
-      //      {
-      //          return BadRequest(ApiResponse<string>.Error(ex.Message));
-      //      }
-      //  }
+        //  [HttpGet("dashboard/transactionModeList")]
+        //  public async Task<IActionResult> GetTransactionModeList([FromQuery] string dateRange, [FromQuery] string mode)
+        //  {
+        //      try
+        //      {
+        //          var result = await _service.GetTransactionModeListAsync(dateRange, mode);
+        //          return Ok(ApiResponse<List<RecentTransactionDTO>>.Success(result, 200));
+        //      }
+        //      catch (ArgumentException ex)
+        //      {
+        //          return BadRequest(ApiResponse<string>.Error(ex.Message));
+        //      }
+        //  }
+        [RequirePermission("Dashbaord")]
         [HttpGet("dashboard/agent-performance")]
         public async Task<IActionResult> GetAgentPerformance()
         {
@@ -111,6 +113,7 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+        [RequirePermission("Dashbaord")]
         [HttpGet("dashboard/top-bank-transaction")]
         public async Task<IActionResult> GetTopBankTransaction()
         {
@@ -124,6 +127,7 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+        [RequirePermission("Dashbaord")]
         [HttpGet("dashboard/transaction-status-by-channel")]
         public async Task<IActionResult> GetTransactionStatusByChannel()
         {
@@ -137,6 +141,8 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+        [RequirePermission("Dashbaord")]
         [HttpGet("dashboard/incoming")]
         public async Task<IActionResult> GetIncomingSummary()
         {
@@ -150,6 +156,9 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+
+        [RequirePermission("Dashbaord")]
         [HttpGet("dashboard/outgoing")]
         public async Task<IActionResult> GetOutgoingSummary()
         {
@@ -163,6 +172,8 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+        [RequirePermission("Dashbaord")]
         [HttpGet("dashboard/eprc")]
         public async Task<IActionResult> GetEPRC()
         {
@@ -176,6 +187,8 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+        [RequirePermission("Dashbaord")]
         [HttpGet("dashboard/channels")]
         public async Task<IActionResult> GetChannels()
         {

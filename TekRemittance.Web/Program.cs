@@ -63,6 +63,8 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IPermissionHelperService, PermissionHelperService>();
 builder.Services.AddScoped<IDashboardsService, DashboardsService>();
 builder.Services.AddScoped<IDashboardsRepository, DashboardsRepository>();
+builder.Services.AddScoped<ILicenseService, LicenseService>();
+builder.Services.AddScoped<IApplicationConfigRepository, ApplicationConfigRepository>();
 
 builder.Services.Configure<SsrsOptions>(builder.Configuration.GetSection("Ssrs"));
 builder.Services.AddHttpClient<ISsrsRenderService, SsrsRenderService>("Ssrs")

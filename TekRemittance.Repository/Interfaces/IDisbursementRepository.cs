@@ -33,6 +33,7 @@ namespace TekRemittance.Repository.Interfaces
 
 
         Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAndBankAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
-
+        Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdCOCPayoutAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null);
+        Task SetCOCPayoutInquiryAsync(string xpin);
     }
 }
