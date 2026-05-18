@@ -24,7 +24,7 @@ namespace TekRemittance.Service.Implementations
                 .Where(ug => ug.UserId == userId)
                 .SelectMany(ug => ug.Group.GroupPermissions)
                 .Where(gp => gp.Permission.IsActive && gp.Group.IsActive)
-                .Select(gp => gp.Permission.Category)
+                .Select(gp => gp.Permission.Name)
                 .Distinct()
                 .ToListAsync();
         }

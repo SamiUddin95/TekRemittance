@@ -210,6 +210,19 @@ namespace TekRemittance.Repository.Implementations
                 .Select(gp => gp.PermissionId)
                 .ToListAsync();
         }
+
+        public async Task<bool> 
+            UserGroupDeleteAsync(Guid id)
+        {
+            var entity = await _context.UserGroups
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (entity == null) return false;
+
+            _context.UserGroups.Remove(entity);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
 

@@ -61,5 +61,10 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.GetPermissionsByGroupIdAsync(groupId);
         }
+
+        public async Task<bool> UserGroupDeleteAsync(Guid id)
+        {
+            return await _repo.UserGroupDeleteAsync(id);
+        }
     }
 }
