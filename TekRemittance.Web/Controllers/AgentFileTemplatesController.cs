@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
 
@@ -21,7 +22,7 @@ namespace TekRemittance.Web.Controllers
             _service = service;
         }
 
-
+        [RequirePermission("Processing.FileTemplate")]
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? name = null, string? agentname = null,string? sheetname=null)
         {

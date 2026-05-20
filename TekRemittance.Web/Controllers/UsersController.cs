@@ -1,13 +1,14 @@
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using TekRemittance.Service.Interfaces;
-using TekRemittance.Web.Models;
-using TekRemittance.Web.Models.dto;
 using System;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Implementations;
+using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
+using TekRemittance.Web.Models;
+using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Web.Controllers
 {
@@ -22,6 +23,7 @@ namespace TekRemittance.Web.Controllers
             _service = service;
         }
 
+        [RequirePermission("Security.Users")]
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null)
         {
@@ -174,6 +176,8 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+
+        [RequirePermission("Security.UnAuthorized Users")]
         [HttpGet("UnAuthorizeUsers")]
         public async Task<IActionResult> GetAllUnAuthorize(int pageNumber = 1, int pageSize = 10, string? name = null, string? employeeId = null, string? loginName = null)
         {

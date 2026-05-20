@@ -1,11 +1,12 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 using TekRemittance.Repository.Interfaces;
 using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
 using TekRemittance.Web.Models;
 
 namespace TekRemittance.Web.Controllers
@@ -45,6 +46,7 @@ namespace TekRemittance.Web.Controllers
         }
 
         [Authorize]
+        [RequirePermission("Processing.FileUpload")]
         [HttpGet]
         public async Task<IActionResult> List([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50, string? templatename = null, string? filename = null)
         {

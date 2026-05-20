@@ -4,6 +4,7 @@ using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Enums;
 using TekRemittance.Repository.Models.dto;
 using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -22,6 +23,7 @@ namespace TekRemittance.Web.Controllers
             _service = service;
         }
 
+        [RequirePermission("Acquisitions.AgentAccounts")]
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? agentname = null, StatusesEnums? status = null)
         {

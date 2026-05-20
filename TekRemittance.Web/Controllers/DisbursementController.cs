@@ -48,6 +48,7 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
+        [RequirePermission("Disbursement.DisbursementQueue")]
         [HttpGet("GetDataByAgent")]
         public async Task<IActionResult> GetByAgentIdP(Guid agentId, Guid userId, int pageNumber = 1, int pageSize = 10,  string? accountnumber = null, string? xpin = null, string? date = null )
           {

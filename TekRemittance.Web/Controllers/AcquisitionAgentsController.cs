@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Enums;
 using TekRemittance.Service.Interfaces;
+using TekRemittance.Web.Attributes;
 using TekRemittance.Web.Models;
 using TekRemittance.Web.Models.dto;
 
@@ -20,6 +21,7 @@ namespace TekRemittance.Web.Controllers
             _service = service;
         }
 
+        [RequirePermission("Acquisitions.AgentManagement")]
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10, string? code = null, string? agentname = null, StatusesEnums? status = null)
         {

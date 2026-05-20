@@ -97,3 +97,5 @@ Thumbs.db
 /TekRemittance.Service/obj/TekRemittance.Service.csproj.nuget.g.targets
 /TekRemittance.sln
 /UpgradeLog.htm
+/sp_TransactionModeAnalysis.sql
+/sp_TransactionModeAnalysis_Updated.sql
