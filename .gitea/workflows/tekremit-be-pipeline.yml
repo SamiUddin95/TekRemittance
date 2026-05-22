@@ -11,14 +11,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore NuGet packages
-        run: dotnet restore TekRemittance.sln
+        run: dotnet restore TekRemittance.Web/TekRemittance.Web.csproj
 
-      - name: Build solution
-        run: dotnet build TekRemittance.sln --configuration Release --no-restore
+      - name: Build application
+        run: dotnet build TekRemittance.Web/TekRemittance.Web.csproj --configuration Release --no-restore
 
       - name: Publish application
         run: |
-          dotnet publish TekRemittance.sln `
+          dotnet publish TekRemittance.Web/TekRemittance.Web.csproj `
             --configuration Release `
             --output D:\Publish\TekRemit-be-cicd `
             --no-build
