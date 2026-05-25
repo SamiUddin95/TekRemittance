@@ -9,7 +9,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>18.1.11312.151</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-05-19T11:27:39.8103529Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-05-21T08:46:25.6238112Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <AutoRefresh>0</AutoRefresh>
@@ -1841,9 +1841,8 @@
       <Width>28.0361in</Width>
       <Page>
         <PageHeader>
-          <Height>4cm</Height>
+          <Height>2.7cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
-          <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
             <Rectangle Name="HeaderRectangle">
               <ReportItems>
@@ -1862,46 +1861,13 @@
                         </TextRun>
                       </TextRuns>
                       <Style>
-                        <TextAlign>Right</TextAlign>
-                      </Style>
-                    </Paragraph>
-                  </Paragraphs>
-                  <Top>2.1cm</Top>
-                  <Height>0.5cm</Height>
-                  <Width>70.83915cm</Width>
-                  <Style>
-                    <Border>
-                      <Style>None</Style>
-                    </Border>
-                    <PaddingLeft>2pt</PaddingLeft>
-                    <PaddingRight>2pt</PaddingRight>
-                    <PaddingTop>2pt</PaddingTop>
-                    <PaddingBottom>2pt</PaddingBottom>
-                  </Style>
-                </Textbox>
-                <Textbox Name="ReportSubtitle">
-                  <CanGrow>true</CanGrow>
-                  <KeepTogether>true</KeepTogether>
-                  <Paragraphs>
-                    <Paragraph>
-                      <TextRuns>
-                        <TextRun>
-                          <Value>Transaction Summary and Status Analysis</Value>
-                          <Style>
-                            <FontStyle>Italic</FontStyle>
-                            <Color>#5d6d7e</Color>
-                          </Style>
-                        </TextRun>
-                      </TextRuns>
-                      <Style>
                         <TextAlign>Center</TextAlign>
                       </Style>
                     </Paragraph>
                   </Paragraphs>
-                  <Top>1.3cm</Top>
-                  <Height>0.6cm</Height>
+                  <Top>2cm</Top>
+                  <Height>0.59417cm</Height>
                   <Width>70.83915cm</Width>
-                  <ZIndex>1</ZIndex>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -1931,10 +1897,10 @@
                       </Style>
                     </Paragraph>
                   </Paragraphs>
-                  <Top>0.3cm</Top>
-                  <Height>1cm</Height>
+                  <Top>0.2cm</Top>
+                  <Height>0.8cm</Height>
                   <Width>70.83915cm</Width>
-                  <ZIndex>2</ZIndex>
+                  <ZIndex>1</ZIndex>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -1965,8 +1931,41 @@
                       </Style>
                     </Paragraph>
                   </Paragraphs>
-                  <Top>2.7cm</Top>
-                  <Height>0.6cm</Height>
+                  <Top>1.5cm</Top>
+                  <Height>0.5cm</Height>
+                  <Width>70.83915cm</Width>
+                  <ZIndex>2</ZIndex>
+                  <Style>
+                    <Border>
+                      <Style>None</Style>
+                    </Border>
+                    <PaddingLeft>2pt</PaddingLeft>
+                    <PaddingRight>2pt</PaddingRight>
+                    <PaddingTop>2pt</PaddingTop>
+                    <PaddingBottom>2pt</PaddingBottom>
+                  </Style>
+                </Textbox>
+                <Textbox Name="ReportSubtitle">
+                  <CanGrow>true</CanGrow>
+                  <KeepTogether>true</KeepTogether>
+                  <Paragraphs>
+                    <Paragraph>
+                      <TextRuns>
+                        <TextRun>
+                          <Value>Transaction Summary and Status Analysis</Value>
+                          <Style>
+                            <FontStyle>Italic</FontStyle>
+                            <Color>#5d6d7e</Color>
+                          </Style>
+                        </TextRun>
+                      </TextRuns>
+                      <Style>
+                        <TextAlign>Center</TextAlign>
+                      </Style>
+                    </Paragraph>
+                  </Paragraphs>
+                  <Top>1cm</Top>
+                  <Height>0.5cm</Height>
                   <Width>70.83915cm</Width>
                   <ZIndex>3</ZIndex>
                   <Style>
@@ -1983,9 +1982,9 @@
                   <Source>Embedded</Source>
                   <Value>Albarakadownload</Value>
                   <Sizing>FitProportional</Sizing>
-                  <Top>0.85cm</Top>
+                  <Top>0.1cm</Top>
                   <Left>1.5875cm</Left>
-                  <Height>1.8cm</Height>
+                  <Height>1.2cm</Height>
                   <Width>6.5cm</Width>
                   <ZIndex>4</ZIndex>
                   <Style>
@@ -1996,7 +1995,7 @@
                 </Image>
               </ReportItems>
               <KeepTogether>true</KeepTogether>
-              <Height>3.5cm</Height>
+              <Height>2.6cm</Height>
               <Width>70.83915cm</Width>
               <Style>
                 <Border>
@@ -2014,7 +2013,6 @@
         <PageFooter>
           <Height>1.5cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
-          <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
             <Textbox Name="PageNumber">
               <CanGrow>true</CanGrow>
@@ -2056,7 +2054,7 @@
           </Style>
         </PageFooter>
         <PageHeight>21cm</PageHeight>
-        <PageWidth>80cm</PageWidth>
+        <PageWidth>71.9cm</PageWidth>
         <LeftMargin>0.5cm</LeftMargin>
         <RightMargin>0.5cm</RightMargin>
         <TopMargin>0.5cm</TopMargin>
