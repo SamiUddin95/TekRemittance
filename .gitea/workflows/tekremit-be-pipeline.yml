@@ -45,7 +45,7 @@ jobs:
           $ErrorActionPreference = "Stop"
           $publishPath = "D:\Publish\TekRemit-be-cicd"
           if (Test-Path $publishPath) {
-            Copy-Item -Path "$publishPath\*" -Destination "D:\WebApps\TekRemit-be-cicd\" -Recurse -Force
+            Copy-Item -Path "$publishPath\*" -Destination "D:\WebApps\TekRemit-be-cicd\" -Recurse -Force -Exclude "web.config","appsettings.Production.json"
             Write-Host "Build files copied from $publishPath"
           } else {
             Write-Error "Publish output not found at $publishPath"
