@@ -554,23 +554,44 @@ namespace TekRemittance.Repository.Implementations
             
         }
 
-        public async Task<RemittanceInfoModelDTO> RemitRejectAsync(string xpin, Guid? userId)
+        
+        public async Task<RemittanceInfoModelDTO> RemitRejectAsync(string xpin, Guid? userId, string? remarks)
         {
-            
-
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
             var remitInfo = await _context.RemittanceInfos
                 .FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
+
+            string username = "Unknown";
+            if (userId.HasValue)
+            {
+                var user = await _context.Users
+                    .Where(u => u.Id == userId.Value)
+                    .Select(u => u.LoginName) 
+                    .FirstOrDefaultAsync();
+
+                username = user ?? "Unknown";
+            }
+
+            var existingRemarks = remitInfo.Remarks ?? "";
+
+           
+            var newRemark = $"[Reject] User:{username} | Date:{DateTime.Now:dd-MMM-yyyy hh:mm tt} | Remarks:{remarks}]\n";
+            
+            remitInfo.Remarks = existingRemarks + newRemark;
             remitInfo.Status = "RE";
             remitInfo.UpdatedOn = DateTime.Now;
+
             await _context.SaveChangesAsync();
 
             return new RemittanceInfoModelDTO
             {
                 Xpin = xpin,
                 UserId = userId,
+                Remarks = remitInfo.Remarks
             };
         }
         public async Task<RemittanceInfoModelDTO> RemitAuthorizeAsync(string xpin, Guid? userId)
@@ -615,7 +636,8 @@ namespace TekRemittance.Repository.Implementations
             };
         }
 
-        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId, string remarks)
+       
+        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId, string? remarks)
         {
             if (userId == null)
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
@@ -625,18 +647,34 @@ namespace TekRemittance.Repository.Implementations
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
+            string username = "Unknown";
+            if (userId.HasValue)
+            {
+                var user = await _context.Users
+                    .Where(u => u.Id == userId.Value)
+                    .Select(u => u.LoginName) 
+                    .FirstOrDefaultAsync();
+
+                username = user ?? "Unknown";
+            }
+
+            var existingRemarks = remitInfo.Remarks ?? "";
+
+            var newRemark = $"[Reverse] User:{username} | Date:{DateTime.Now:dd-MMM-yyyy hh:mm tt} | Remarks:{remarks}]\n";
+           
+            remitInfo.Remarks = existingRemarks + newRemark;
             remitInfo.Status = "P";
-            remitInfo.Remarks = remarks;
             remitInfo.UpdatedOn = DateTime.Now;
+
             await _context.SaveChangesAsync();
 
             return new RemittanceInfoModelDTO
             {
                 Xpin = xpin,
                 UserId = userId,
+                Remarks = remitInfo.Remarks
             };
         }
-
         public async Task<RemittanceInfoModelDTO> RemitAmlAsync(string xpin, Guid? userId)
         {
             if (userId == null)

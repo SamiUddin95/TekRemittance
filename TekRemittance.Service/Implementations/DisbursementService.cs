@@ -45,9 +45,9 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repo.RemitApproveAsync(xpin, userId);
         }
-        public async Task<RemittanceInfoModelDTO> RemitRejectAsync(string xpin, Guid? userId)
+        public async Task<RemittanceInfoModelDTO> RemitRejectAsync(string xpin, Guid? userId, string? remarks)
         {
-            return await _repo.RemitRejectAsync(xpin, userId);
+            return await _repo.RemitRejectAsync(xpin, userId,remarks);
         }
 
         public async Task<RemittanceInfoModelDTO> RemitAuthorizeAsync(string xpin, Guid? userId)
@@ -60,7 +60,7 @@ namespace TekRemittance.Service.Implementations
             return await _repo.RemitRepairAsync(xpin, userId);
         }
 
-        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId, string remarks)
+        public async Task<RemittanceInfoModelDTO> RemitReverseAsync(string xpin, Guid? userId, string? remarks)
         {
             return await _repo.RemitReverseAsync(xpin, userId, remarks);
         }

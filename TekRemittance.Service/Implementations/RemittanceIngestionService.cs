@@ -1,6 +1,8 @@
 using ClosedXML.Excel;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,21 +25,26 @@ namespace TekRemittance.Service.Implementations
         private readonly IAgentFileTemplateRepository _templateRepo;
         private readonly IAgentFileTemplateFieldRepository _fieldRepo;
         private readonly IRemittanceInfoRepository _remitRepo;
+        private readonly IConfiguration _configuration;
         private readonly AppDbContext _context;
         public RemittanceIngestionService(
             IAgentFileTemplateRepository templateRepo,
             IAgentFileTemplateFieldRepository fieldRepo,
             IRemittanceInfoRepository remitRepo,
+            IConfiguration configuration,
             AppDbContext context)
         {
             _templateRepo = templateRepo;
             _fieldRepo = fieldRepo;
             _remitRepo = remitRepo;
+            _configuration = configuration;
             _context = context;
         }
 
         public async Task<(Guid UploadId, int RowCount)> IngestAsync(Guid agentId, Guid? templateId, IFormFile file, bool hasHeader)
         {
+
+
             if (file == null || file.Length == 0) throw new ArgumentException("File is empty");
 
             var baseName = Path.GetFileNameWithoutExtension(file.FileName)?.Trim();
@@ -67,6 +74,8 @@ namespace TekRemittance.Service.Implementations
                 .OrderBy(f => f.FieldOrder)
                 .ToList();
             if (fields.Count == 0) throw new InvalidOperationException("Template has no enabled fields");
+
+            var configuredBankCode = _configuration["BankCode"];
 
             var uploadId = await _remitRepo.CreateUploadAsync(agentId, template.Id, baseName);
 
@@ -145,8 +154,36 @@ namespace TekRemittance.Service.Implementations
                         }
 
 
+
+                        var eprcCodeIndex = fields.FindIndex(f =>
+                        {
+                            if (string.IsNullOrWhiteSpace(f.FieldName)) return false;
+                            var normalized = f.FieldName.ToLower().Replace("_", "").Replace(" ", "");
+                            return normalized.Contains("eprccode");
+                        });
+
+                        string? eprcCode = null;
+                        if (eprcCodeIndex >= 0 && eprcCodeIndex < values.Count)
+                        {
+                            eprcCode = values[eprcCodeIndex];
+                        }
+
+
+                        var rowBank = await _context.Banks
+                            .FirstOrDefaultAsync(x => x.BankCode == eprcCode);
+
+                        Guid? bankId = rowBank?.Id;
+
+
+                        string? finalEprcCode = null;
+                        if (!string.IsNullOrEmpty(eprcCode) && eprcCode == configuredBankCode)
+                        {
+                            finalEprcCode = eprcCode;
+                        }
+
+
                         var (json, error) = MapToJson(values, fields);
-                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error, accountNumber, accountTitle, xpin));
+                        rows.Add(BuildRow(agentId, template.Id, uploadId, rowNo, json, error, accountNumber, accountTitle, xpin, bankId, finalEprcCode));
                     }
                 }
                 //else if (ext == ".csv")
@@ -238,7 +275,7 @@ namespace TekRemittance.Service.Implementations
         }
 
         private static RemittanceInfo BuildRow(Guid agentId, Guid templateId, Guid uploadId, int rowNo, string json, string? error,string accountNumber, string? accountTitle,
-    string? xpin)
+    string? xpin, Guid? bankId , string? eprcCode)
         {
             return new RemittanceInfo
             {
@@ -254,8 +291,10 @@ namespace TekRemittance.Service.Implementations
                 AccountTitle=accountTitle,
                 Xpin=xpin, 
                 Date = DateTime.Now,
-                Status = "P"
-                
+                Status = "P",
+                BankId = bankId,
+                EPRCCode = eprcCode,
+
             };
         }
         private static (string Json, string? Error) MapToJson(IReadOnlyList<string> values, List<agentFileTemplateFieldDTO> fields)
