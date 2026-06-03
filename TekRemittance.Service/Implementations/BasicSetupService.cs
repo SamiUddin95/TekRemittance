@@ -305,9 +305,9 @@ namespace TekRemittance.Service.Implementations
             return createdRecords;
         }
         
-        public async Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null, string? niftCode = null)
+        public async Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
         {
-            return await _repository.GetAllBankBranchAsync(pageNumber, pageSize, code, name, niftCode);
+            return await _repository.GetAllBankBranchAsync(pageNumber, pageSize, code, name);
         }
         public async Task<BankBranchDTO?> GetBankBranchByIdAsync(int id)
         {
@@ -325,13 +325,9 @@ namespace TekRemittance.Service.Implementations
             {
                 Id = updated.Id,
                 Code = updated.Code,
-                NIFTBranchCode = updated.NIFTBranchCode,
                 Name = updated.Name,
                 HubId = updated.HubId,
                 IsDeleted = updated.IsDeleted,
-                Email1 = updated.Email1,
-                Email2 = updated.Email2,
-                Email3 = updated.Email3,
                 CreatedBy = updated.CreatedBy,
                 UpdatedBy = updated.UpdatedBy,
                 CreatedOn = updated.CreatedOn,
@@ -365,10 +361,6 @@ namespace TekRemittance.Service.Implementations
                 Code = updated.Code,
                 Name = updated.Name,
                 IsDeleted = updated.IsDeleted,
-                CrAccSameDay = updated.CrAccSameDay,
-                CrAccNormal = updated.CrAccNormal,
-                CrAccIntercity = updated.CrAccIntercity,
-                CrAccDollar = updated.CrAccDollar,
                 CreatedBy = updated.CreatedBy,
                 UpdatedBy = updated.UpdatedBy,
                 CreatedOn = updated.CreatedOn,

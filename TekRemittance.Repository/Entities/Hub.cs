@@ -10,8 +10,7 @@ namespace TekRemittance.Repository.Entities
     public class Hub
     {
         public int Id { get; set; }
-        public int Version { get; set; }
-        public bool IsNew { get; set; }
+
         public bool IsDeleted { get; set; }
         [MaxLength(128)]
         public string? Code { get; set; }
@@ -21,9 +20,6 @@ namespace TekRemittance.Repository.Entities
         public string? UpdatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public string? CrAccSameDay { get; set; }
-        public string? CrAccNormal { get; set; }
-        public string? CrAccIntercity { get; set; }
-        public string? CrAccDollar { get; set; }
+
     }
 }

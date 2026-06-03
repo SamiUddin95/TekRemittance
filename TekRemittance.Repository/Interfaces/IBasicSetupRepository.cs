@@ -51,7 +51,7 @@ namespace TekRemittance.Repository.Interfaces
         Task<List<AmlDataDTO>> AddRangeAsync(List<AmlDataDTO> dtos);
 
         
-        Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null, string? niftCode = null);
+        Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null);
         Task<BankBranchDTO?> GetBankBranchByIdAsync(int id);
         Task<BankBranchDTO> AddBankBranchAsync(BankBranchDTO dto);
         Task<BankBranches?> UpdateBankBranchAsync(BankBranchDTO dto);

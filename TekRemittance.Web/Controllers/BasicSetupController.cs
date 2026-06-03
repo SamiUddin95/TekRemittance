@@ -552,11 +552,11 @@ namespace TekRemittance.Web.Controllers
 
         #region BankBranch
         [HttpGet("bankbranches")]
-        public async Task<IActionResult> GetAllBankBranches(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null, string? niftCode = null)
+        public async Task<IActionResult> GetAllBankBranches(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
         {
             try
             {
-                var result = await _service.GetAllBankBranchAsync(pageNumber, pageSize, code, name, niftCode);
+                var result = await _service.GetAllBankBranchAsync(pageNumber, pageSize, code, name);
                 return Ok(ApiResponse<object>.Success(new
                 {
                     items = result.Items,

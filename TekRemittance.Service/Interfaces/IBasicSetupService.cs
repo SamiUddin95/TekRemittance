@@ -53,7 +53,7 @@ namespace TekRemittance.Service.Interfaces
         Task<List<AmlDataDTO>> ProcessAmlFileAsync(IFormFile file);
 
        
-        Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null, string? niftCode = null);
+        Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null);
         Task<BankBranchDTO?> GetBankBranchByIdAsync(int id);
         Task<BankBranchDTO> CreateBankBranchAsync(BankBranchDTO dto);
         Task<BankBranchDTO?> UpdateBankBranchAsync(BankBranchDTO dto);

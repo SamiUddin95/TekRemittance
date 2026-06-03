@@ -788,7 +788,7 @@ namespace TekRemittance.Repository.Implementations
         }
 
         #region BankBranch
-        public async Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null, string? niftCode = null)
+        public async Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
@@ -805,9 +805,6 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(b => b.Name.Contains(name));
 
-            if (!string.IsNullOrWhiteSpace(niftCode))
-                query = query.Where(b => b.NIFTBranchCode.Contains(niftCode));
-
             var totalCount = await query.CountAsync();
 
             var items = await query
@@ -818,14 +815,9 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = b.Id,
                     Code = b.Code,
-                    NIFTBranchCode = b.NIFTBranchCode,
                     Name = b.Name,
                     HubId = b.HubId,
-                    //HubName = b.Hub.Name,
                     IsDeleted = b.IsDeleted,
-                    Email1 = b.Email1,
-                    Email2 = b.Email2,
-                    Email3 = b.Email3,
                     CreatedBy = b.CreatedBy,
                     UpdatedBy = b.UpdatedBy,
                     CreatedOn = b.CreatedOn,
@@ -852,14 +844,9 @@ namespace TekRemittance.Repository.Implementations
                 {
                     Id = b.Id,
                     Code = b.Code,
-                    NIFTBranchCode = b.NIFTBranchCode,
                     Name = b.Name,
                     HubId = b.HubId,
-                    //HubName = b.Hub.Name,
                     IsDeleted = b.IsDeleted,
-                    Email1 = b.Email1,
-                    Email2 = b.Email2,
-                    Email3 = b.Email3,
                     CreatedBy = b.CreatedBy,
                     UpdatedBy = b.UpdatedBy,
                     CreatedOn = b.CreatedOn,
@@ -877,19 +864,13 @@ namespace TekRemittance.Repository.Implementations
             var entity = new BankBranches
             {
                 Code = dto.Code,
-                NIFTBranchCode = dto.NIFTBranchCode,
                 Name = name,
                 HubId = dto.HubId,
-                Email1 = dto.Email1,
-                Email2 = dto.Email2,
-                Email3 = dto.Email3,
                 IsDeleted = false,
-                IsNew = true,
-                Version = 1,
                 CreatedBy = dto.CreatedBy ?? "system",
                 UpdatedBy = dto.UpdatedBy ?? "system",
-                CreatedOn = DateTime.UtcNow,
-                UpdatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.Now,
+                UpdatedOn = DateTime.Now
             };
 
             await _context.BankBranches.AddAsync(entity);
@@ -911,14 +892,10 @@ namespace TekRemittance.Repository.Implementations
                 throw new ArgumentException("Branch name already exists.");
 
             existing.Code = dto.Code;
-            existing.NIFTBranchCode = dto.NIFTBranchCode;
             existing.Name = name;
             existing.HubId = dto.HubId;
-            existing.Email1 = dto.Email1;
-            existing.Email2 = dto.Email2;
-            existing.Email3 = dto.Email3;
             existing.UpdatedBy = dto.UpdatedBy ?? "system";
-            existing.UpdatedOn = DateTime.UtcNow;
+            existing.UpdatedOn = DateTime.Now;
 
             await _context.SaveChangesAsync();
             return existing;
@@ -930,7 +907,7 @@ namespace TekRemittance.Repository.Implementations
             if (existing == null) return false;
 
             existing.IsDeleted = true;
-            existing.UpdatedOn = DateTime.UtcNow;
+            existing.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
             return true;
         }
@@ -965,10 +942,6 @@ namespace TekRemittance.Repository.Implementations
                     Code = h.Code,
                     Name = h.Name,
                     IsDeleted = h.IsDeleted,
-                    CrAccSameDay = h.CrAccSameDay,
-                    CrAccNormal = h.CrAccNormal,
-                    CrAccIntercity = h.CrAccIntercity,
-                    CrAccDollar = h.CrAccDollar,
                     CreatedBy = h.CreatedBy,
                     UpdatedBy = h.UpdatedBy,
                     CreatedOn = h.CreatedOn,
@@ -996,10 +969,6 @@ namespace TekRemittance.Repository.Implementations
                     Code = h.Code,
                     Name = h.Name,
                     IsDeleted = h.IsDeleted,
-                    CrAccSameDay = h.CrAccSameDay,
-                    CrAccNormal = h.CrAccNormal,
-                    CrAccIntercity = h.CrAccIntercity,
-                    CrAccDollar = h.CrAccDollar,
                     CreatedBy = h.CreatedBy,
                     UpdatedBy = h.UpdatedBy,
                     CreatedOn = h.CreatedOn,
@@ -1018,17 +987,11 @@ namespace TekRemittance.Repository.Implementations
             {
                 Code = dto.Code,
                 Name = name,
-                CrAccSameDay = dto.CrAccSameDay,
-                CrAccNormal = dto.CrAccNormal,
-                CrAccIntercity = dto.CrAccIntercity,
-                CrAccDollar = dto.CrAccDollar,
                 IsDeleted = false,
-                IsNew = true,
-                Version = 1,
                 CreatedBy = dto.CreatedBy ?? "system",
                 UpdatedBy = dto.UpdatedBy ?? "system",
-                CreatedOn = DateTime.UtcNow,
-                UpdatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.Now,
+                UpdatedOn = DateTime.Now
             };
 
             await _context.Hub.AddAsync(entity);
@@ -1051,12 +1014,8 @@ namespace TekRemittance.Repository.Implementations
 
             existing.Code = dto.Code;
             existing.Name = name;
-            existing.CrAccSameDay = dto.CrAccSameDay;
-            existing.CrAccNormal = dto.CrAccNormal;
-            existing.CrAccIntercity = dto.CrAccIntercity;
-            existing.CrAccDollar = dto.CrAccDollar;
             existing.UpdatedBy = dto.UpdatedBy ?? "system";
-            existing.UpdatedOn = DateTime.UtcNow;
+            existing.UpdatedOn = DateTime.Now;
 
             await _context.SaveChangesAsync();
             return existing;
@@ -1068,7 +1027,7 @@ namespace TekRemittance.Repository.Implementations
             if (existing == null) return false;
 
             existing.IsDeleted = true;
-            existing.UpdatedOn = DateTime.UtcNow;
+            existing.UpdatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
             return true;
         }
