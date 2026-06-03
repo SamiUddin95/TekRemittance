@@ -12,10 +12,7 @@ namespace TekRemittance.Repository.Models.dto
         public string? Code { get; set; }
         public string? Name { get; set; }
         public bool IsDeleted { get; set; }
-        public string? CrAccSameDay { get; set; }
-        public string? CrAccNormal { get; set; }
-        public string? CrAccIntercity { get; set; }
-        public string? CrAccDollar { get; set; }
+    
         public string? CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
