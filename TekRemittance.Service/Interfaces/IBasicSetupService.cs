@@ -51,5 +51,20 @@ namespace TekRemittance.Service.Interfaces
         Task<bool> DeleteAmlDataAsync(Guid id);
 
         Task<List<AmlDataDTO>> ProcessAmlFileAsync(IFormFile file);
+
+       
+        Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null, string? niftCode = null);
+        Task<BankBranchDTO?> GetBankBranchByIdAsync(int id);
+        Task<BankBranchDTO> CreateBankBranchAsync(BankBranchDTO dto);
+        Task<BankBranchDTO?> UpdateBankBranchAsync(BankBranchDTO dto);
+        Task<bool> DeleteBankBranchAsync(int id);
+       
+
+        Task<PagedResult<HubDTO>> GetAllHubAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null);
+        Task<HubDTO?> GetHubByIdAsync(int id);
+        Task<HubDTO> CreateHubAsync(HubDTO dto);
+        Task<HubDTO?> UpdateHubAsync(HubDTO dto);
+        Task<bool> DeleteHubAsync(int id);
+        
     }
 }

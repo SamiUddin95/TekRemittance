@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
@@ -143,7 +144,7 @@ namespace TekRemittance.Repository.Implementations
                 UpdatedOn = entity.UpdatedOn,
                 IsSupervise = entity.IsSupervise,
                 UserType=entity.UserType
-                
+
             };
         }
 

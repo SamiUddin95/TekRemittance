@@ -26,6 +26,6 @@ namespace TekRemittance.Repository.Entities
         public DateTime? UpdatedOn { get; set; }
 
         public string UserType { get; set; }
-
+       
     }
 }

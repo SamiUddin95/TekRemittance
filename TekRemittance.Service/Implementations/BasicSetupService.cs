@@ -304,7 +304,82 @@ namespace TekRemittance.Service.Implementations
             var createdRecords = await _repository.AddRangeAsync(amlDataList);
             return createdRecords;
         }
-
+        
+        public async Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null, string? niftCode = null)
+        {
+            return await _repository.GetAllBankBranchAsync(pageNumber, pageSize, code, name, niftCode);
+        }
+        public async Task<BankBranchDTO?> GetBankBranchByIdAsync(int id)
+        {
+            return await _repository.GetBankBranchByIdAsync(id);
+        }
+        public async Task<BankBranchDTO> CreateBankBranchAsync(BankBranchDTO dto)
+        {
+            return await _repository.AddBankBranchAsync(dto);
+        }
+        public async Task<BankBranchDTO?> UpdateBankBranchAsync(BankBranchDTO dto)
+        {
+            var updated = await _repository.UpdateBankBranchAsync(dto);
+            if (updated == null) return null;
+            return new BankBranchDTO
+            {
+                Id = updated.Id,
+                Code = updated.Code,
+                NIFTBranchCode = updated.NIFTBranchCode,
+                Name = updated.Name,
+                HubId = updated.HubId,
+                IsDeleted = updated.IsDeleted,
+                Email1 = updated.Email1,
+                Email2 = updated.Email2,
+                Email3 = updated.Email3,
+                CreatedBy = updated.CreatedBy,
+                UpdatedBy = updated.UpdatedBy,
+                CreatedOn = updated.CreatedOn,
+                UpdatedOn = updated.UpdatedOn
+            };
+        }
+        public async Task<bool> DeleteBankBranchAsync(int id)
+        {
+            return await _repository.DeleteBankBranchAsync(id);
+        }
+        
+        public async Task<PagedResult<HubDTO>> GetAllHubAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            return await _repository.GetAllHubAsync(pageNumber, pageSize, code, name);
+        }
+        public async Task<HubDTO?> GetHubByIdAsync(int id)
+        {
+            return await _repository.GetHubByIdAsync(id);
+        }
+        public async Task<HubDTO> CreateHubAsync(HubDTO dto)
+        {
+            return await _repository.AddHubAsync(dto);
+        }
+        public async Task<HubDTO?> UpdateHubAsync(HubDTO dto)
+        {
+            var updated = await _repository.UpdateHubAsync(dto);
+            if (updated == null) return null;
+            return new HubDTO
+            {
+                Id = updated.Id,
+                Code = updated.Code,
+                Name = updated.Name,
+                IsDeleted = updated.IsDeleted,
+                CrAccSameDay = updated.CrAccSameDay,
+                CrAccNormal = updated.CrAccNormal,
+                CrAccIntercity = updated.CrAccIntercity,
+                CrAccDollar = updated.CrAccDollar,
+                CreatedBy = updated.CreatedBy,
+                UpdatedBy = updated.UpdatedBy,
+                CreatedOn = updated.CreatedOn,
+                UpdatedOn = updated.UpdatedOn
+            };
+        }
+        public async Task<bool> DeleteHubAsync(int id)
+        {
+            return await _repository.DeleteHubAsync(id);
+        }
+        
 
 
     }
