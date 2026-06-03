@@ -45,7 +45,8 @@ namespace TekRemittance.Repository.Implementations
                     CreatedBy = g.CreatedBy,
                     CreatedOn = g.CreatedOn,
                     UpdatedBy = g.UpdatedBy,
-                    UpdatedOn = g.UpdatedOn
+                    UpdatedOn = g.UpdatedOn,
+                    MakerAndChecker=g.MakerAndChecker
                 })
                 .ToListAsync();
 
@@ -75,7 +76,8 @@ namespace TekRemittance.Repository.Implementations
                 CreatedBy = group.CreatedBy,
                 CreatedOn = group.CreatedOn,
                 UpdatedBy = group.UpdatedBy,
-                UpdatedOn = group.UpdatedOn
+                UpdatedOn = group.UpdatedOn,
+                MakerAndChecker=group.MakerAndChecker
             };
         }
 
@@ -88,7 +90,8 @@ namespace TekRemittance.Repository.Implementations
                 Description = dto.Description,
                 IsActive = true,
                 CreatedBy = dto.CreatedBy,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.UtcNow,
+                MakerAndChecker = dto.MakerAndChecker
             };
 
             _context.Groups.Add(entity);
@@ -111,6 +114,7 @@ namespace TekRemittance.Repository.Implementations
             entity.Description = dto.Description;
             entity.UpdatedBy = dto.UpdatedBy;
             entity.UpdatedOn = DateTime.UtcNow;
+            entity.MakerAndChecker = dto.MakerAndChecker;
 
             await _context.SaveChangesAsync();
 
