@@ -816,8 +816,9 @@ namespace TekRemittance.Repository.Implementations
                     Id = b.Id,
                     Code = b.Code,
                     Name = b.Name,
-                    HubId = b.HubId,
-                    IsActive=b.IsActive,
+                    //HubId = b.HubId,
+                    HubCode = b.Hub.Code,
+                    IsActive =b.IsActive,
                     IsDeleted = b.IsDeleted,
                     CreatedBy = b.CreatedBy,
                     UpdatedBy = b.UpdatedBy,
@@ -846,8 +847,9 @@ namespace TekRemittance.Repository.Implementations
                     Id = b.Id,
                     Code = b.Code,
                     Name = b.Name,
-                    HubId = b.HubId,
-                    IsActive= b.IsActive,
+                    //HubId = b.HubId,
+                    HubCode = b.Hub.Code,
+                    IsActive = b.IsActive,
                     IsDeleted = b.IsDeleted,
                     CreatedBy = b.CreatedBy,
                     UpdatedBy = b.UpdatedBy,
@@ -863,12 +865,18 @@ namespace TekRemittance.Repository.Implementations
             if (await _context.BankBranches.AnyAsync(b => b.Name.ToLower() == name.ToLower() && !b.IsDeleted))
                 throw new ArgumentException("Branch name already exists.");
 
+            var hub = await _context.Hub
+        .FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+            if (hub == null)
+                throw new ArgumentException("Hub not found.");
+
             var entity = new BankBranches
             {
                 Code = dto.Code,
                 Name = name,
-                HubId = dto.HubId,
-                IsActive= dto.IsActive,
+                //HubId = dto.HubId,
+                HubId = hub.Id,
+                IsActive = dto.IsActive,
                 IsDeleted = false,
                 CreatedBy = dto.CreatedBy ?? "system",
                 UpdatedBy = dto.UpdatedBy ?? "system",
@@ -894,10 +902,15 @@ namespace TekRemittance.Repository.Implementations
             if (await _context.BankBranches.AnyAsync(b => b.Id != dto.Id && b.Name.ToLower() == name.ToLower() && !b.IsDeleted))
                 throw new ArgumentException("Branch name already exists.");
 
+            var hub = await _context.Hub.FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+            if (hub == null)
+                throw new ArgumentException("Hub not found.");
+
             existing.Code = dto.Code;
             existing.Name = name;
             existing.IsActive= dto.IsActive;
-            existing.HubId = dto.HubId;
+           // existing.HubId = dto.HubId;//
+            existing.HubId = hub.Id;
             existing.UpdatedBy = dto.UpdatedBy ?? "system";
             existing.UpdatedOn = DateTime.Now;
 
