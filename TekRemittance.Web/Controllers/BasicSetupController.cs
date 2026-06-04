@@ -735,20 +735,13 @@ namespace TekRemittance.Web.Controllers
             }
         }
         #endregion
-        [HttpGet("HubFilter")]
-        public async Task<IActionResult> GetAllHubsSimple(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        [HttpGet("hubs-dropdown")]
+        public async Task<IActionResult> GetHubsDropdown()
         {
             try
             {
-                var result = await _service.GetAllHubSimpleAsync(pageNumber, pageSize, code, name);
-                return Ok(ApiResponse<object>.Success(new
-                {
-                    items = result.Items,
-                    totalCount = result.TotalCount,
-                    pageNumber = result.PageNumber,
-                    pageSize = result.PageSize,
-                    totalPages = result.TotalPages
-                }, 200));
+                var result = await _service.GetHubsDropdownAsync();
+                return Ok(ApiResponse<object>.Success(result, 200));
             }
             catch (Exception ex)
             {
@@ -756,20 +749,13 @@ namespace TekRemittance.Web.Controllers
             }
         }
 
-        [HttpGet("BankBranchesFilter")]
-        public async Task<IActionResult> GetAllBankBranchesSimple(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        [HttpGet("bankbranches-dropdown")]
+        public async Task<IActionResult> GetBankBranchesDropdown()
         {
             try
             {
-                var result = await _service.GetAllBankBranchSimpleAsync(pageNumber, pageSize, code, name);
-                return Ok(ApiResponse<object>.Success(new
-                {
-                    items = result.Items,
-                    totalCount = result.TotalCount,
-                    pageNumber = result.PageNumber,
-                    pageSize = result.PageSize,
-                    totalPages = result.TotalPages
-                }, 200));
+                var result = await _service.GetBankBranchesDropdownAsync();
+                return Ok(ApiResponse<object>.Success(result, 200));
             }
             catch (Exception ex)
             {

@@ -1041,28 +1041,11 @@ namespace TekRemittance.Repository.Implementations
         }
         #endregion
 
-        public async Task<PagedResult<HubSimpleDTO>> GetAllHubSimpleAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        public async Task<List<HubSimpleDTO>> GetHubsDropdownAsync()
         {
-            if (pageNumber < 1) pageNumber = 1;
-            if (pageSize < 1) pageSize = 10;
-
-            var query = _context.Hub
+            return await _context.Hub
                 .AsNoTracking()
                 .Where(h => !h.IsDeleted)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(code))
-                query = query.Where(h => h.Code.Contains(code));
-
-            if (!string.IsNullOrWhiteSpace(name))
-                query = query.Where(h => h.Name.Contains(name));
-
-            var totalCount = await query.CountAsync();
-
-            var items = await query
-                .OrderByDescending(h => h.UpdatedOn ?? h.CreatedOn)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
                 .Select(h => new HubSimpleDTO
                 {
                    
@@ -1070,53 +1053,20 @@ namespace TekRemittance.Repository.Implementations
                     Name = h.Name
                 })
                 .ToListAsync();
-
-            return new PagedResult<HubSimpleDTO>
-            {
-                Items = items,
-                TotalCount = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize
-            };
         }
 
-        public async Task<PagedResult<BankBranchSimpleDTO>> GetAllBankBranchSimpleAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        public async Task<List<BankBranchSimpleDTO>> GetBankBranchesDropdownAsync()
         {
-            if (pageNumber < 1) pageNumber = 1;
-            if (pageSize < 1) pageSize = 10;
-
-            var query = _context.BankBranches
+            return await _context.BankBranches
                 .AsNoTracking()
                 .Where(b => !b.IsDeleted)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(code))
-                query = query.Where(b => b.Code.Contains(code));
-
-            if (!string.IsNullOrWhiteSpace(name))
-                query = query.Where(b => b.Name.Contains(name));
-
-            var totalCount = await query.CountAsync();
-
-            var items = await query
-                .OrderByDescending(b => b.UpdatedOn ?? b.CreatedOn)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
                 .Select(b => new BankBranchSimpleDTO
                 {
-                   
+                  
                     Code = b.Code,
                     Name = b.Name
                 })
                 .ToListAsync();
-
-            return new PagedResult<BankBranchSimpleDTO>
-            {
-                Items = items,
-                TotalCount = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize
-            };
         }
 
     }
