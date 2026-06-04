@@ -817,6 +817,7 @@ namespace TekRemittance.Repository.Implementations
                     Code = b.Code,
                     Name = b.Name,
                     HubId = b.HubId,
+                    IsActive=b.IsActive,
                     IsDeleted = b.IsDeleted,
                     CreatedBy = b.CreatedBy,
                     UpdatedBy = b.UpdatedBy,
@@ -846,6 +847,7 @@ namespace TekRemittance.Repository.Implementations
                     Code = b.Code,
                     Name = b.Name,
                     HubId = b.HubId,
+                    IsActive= b.IsActive,
                     IsDeleted = b.IsDeleted,
                     CreatedBy = b.CreatedBy,
                     UpdatedBy = b.UpdatedBy,
@@ -866,6 +868,7 @@ namespace TekRemittance.Repository.Implementations
                 Code = dto.Code,
                 Name = name,
                 HubId = dto.HubId,
+                IsActive= dto.IsActive,
                 IsDeleted = false,
                 CreatedBy = dto.CreatedBy ?? "system",
                 UpdatedBy = dto.UpdatedBy ?? "system",
@@ -893,6 +896,7 @@ namespace TekRemittance.Repository.Implementations
 
             existing.Code = dto.Code;
             existing.Name = name;
+            existing.IsActive= dto.IsActive;
             existing.HubId = dto.HubId;
             existing.UpdatedBy = dto.UpdatedBy ?? "system";
             existing.UpdatedOn = DateTime.Now;
@@ -941,6 +945,7 @@ namespace TekRemittance.Repository.Implementations
                     Id = h.Id,
                     Code = h.Code,
                     Name = h.Name,
+                    IsActive= h.IsActive,
                     IsDeleted = h.IsDeleted,
                     CreatedBy = h.CreatedBy,
                     UpdatedBy = h.UpdatedBy,
@@ -968,6 +973,7 @@ namespace TekRemittance.Repository.Implementations
                     Id = h.Id,
                     Code = h.Code,
                     Name = h.Name,
+                    IsActive= h.IsActive,
                     IsDeleted = h.IsDeleted,
                     CreatedBy = h.CreatedBy,
                     UpdatedBy = h.UpdatedBy,
@@ -987,6 +993,7 @@ namespace TekRemittance.Repository.Implementations
             {
                 Code = dto.Code,
                 Name = name,
+                IsActive= dto.IsActive,
                 IsDeleted = false,
                 CreatedBy = dto.CreatedBy ?? "system",
                 UpdatedBy = dto.UpdatedBy ?? "system",
@@ -1014,6 +1021,7 @@ namespace TekRemittance.Repository.Implementations
 
             existing.Code = dto.Code;
             existing.Name = name;
+            existing.IsActive= dto.IsActive;
             existing.UpdatedBy = dto.UpdatedBy ?? "system";
             existing.UpdatedOn = DateTime.Now;
 
@@ -1033,7 +1041,83 @@ namespace TekRemittance.Repository.Implementations
         }
         #endregion
 
+        public async Task<PagedResult<HubSimpleDTO>> GetAllHubSimpleAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
 
+            var query = _context.Hub
+                .AsNoTracking()
+                .Where(h => !h.IsDeleted)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(code))
+                query = query.Where(h => h.Code.Contains(code));
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(h => h.Name.Contains(name));
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(h => h.UpdatedOn ?? h.CreatedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(h => new HubSimpleDTO
+                {
+                   
+                    Code = h.Code,
+                    Name = h.Name
+                })
+                .ToListAsync();
+
+            return new PagedResult<HubSimpleDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<PagedResult<BankBranchSimpleDTO>> GetAllBankBranchSimpleAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.BankBranches
+                .AsNoTracking()
+                .Where(b => !b.IsDeleted)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(code))
+                query = query.Where(b => b.Code.Contains(code));
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(b => b.Name.Contains(name));
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(b => b.UpdatedOn ?? b.CreatedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(b => new BankBranchSimpleDTO
+                {
+                   
+                    Code = b.Code,
+                    Name = b.Name
+                })
+                .ToListAsync();
+
+            return new PagedResult<BankBranchSimpleDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
 
     }
 }

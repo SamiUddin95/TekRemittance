@@ -735,6 +735,47 @@ namespace TekRemittance.Web.Controllers
             }
         }
         #endregion
+        [HttpGet("HubFilter")]
+        public async Task<IActionResult> GetAllHubsSimple(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            try
+            {
+                var result = await _service.GetAllHubSimpleAsync(pageNumber, pageSize, code, name);
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpGet("BankBranchesFilter")]
+        public async Task<IActionResult> GetAllBankBranchesSimple(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            try
+            {
+                var result = await _service.GetAllBankBranchSimpleAsync(pageNumber, pageSize, code, name);
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
 
     }
 }

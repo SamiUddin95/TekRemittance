@@ -63,6 +63,9 @@ namespace TekRemittance.Repository.Interfaces
         Task<Hub?> UpdateHubAsync(HubDTO dto);
         Task<bool> DeleteHubAsync(int id);
 
+        Task<PagedResult<HubSimpleDTO>> GetAllHubSimpleAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null);
+        Task<PagedResult<BankBranchSimpleDTO>> GetAllBankBranchSimpleAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null);
+
 
     }
 }

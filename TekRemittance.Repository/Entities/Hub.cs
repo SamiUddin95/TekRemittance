@@ -16,6 +16,8 @@ namespace TekRemittance.Repository.Entities
         public string? Code { get; set; }
         [MaxLength(256)]
         public string? Name { get; set; }
+        public bool IsActive { get; set; }
+
         public string? CreatedBy { get; set; }
         public string? UpdatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }

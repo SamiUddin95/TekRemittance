@@ -371,7 +371,17 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repository.DeleteHubAsync(id);
         }
-        
+
+        public async Task<PagedResult<HubSimpleDTO>> GetAllHubSimpleAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            return await _repository.GetAllHubSimpleAsync(pageNumber, pageSize, code, name);
+        }
+
+        public async Task<PagedResult<BankBranchSimpleDTO>> GetAllBankBranchSimpleAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            return await _repository.GetAllBankBranchSimpleAsync(pageNumber, pageSize, code, name);
+        }
+
 
 
     }

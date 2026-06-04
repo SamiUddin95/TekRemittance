@@ -13,6 +13,8 @@ namespace TekRemittance.Repository.Entities
     
         public string? Name { get; set; }
         public int HubId { get; set; }
+        public bool IsActive { get; set; }
+
         public Hub Hub { get; set; }
    
         public bool IsDeleted { get; set; }
