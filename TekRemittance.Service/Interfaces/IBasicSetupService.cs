@@ -67,7 +67,7 @@ namespace TekRemittance.Service.Interfaces
         Task<bool> DeleteHubAsync(int id);
 
         Task<List<HubSimpleDTO>> GetHubsDropdownAsync();
-        Task<List<BankBranchSimpleDTO>> GetBankBranchesDropdownAsync();
+        Task<List<BankBranchSimpleDTO>> GetBankBranchesDropdownAsync(string? hubCode = null);
 
     }
 }

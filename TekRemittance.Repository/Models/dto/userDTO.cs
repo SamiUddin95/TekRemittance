@@ -1,4 +1,5 @@
 using System;
+using TekRemittance.Repository.Models.dto;
 
 namespace TekRemittance.Web.Models.dto
 {
@@ -22,17 +23,9 @@ namespace TekRemittance.Web.Models.dto
 
         public string UserType { get; set; }
 
-        //public List<int> HubIds { get; set; } = new List<int>();
-        //public List<int> BankBranchIds { get; set; } = new List<int>();
-        //public List<string>? HubNames { get; set; }
-        //public List<string>? BankBranchNames { get; set; }
-        // IDs ki jagah Codes
-        public List<string> HubCodes { get; set; } = new List<string>();
-        public List<string> BankBranchCodes { get; set; } = new List<string>();
-
-        // Response ke liye Names
-        public List<string>? HubNames { get; set; }
-        public List<string>? BankBranchNames { get; set; }
+        public List<CodeNameDTO> Hubs { get; set; } = new List<CodeNameDTO>();
+        public List<CodeNameDTO> BankBranches { get; set; } = new List<CodeNameDTO>();
 
     }
+  
 }

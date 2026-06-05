@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using TekRemittance.Repository.Entities;
 using TekRemittance.Repository.Entities.Data;
@@ -29,6 +30,7 @@ namespace TekRemittance.Repository.Implementations
             if (pageSize < 1) pageSize = 10;
 
             var query = _context.Users.AsNoTracking();
+
             if (!string.IsNullOrEmpty(name))
                 query = query.Where(u => u.Name.Contains(name));
             if (!string.IsNullOrEmpty(employeeId))
@@ -36,15 +38,38 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrEmpty(loginName))
                 query = query.Where(u => u.LoginName.Contains(loginName));
 
-
-
             var totalCount = await query.CountAsync();
 
-            var items = await query
-                .OrderByDescending(u => u.UpdatedOn??u.CreatedOn)
+            var rawItems = await query
+                .OrderByDescending(u => u.UpdatedOn ?? u.CreatedOn)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(u => new userDTO
+                .ToListAsync();
+
+            var allHubCodes = rawItems
+                .SelectMany(u => JsonSerializer.Deserialize<List<string>>(u.HubCodes ?? "[]") ?? new List<string>())
+                .Distinct().ToList();
+
+            var allBranchCodes = rawItems
+                .SelectMany(u => JsonSerializer.Deserialize<List<string>>(u.BankBranchCodes ?? "[]") ?? new List<string>())
+                .Distinct().ToList();
+
+            var allHubs = await _context.Hub
+                .Where(h => allHubCodes.Contains(h.Code) && !h.IsDeleted)
+                .Select(h => new CodeNameDTO { Code = h.Code, Name = h.Name })
+                .ToListAsync();
+
+            var allBranches = await _context.BankBranches
+                .Where(b => allBranchCodes.Contains(b.Code) && !b.IsDeleted)
+                .Select(b => new CodeNameDTO { Code = b.Code, Name = b.Name })
+                .ToListAsync();
+
+            var items = rawItems.Select(u =>
+            {
+                var hubCodes = JsonSerializer.Deserialize<List<string>>(u.HubCodes ?? "[]") ?? new List<string>();
+                var branchCodes = JsonSerializer.Deserialize<List<string>>(u.BankBranchCodes ?? "[]") ?? new List<string>();
+
+                return new userDTO
                 {
                     Id = u.Id,
                     Name = u.Name,
@@ -59,9 +84,11 @@ namespace TekRemittance.Repository.Implementations
                     CreatedOn = u.CreatedOn,
                     UpdatedBy = u.UpdatedBy,
                     UpdatedOn = u.UpdatedOn,
-                    UserType=u.UserType
-                })
-                .ToListAsync();
+                    UserType = u.UserType,
+                    Hubs = allHubs.Where(h => hubCodes.Contains(h.Code)).ToList(),
+                    BankBranches = allBranches.Where(b => branchCodes.Contains(b.Code)).ToList()
+                };
+            }).ToList();
 
             return new PagedResult<userDTO>
             {
@@ -71,28 +98,50 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
+
+
         public async Task<userDTO?> GetByIdAsync(Guid id)
         {
-            return await _context.Users.AsNoTracking()
+            var user = await _context.Users
+                .AsNoTracking()
                 .Where(u => u.Id == id)
-                .Select(u => new userDTO
-                {
-                    Id = u.Id,
-                    Name = u.Name,
-                    Email = u.Email,
-                    Phone = u.Phone,
-                    EmployeeId = u.EmployeeId,
-                    Limit = u.Limit,
-                    LoginName = u.LoginName,
-                    IsActive = u.IsActive,
-                    CreatedBy = u.CreatedBy,
-                    CreatedOn = u.CreatedOn,
-                    UpdatedBy = u.UpdatedBy,
-                    UpdatedOn = u.UpdatedOn,
-                    password = u.PasswordHash,
-                    IsSupervise = u.IsSupervise,
-                    UserType=u.UserType
-                }).FirstOrDefaultAsync();
+                .FirstOrDefaultAsync();
+
+            if (user == null) return null;
+
+            var hubCodes = JsonSerializer.Deserialize<List<string>>(user.HubCodes ?? "[]") ?? new List<string>();
+            var branchCodes = JsonSerializer.Deserialize<List<string>>(user.BankBranchCodes ?? "[]") ?? new List<string>();
+
+            var hubs = await _context.Hub
+          .Where(h => hubCodes.Contains(h.Code) && !h.IsDeleted)
+          .Select(h => new CodeNameDTO { Code = h.Code, Name = h.Name })
+          .ToListAsync();
+
+            var branches = await _context.BankBranches
+                .Where(b => branchCodes.Contains(b.Code) && !b.IsDeleted)
+                .Select(b => new CodeNameDTO { Code = b.Code, Name = b.Name })
+                .ToListAsync();
+
+            return new userDTO
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Phone = user.Phone,
+                EmployeeId = user.EmployeeId,
+                Limit = user.Limit,
+                LoginName = user.LoginName,
+                IsActive = user.IsActive,
+                IsSupervise = user.IsSupervise,
+                password = user.PasswordHash,
+                CreatedBy = user.CreatedBy,
+                CreatedOn = user.CreatedOn,
+                UpdatedBy = user.UpdatedBy,
+                UpdatedOn = user.UpdatedOn,
+                UserType = user.UserType,
+                Hubs = hubs,
+                BankBranches = branches
+            };
         }
 
         public async Task<userDTO> AddAsync(userDTO dto, string passwordHash)
@@ -122,7 +171,9 @@ namespace TekRemittance.Repository.Implementations
                 UpdatedBy = dto.UpdatedBy ?? "system",
                 UpdatedOn = DateTime.UtcNow,
                 IsSupervise  = false,
-                UserType=dto.UserType
+                UserType=dto.UserType,
+                HubCodes = JsonSerializer.Serialize(dto.Hubs.Select(h => h.Code).ToList()),
+                BankBranchCodes = JsonSerializer.Serialize(dto.BankBranches.Select(b => b.Code).ToList())
             };
             await _context.Users.AddAsync(entity);
             await _context.SaveChangesAsync();
@@ -142,8 +193,10 @@ namespace TekRemittance.Repository.Implementations
                 UpdatedBy = entity.UpdatedBy,
                 UpdatedOn = entity.UpdatedOn,
                 IsSupervise = entity.IsSupervise,
-                UserType=entity.UserType
-                
+                UserType=entity.UserType,
+                Hubs = dto.Hubs,
+                BankBranches = dto.BankBranches
+
             };
         }
 
@@ -173,7 +226,9 @@ namespace TekRemittance.Repository.Implementations
             existing.UpdatedOn = DateTime.UtcNow;
             existing.IsSupervise = false;
             existing.UserType = dto.UserType;
-            
+            existing.HubCodes = JsonSerializer.Serialize(dto.Hubs.Select(h => h.Code).ToList());
+            existing.BankBranchCodes = JsonSerializer.Serialize(dto.BankBranches.Select(b => b.Code).ToList());
+
 
             await _context.SaveChangesAsync();
 
@@ -192,7 +247,9 @@ namespace TekRemittance.Repository.Implementations
                 UpdatedBy = existing.UpdatedBy,
                 UpdatedOn = existing.UpdatedOn,
                 IsSupervise = existing.IsSupervise,
-                UserType=existing.UserType
+                UserType=existing.UserType,
+                Hubs = dto.Hubs,
+                BankBranches = dto.BankBranches
             };
         }
 
