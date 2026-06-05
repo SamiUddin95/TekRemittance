@@ -750,11 +750,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("bankbranches-dropdown")]
-        public async Task<IActionResult> GetBankBranchesDropdown(string? hubCode = null)
+        public async Task<IActionResult> GetBankBranchesDropdown([FromQuery] List<string>? hubCodes = null)
         {
             try
             {
-                var result = await _service.GetBankBranchesDropdownAsync(hubCode);
+                var result = await _service.GetBankBranchesDropdownAsync(hubCodes);
                 return Ok(ApiResponse<object>.Success(result, 200));
             }
             catch (Exception ex)

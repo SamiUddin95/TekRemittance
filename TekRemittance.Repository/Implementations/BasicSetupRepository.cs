@@ -1079,19 +1079,21 @@ namespace TekRemittance.Repository.Implementations
         }
 
      
-        public async Task<List<BankBranchSimpleDTO>> GetBankBranchesDropdownAsync(string? hubCode = null)
+        public async Task<List<BankBranchSimpleDTO>> GetBankBranchesDropdownAsync(List<string>? hubCodes = null)
         {
             var query = _context.BankBranches
                 .AsNoTracking()
                 .Where(b => !b.IsDeleted)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(hubCode))
+            if (hubCodes != null && hubCodes.Any())
             {
-                var hub = await _context.Hub
-                    .FirstOrDefaultAsync(h => h.Code == hubCode && !h.IsDeleted);
-                if (hub != null)
-                    query = query.Where(b => b.HubId == hub.Id);
+                var hubIds = await _context.Hub
+                    .Where(h => hubCodes.Contains(h.Code) && !h.IsDeleted)
+                    .Select(h => h.Id)
+                    .ToListAsync();
+
+                query = query.Where(b => hubIds.Contains(b.HubId));
             }
 
             return await query

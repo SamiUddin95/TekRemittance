@@ -381,9 +381,9 @@ namespace TekRemittance.Service.Implementations
             return await _repository.GetHubsDropdownAsync();
         }
 
-        public async Task<List<BankBranchSimpleDTO>> GetBankBranchesDropdownAsync(string? hubCode = null)
+        public async Task<List<BankBranchSimpleDTO>> GetBankBranchesDropdownAsync(List<string>? hubCodes = null)
         {
-            return await _repository.GetBankBranchesDropdownAsync(hubCode);
+            return await _repository.GetBankBranchesDropdownAsync(hubCodes);
         }
 
 
