@@ -321,13 +321,16 @@ namespace TekRemittance.Service.Implementations
         {
             var updated = await _repository.UpdateBankBranchAsync(dto);
             if (updated == null) return null;
+
+
             return new BankBranchDTO
             {
                 Id = updated.Id,
                 Code = updated.Code,
                 Name = updated.Name,
                 //HubId = updated.HubId,
-                HubCode = updated.Hub?.Code,
+                //HubCode = updated.Hub?.Code,
+                HubName = updated.Hub?.Name,
                 IsDeleted = updated.IsDeleted,
                 CreatedBy = updated.CreatedBy,
                 UpdatedBy = updated.UpdatedBy,

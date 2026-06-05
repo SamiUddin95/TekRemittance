@@ -15,7 +15,8 @@ namespace TekRemittance.Repository.Models.dto
         public bool IsActive { get; set; }
 
         //public int HubId { get; set; }
-        public string? HubCode { get; set; }
+        //public string? HubCode { get; set; }
+        public string? HubName { get; set; }
 
         public bool IsDeleted { get; set; }
 

@@ -26,6 +26,11 @@ namespace TekRemittance.Repository.Entities
         public DateTime? UpdatedOn { get; set; }
 
         public string UserType { get; set; }
-       
+
+        //public string? HubIds { get; set; }
+        //public string? BankBranchIds { get; set; }
+
+        public string? HubCodes { get; set; }      
+        public string? BankBranchCodes { get; set; }
     }
 }

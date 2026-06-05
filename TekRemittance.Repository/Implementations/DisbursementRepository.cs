@@ -109,11 +109,12 @@ namespace TekRemittance.Repository.Implementations
      int pageSize = 10,
      string? accountnumber = null,
      string? xpin = null,
-     string? date = null
+     string? date = null, string? search = null
        )
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
+
 
             var query =
         from r in _context.RemittanceInfos
@@ -142,17 +143,21 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPIN\":\"{xp}\"")); 
             }
 
             if (!string.IsNullOrWhiteSpace(date))
             {
                 var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                                            .ToString("dd-MM-yyyy");
-
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{formattedDate}\""));
+                                            .ToString("yyyy-MM-dd");  
+                query = query.Where(x => x.r.DataJson.Contains(formattedDate));
             }
 
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                string s = search.Trim();
+                query = query.Where(x => x.r.DataJson.Contains(s));
+            }
             var totalCount = await query.CountAsync();
 
           
@@ -225,7 +230,7 @@ namespace TekRemittance.Repository.Implementations
             };
         }
 
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusUAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -245,14 +250,20 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPIN\":\"{xp}\""));
             }
 
             if (!string.IsNullOrWhiteSpace(date))
             {
-                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                   .ToString("dd-MM-yyyy");
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+                var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                            .ToString("yyyy-MM-dd");
+                query = query.Where(x => x.r.DataJson.Contains(formattedDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                string s = search.Trim();
+                query = query.Where(x => x.r.DataJson.Contains(s));
             }
 
             var totalCount = await query.CountAsync();
@@ -347,7 +358,7 @@ namespace TekRemittance.Repository.Implementations
         //        PageSize = pageSize
         //    };
         //}
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusREAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusREAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 10;
@@ -363,16 +374,24 @@ namespace TekRemittance.Repository.Implementations
                 string acc = accountnumber.Trim();
                 query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
             }
+
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPIN\":\"{xp}\""));
             }
+
             if (!string.IsNullOrWhiteSpace(date))
             {
-                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                   .ToString("dd-MM-yyyy");
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+                var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                            .ToString("yyyy-MM-dd");
+                query = query.Where(x => x.r.DataJson.Contains(formattedDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                string s = search.Trim();
+                query = query.Where(x => x.r.DataJson.Contains(s));
             }
 
             var totalCount = await query.CountAsync();
@@ -445,7 +464,7 @@ namespace TekRemittance.Repository.Implementations
 
             return null;
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusRAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -465,14 +484,20 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPIN\":\"{xp}\""));
             }
 
             if (!string.IsNullOrWhiteSpace(date))
             {
-                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                   .ToString("dd-MM-yyyy");
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+                var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                            .ToString("yyyy-MM-dd");
+                query = query.Where(x => x.r.DataJson.Contains(formattedDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                string s = search.Trim();
+                query = query.Where(x => x.r.DataJson.Contains(s));
             }
 
 
@@ -507,7 +532,7 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -528,14 +553,20 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPIN\":\"{xp}\""));
             }
 
             if (!string.IsNullOrWhiteSpace(date))
             {
-                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                   .ToString("dd-MM-yyyy");
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+                var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                            .ToString("yyyy-MM-dd");
+                query = query.Where(x => x.r.DataJson.Contains(formattedDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                string s = search.Trim();
+                query = query.Where(x => x.r.DataJson.Contains(s));
             }
 
 
@@ -798,7 +829,7 @@ namespace TekRemittance.Repository.Implementations
             };
         }
 
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAMLAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAMLAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -824,13 +855,20 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPIN\":\"{xp}\""));
             }
+
             if (!string.IsNullOrWhiteSpace(date))
             {
-                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                   .ToString("dd-MM-yyyy");
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+                var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                            .ToString("yyyy-MM-dd");
+                query = query.Where(x => x.r.DataJson.Contains(formattedDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                string s = search.Trim();
+                query = query.Where(x => x.r.DataJson.Contains(s));
             }
 
             var totalCount = await query.CountAsync();
@@ -976,7 +1014,7 @@ namespace TekRemittance.Repository.Implementations
         }
 
 
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAndBankAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdWithStatusAndBankAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -1000,17 +1038,26 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrWhiteSpace(accountnumber))
             {
                 string acc = accountnumber.Trim();
-                query = query.Where(x => x.r.AccountNumber.Contains(acc));
+                query = query.Where(x => x.r.DataJson.Contains($"\"AccountNumber\":\"{acc}\""));
             }
+
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.Xpin == xp);
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPIN\":\"{xp}\""));
             }
+
             if (!string.IsNullOrWhiteSpace(date))
             {
-                var parsedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                query = query.Where(x => x.r.Date.Value.Date == parsedDate.Date);
+                var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                            .ToString("yyyy-MM-dd");
+                query = query.Where(x => x.r.DataJson.Contains(formattedDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                string s = search.Trim();
+                query = query.Where(x => x.r.DataJson.Contains(s));
             }
 
             var totalCount = await query.CountAsync();
@@ -1043,7 +1090,7 @@ namespace TekRemittance.Repository.Implementations
                 PageSize = pageSize
             };
         }
-        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdCOCPayoutAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<PagedResult<RemitttanceInfosStatusDTO>> GetByAgentIdCOCPayoutAsync(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             if (pageNumber < 1) pageNumber = 1;
             if (pageSize < 1) pageSize = 50;
@@ -1065,14 +1112,20 @@ namespace TekRemittance.Repository.Implementations
             if (!string.IsNullOrWhiteSpace(xpin))
             {
                 string xp = xpin.Trim();
-                query = query.Where(x => x.r.DataJson.Contains($"\"XPin\":{xp}"));
+                query = query.Where(x => x.r.DataJson.Contains($"\"XPIN\":\"{xp}\""));
             }
 
             if (!string.IsNullOrWhiteSpace(date))
             {
-                date = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                    .ToString("dd-MM-yyyy");
-                query = query.Where(x => x.r.DataJson.Contains($"\"Date\":\"{date}\""));
+                var formattedDate = DateTime.ParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                            .ToString("yyyy-MM-dd");
+                query = query.Where(x => x.r.DataJson.Contains(formattedDate));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                string s = search.Trim();
+                query = query.Where(x => x.r.DataJson.Contains(s));
             }
 
             var totalCount = await query.CountAsync();

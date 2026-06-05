@@ -817,7 +817,8 @@ namespace TekRemittance.Repository.Implementations
                     Code = b.Code,
                     Name = b.Name,
                     //HubId = b.HubId,
-                    HubCode = b.Hub.Code,
+                    //HubCode = b.Hub.Code,
+                    HubName = b.Hub.Name,
                     IsActive =b.IsActive,
                     IsDeleted = b.IsDeleted,
                     CreatedBy = b.CreatedBy,
@@ -848,7 +849,8 @@ namespace TekRemittance.Repository.Implementations
                     Code = b.Code,
                     Name = b.Name,
                     //HubId = b.HubId,
-                    HubCode = b.Hub.Code,
+                    //HubCode = b.Hub.Code,
+                    HubName = b.Hub.Name,
                     IsActive = b.IsActive,
                     IsDeleted = b.IsDeleted,
                     CreatedBy = b.CreatedBy,
@@ -865,8 +867,12 @@ namespace TekRemittance.Repository.Implementations
             if (await _context.BankBranches.AnyAsync(b => b.Name.ToLower() == name.ToLower() && !b.IsDeleted))
                 throw new ArgumentException("Branch name already exists.");
 
+            //    var hub = await _context.Hub
+            //.FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+            //    if (hub == null)
+            //        throw new ArgumentException("Hub not found.");
             var hub = await _context.Hub
-        .FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+        .FirstOrDefaultAsync(h => h.Name == dto.HubName && !h.IsDeleted);
             if (hub == null)
                 throw new ArgumentException("Hub not found.");
 
@@ -902,7 +908,11 @@ namespace TekRemittance.Repository.Implementations
             if (await _context.BankBranches.AnyAsync(b => b.Id != dto.Id && b.Name.ToLower() == name.ToLower() && !b.IsDeleted))
                 throw new ArgumentException("Branch name already exists.");
 
-            var hub = await _context.Hub.FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+            //var hub = await _context.Hub.FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+            //if (hub == null)
+            //    throw new ArgumentException("Hub not found.");
+            var hub = await _context.Hub
+    .FirstOrDefaultAsync(h => h.Name == dto.HubName && !h.IsDeleted);
             if (hub == null)
                 throw new ArgumentException("Hub not found.");
 
