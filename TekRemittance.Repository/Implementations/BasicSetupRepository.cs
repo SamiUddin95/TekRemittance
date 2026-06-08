@@ -786,5 +786,323 @@ namespace TekRemittance.Repository.Implementations
 
             return dtos;
         }
+
+        #region BankBranch
+        public async Task<PagedResult<BankBranchDTO>> GetAllBankBranchAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.BankBranches
+                .AsNoTracking()
+                .Where(b => !b.IsDeleted)
+                .Include(b => b.Hub)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(code))
+                query = query.Where(b => b.Code.Contains(code));
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(b => b.Name.Contains(name));
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(b => b.UpdatedOn ?? b.CreatedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(b => new BankBranchDTO
+                {
+                    Id = b.Id,
+                    Code = b.Code,
+                    Name = b.Name,
+                    //HubId = b.HubId,
+                    //HubCode = b.Hub.Code,
+                    HubName = b.Hub.Name,
+                    IsActive =b.IsActive,
+                    IsDeleted = b.IsDeleted,
+                    CreatedBy = b.CreatedBy,
+                    UpdatedBy = b.UpdatedBy,
+                    CreatedOn = b.CreatedOn,
+                    UpdatedOn = b.UpdatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<BankBranchDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<BankBranchDTO?> GetBankBranchByIdAsync(int id)
+        {
+            return await _context.BankBranches
+                .AsNoTracking()
+                .Where(b => b.Id == id && !b.IsDeleted)
+                .Include(b => b.Hub)
+                .Select(b => new BankBranchDTO
+                {
+                    Id = b.Id,
+                    Code = b.Code,
+                    Name = b.Name,
+                    //HubId = b.HubId,
+                    //HubCode = b.Hub.Code,
+                    HubName = b.Hub.Name,
+                    IsActive = b.IsActive,
+                    IsDeleted = b.IsDeleted,
+                    CreatedBy = b.CreatedBy,
+                    UpdatedBy = b.UpdatedBy,
+                    CreatedOn = b.CreatedOn,
+                    UpdatedOn = b.UpdatedOn
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<BankBranchDTO> AddBankBranchAsync(BankBranchDTO dto)
+        {
+            var name = dto.Name?.Trim() ?? string.Empty;
+            if (await _context.BankBranches.AnyAsync(b => b.Name.ToLower() == name.ToLower() && !b.IsDeleted))
+                throw new ArgumentException("Branch name already exists.");
+
+            //    var hub = await _context.Hub
+            //.FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+            //    if (hub == null)
+            //        throw new ArgumentException("Hub not found.");
+            var hub = await _context.Hub
+        .FirstOrDefaultAsync(h => h.Name == dto.HubName && !h.IsDeleted);
+            if (hub == null)
+                throw new ArgumentException("Hub not found.");
+
+            var entity = new BankBranches
+            {
+                Code = dto.Code,
+                Name = name,
+                //HubId = dto.HubId,
+                HubId = hub.Id,
+                IsActive = dto.IsActive,
+                IsDeleted = false,
+                CreatedBy = dto.CreatedBy ?? "system",
+                UpdatedBy = dto.UpdatedBy ?? "system",
+                CreatedOn = DateTime.Now,
+                UpdatedOn = DateTime.Now
+            };
+
+            await _context.BankBranches.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            dto.Id = entity.Id;
+            dto.CreatedOn = entity.CreatedOn;
+            dto.UpdatedOn = entity.UpdatedOn;
+            return dto;
+        }
+
+        public async Task<BankBranches?> UpdateBankBranchAsync(BankBranchDTO dto)
+        {
+            var existing = await _context.BankBranches.FirstOrDefaultAsync(b => b.Id == dto.Id && !b.IsDeleted);
+            if (existing == null) return null;
+
+            var name = dto.Name?.Trim() ?? string.Empty;
+            if (await _context.BankBranches.AnyAsync(b => b.Id != dto.Id && b.Name.ToLower() == name.ToLower() && !b.IsDeleted))
+                throw new ArgumentException("Branch name already exists.");
+
+            //var hub = await _context.Hub.FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+            //if (hub == null)
+            //    throw new ArgumentException("Hub not found.");
+            var hub = await _context.Hub
+    .FirstOrDefaultAsync(h => h.Name == dto.HubName && !h.IsDeleted);
+            if (hub == null)
+                throw new ArgumentException("Hub not found.");
+
+            existing.Code = dto.Code;
+            existing.Name = name;
+            existing.IsActive= dto.IsActive;
+           // existing.HubId = dto.HubId;//
+            existing.HubId = hub.Id;
+            existing.UpdatedBy = dto.UpdatedBy ?? "system";
+            existing.UpdatedOn = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+            return existing;
+        }
+
+        public async Task<bool> DeleteBankBranchAsync(int id)
+        {
+            var existing = await _context.BankBranches.FirstOrDefaultAsync(b => b.Id == id && !b.IsDeleted);
+            if (existing == null) return false;
+
+            existing.IsDeleted = true;
+            existing.UpdatedOn = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        #endregion
+
+        #region Hub
+        public async Task<PagedResult<HubDTO>> GetAllHubAsync(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            if (pageNumber < 1) pageNumber = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            var query = _context.Hub
+                .AsNoTracking()
+                .Where(h => !h.IsDeleted)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(code))
+                query = query.Where(h => h.Code.Contains(code));
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(h => h.Name.Contains(name));
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(h => h.UpdatedOn ?? h.CreatedOn)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(h => new HubDTO
+                {
+                    Id = h.Id,
+                    Code = h.Code,
+                    Name = h.Name,
+                    IsActive= h.IsActive,
+                    IsDeleted = h.IsDeleted,
+                    CreatedBy = h.CreatedBy,
+                    UpdatedBy = h.UpdatedBy,
+                    CreatedOn = h.CreatedOn,
+                    UpdatedOn = h.UpdatedOn
+                })
+                .ToListAsync();
+
+            return new PagedResult<HubDTO>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
+
+        public async Task<HubDTO?> GetHubByIdAsync(int id)
+        {
+            return await _context.Hub
+                .AsNoTracking()
+                .Where(h => h.Id == id && !h.IsDeleted)
+                .Select(h => new HubDTO
+                {
+                    Id = h.Id,
+                    Code = h.Code,
+                    Name = h.Name,
+                    IsActive= h.IsActive,
+                    IsDeleted = h.IsDeleted,
+                    CreatedBy = h.CreatedBy,
+                    UpdatedBy = h.UpdatedBy,
+                    CreatedOn = h.CreatedOn,
+                    UpdatedOn = h.UpdatedOn
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<HubDTO> AddHubAsync(HubDTO dto)
+        {
+            var name = dto.Name?.Trim() ?? string.Empty;
+            if (await _context.Hub.AnyAsync(h => h.Name.ToLower() == name.ToLower() && !h.IsDeleted))
+                throw new ArgumentException("Hub name already exists.");
+
+            var entity = new Hub
+            {
+                Code = dto.Code,
+                Name = name,
+                IsActive= dto.IsActive,
+                IsDeleted = false,
+                CreatedBy = dto.CreatedBy ?? "system",
+                UpdatedBy = dto.UpdatedBy ?? "system",
+                CreatedOn = DateTime.Now,
+                UpdatedOn = DateTime.Now
+            };
+
+            await _context.Hub.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            dto.Id = entity.Id;
+            dto.CreatedOn = entity.CreatedOn;
+            dto.UpdatedOn = entity.UpdatedOn;
+            return dto;
+        }
+
+        public async Task<Hub?> UpdateHubAsync(HubDTO dto)
+        {
+            var existing = await _context.Hub.FirstOrDefaultAsync(h => h.Id == dto.Id && !h.IsDeleted);
+            if (existing == null) return null;
+
+            var name = dto.Name?.Trim() ?? string.Empty;
+            if (await _context.Hub.AnyAsync(h => h.Id != dto.Id && h.Name.ToLower() == name.ToLower() && !h.IsDeleted))
+                throw new ArgumentException("Hub name already exists.");
+
+            existing.Code = dto.Code;
+            existing.Name = name;
+            existing.IsActive= dto.IsActive;
+            existing.UpdatedBy = dto.UpdatedBy ?? "system";
+            existing.UpdatedOn = DateTime.Now;
+
+            await _context.SaveChangesAsync();
+            return existing;
+        }
+
+        public async Task<bool> DeleteHubAsync(int id)
+        {
+            var existing = await _context.Hub.FirstOrDefaultAsync(h => h.Id == id && !h.IsDeleted);
+            if (existing == null) return false;
+
+            existing.IsDeleted = true;
+            existing.UpdatedOn = DateTime.Now;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        #endregion
+
+        public async Task<List<HubSimpleDTO>> GetHubsDropdownAsync()
+        {
+            return await _context.Hub
+                .AsNoTracking()
+                .Where(h => !h.IsDeleted)
+                .Select(h => new HubSimpleDTO
+                {
+                   
+                    Code = h.Code,
+                    Name = h.Name
+                })
+                .ToListAsync();
+        }
+
+     
+        public async Task<List<BankBranchSimpleDTO>> GetBankBranchesDropdownAsync(List<string>? hubCodes = null)
+        {
+            var query = _context.BankBranches
+                .AsNoTracking()
+                .Where(b => !b.IsDeleted)
+                .AsQueryable();
+
+            if (hubCodes != null && hubCodes.Any())
+            {
+                var hubIds = await _context.Hub
+                    .Where(h => hubCodes.Contains(h.Code) && !h.IsDeleted)
+                    .Select(h => h.Id)
+                    .ToListAsync();
+
+                query = query.Where(b => hubIds.Contains(b.HubId));
+            }
+
+            return await query
+                .Select(b => new BankBranchSimpleDTO
+                {
+                    Code = b.Code,
+                    Name = b.Name
+                })
+                .ToListAsync();
+        }
     }
 }

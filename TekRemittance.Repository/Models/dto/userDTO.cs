@@ -1,4 +1,5 @@
 using System;
+using TekRemittance.Repository.Models.dto;
 
 namespace TekRemittance.Web.Models.dto
 {
@@ -22,5 +23,9 @@ namespace TekRemittance.Web.Models.dto
 
         public string UserType { get; set; }
 
+        public List<CodeNameDTO> Hubs { get; set; } = new List<CodeNameDTO>();
+        public List<CodeNameDTO> BankBranches { get; set; } = new List<CodeNameDTO>();
+
     }
+  
 }

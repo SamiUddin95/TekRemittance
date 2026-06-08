@@ -48,6 +48,8 @@ namespace TekRemittance.Repository.Entities.Data
         public DbSet<AmlData> AmlData { get; set; }
 
         public DbSet<ApplicationConfig>ApplicationConfig { get; set; }
+        public DbSet<BankBranches> BankBranches { get; set; }
+        public DbSet<Hub> Hub { get; set; }
 
 
 

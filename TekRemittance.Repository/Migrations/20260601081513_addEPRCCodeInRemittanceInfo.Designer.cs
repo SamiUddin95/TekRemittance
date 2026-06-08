@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TekRemittance.Repository.Entities.Data;
 
@@ -11,9 +12,11 @@ using TekRemittance.Repository.Entities.Data;
 namespace TekRemittance.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260601081513_addEPRCCodeInRemittanceInfo")]
+    partial class addEPRCCodeInRemittanceInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -557,48 +560,6 @@ namespace TekRemittance.Repository.Migrations
                     b.ToTable("Banks");
                 });
 
-            modelBuilder.Entity("TekRemittance.Repository.Entities.BankBranches", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("HubId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HubId");
-
-                    b.ToTable("BankBranches");
-                });
-
             modelBuilder.Entity("TekRemittance.Repository.Entities.Branches", b =>
                 {
                     b.Property<Guid>("Id")
@@ -877,10 +838,6 @@ namespace TekRemittance.Repository.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("MakerAndChecker")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -930,45 +887,6 @@ namespace TekRemittance.Repository.Migrations
                         .IsUnique();
 
                     b.ToTable("GroupPermissions");
-                });
-
-            modelBuilder.Entity("TekRemittance.Repository.Entities.Hub", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Hub");
                 });
 
             modelBuilder.Entity("TekRemittance.Repository.Entities.PasswordPolicy", b =>
@@ -1305,9 +1223,6 @@ namespace TekRemittance.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("BankBranchCodes")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CreatedBy")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -1324,9 +1239,6 @@ namespace TekRemittance.Repository.Migrations
                     b.Property<string>("EmployeeId")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("HubCodes")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -1507,17 +1419,6 @@ namespace TekRemittance.Repository.Migrations
                     b.Navigation("Agent");
 
                     b.Navigation("Template");
-                });
-
-            modelBuilder.Entity("TekRemittance.Repository.Entities.BankBranches", b =>
-                {
-                    b.HasOne("TekRemittance.Repository.Entities.Hub", "Hub")
-                        .WithMany()
-                        .HasForeignKey("HubId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hub");
                 });
 
             modelBuilder.Entity("TekRemittance.Repository.Entities.Branches", b =>

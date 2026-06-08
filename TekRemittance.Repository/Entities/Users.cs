@@ -27,5 +27,10 @@ namespace TekRemittance.Repository.Entities
 
         public string UserType { get; set; }
 
+        //public string? HubIds { get; set; }
+        //public string? BankBranchIds { get; set; }
+
+        public string? HubCodes { get; set; }      
+        public string? BankBranchCodes { get; set; }
     }
 }

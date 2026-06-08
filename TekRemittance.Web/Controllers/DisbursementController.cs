@@ -50,11 +50,11 @@ namespace TekRemittance.Web.Controllers
 
         [RequirePermission("Disbursement.DisbursementQueue")]
         [HttpGet("GetDataByAgent")]
-        public async Task<IActionResult> GetByAgentIdP(Guid agentId, Guid userId, int pageNumber = 1, int pageSize = 10,  string? accountnumber = null, string? xpin = null, string? date = null )
+        public async Task<IActionResult> GetByAgentIdP(Guid agentId, Guid userId, int pageNumber = 1, int pageSize = 10,  string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
           {
             try
             {
-                var result = await _service.GetByAgentIdWithStatusPAsync(agentId, userId, pageNumber, pageSize,accountnumber, xpin,date);
+                var result = await _service.GetByAgentIdWithStatusPAsync(agentId, userId, pageNumber, pageSize,accountnumber, xpin,date, search);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -73,11 +73,11 @@ namespace TekRemittance.Web.Controllers
 
         [RequirePermission("Disbursement.AuthorizationQueue")]
         [HttpGet("GetDataByAuthorize/{agentId:guid}")]
-        public async Task<IActionResult> GetDataByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<IActionResult> GetDataByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusUAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
+                var data = await _service.GetByAgentIdWithStatusUAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date,search);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -96,11 +96,11 @@ namespace TekRemittance.Web.Controllers
 
         [RequirePermission("Disbursement.RejectedQueue")]
         [HttpGet("GetDataByReject/{agentId:guid}")]
-        public async Task<IActionResult> GetDataREByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<IActionResult> GetDataREByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusREAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
+                var data = await _service.GetByAgentIdWithStatusREAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date,search);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -118,11 +118,11 @@ namespace TekRemittance.Web.Controllers
         }
 
         [HttpGet("GetDataByRepair/{agentId:guid}")]
-        public async Task<IActionResult> GetDataRByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<IActionResult> GetDataRByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusRAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
+                var data = await _service.GetByAgentIdWithStatusRAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date,search);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -141,11 +141,11 @@ namespace TekRemittance.Web.Controllers
 
         [RequirePermission("Disbursement.ApprovedQueue")]
         [HttpGet("GetDataByApproved/{agentId:guid}")]
-        public async Task<IActionResult> GetDataAByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<IActionResult> GetDataAByAgentId(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date);
+                var data = await _service.GetByAgentIdWithStatusAAsync(agentId, pageNumber, pageSize,accountnumber,xpin,date,search);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -186,7 +186,7 @@ namespace TekRemittance.Web.Controllers
                 if (dto == null)
                     return BadRequest(ApiResponse<string>.Error("Request body cannot be null", 400));
 
-                var result = await _service.RemitRejectAsync(dto.Xpin, dto.UserId);
+                var result = await _service.RemitRejectAsync(dto.Xpin, dto.UserId, dto.Remarks);
 
                 return Ok(ApiResponse<RemittanceInfoModelDTO>.Success(result, 200));
             }
@@ -310,11 +310,11 @@ namespace TekRemittance.Web.Controllers
 
 
         [HttpGet("GetDataAntiMoneyLaundering/{agentId:guid}")]
-        public async Task<IActionResult> GetDataByAML(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<IActionResult> GetDataByAML(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusAMLAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+                var data = await _service.GetByAgentIdWithStatusAMLAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date,search);
 
                 return Ok(ApiResponse<object>.Success(new
                 {
@@ -350,11 +350,11 @@ namespace TekRemittance.Web.Controllers
 
         [RequirePermission("Disbursement.InternalBanksAccount")]
         [HttpGet("InternalBankAccounts/{agentId:guid}")]
-        public async Task<IActionResult> GetDataByApprovedAndBank(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<IActionResult> GetDataByApprovedAndBank(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdWithStatusAndBankAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+                var data = await _service.GetByAgentIdWithStatusAndBankAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date,search);
                 return Ok(ApiResponse<object>.Success(new
                 {
                     items = data.Items,
@@ -372,11 +372,11 @@ namespace TekRemittance.Web.Controllers
 
         [RequirePermission("Disbursement.COCpayout")]
         [HttpGet("GetCOCPayout/{agentId:guid}")]
-        public async Task<IActionResult> GetCOCPayout(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null)
+        public async Task<IActionResult> GetCOCPayout(Guid agentId, int pageNumber = 1, int pageSize = 10, string? accountnumber = null, string? xpin = null, string? date = null, string? search = null)
         {
             try
             {
-                var data = await _service.GetByAgentIdCOCPayoutAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date);
+                var data = await _service.GetByAgentIdCOCPayoutAsync(agentId, pageNumber, pageSize, accountnumber, xpin, date,search);
                 return Ok(ApiResponse<object>.Success(new
                 {
                     items = data.Items,

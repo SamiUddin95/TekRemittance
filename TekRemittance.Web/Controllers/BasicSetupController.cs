@@ -550,5 +550,218 @@ namespace TekRemittance.Web.Controllers
 
         #endregion
 
+        #region BankBranch
+        [HttpGet("bankbranches")]
+        public async Task<IActionResult> GetAllBankBranches(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            try
+            {
+                var result = await _service.GetAllBankBranchAsync(pageNumber, pageSize, code, name);
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpGet("BankBranchById/{id:int}")]
+        public async Task<IActionResult> GetBankBranchById(int id)
+        {
+            try
+            {
+                var branch = await _service.GetBankBranchByIdAsync(id);
+                if (branch == null)
+                    return NotFound(ApiResponse<string>.Error("Branch not found", 404));
+                return Ok(ApiResponse<BankBranchDTO>.Success(branch, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPost("CreateBankBranch")]
+        public async Task<IActionResult> CreateBankBranch([FromBody] BankBranchDTO dto)
+        {
+            try
+            {
+                var created = await _service.CreateBankBranchAsync(dto);
+                return Ok(ApiResponse<BankBranchDTO>.Success(created, 201));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPut("UpdateBankBranch")]
+        public async Task<IActionResult> UpdateBankBranch([FromBody] BankBranchDTO dto)
+        {
+            try
+            {
+                var updated = await _service.UpdateBankBranchAsync(dto);
+                if (updated == null)
+                    return NotFound(ApiResponse<string>.Error("Branch not found", 404));
+                return Ok(ApiResponse<BankBranchDTO>.Success(updated, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpDelete("DeleteBankBranch/{id:int}")]
+        public async Task<IActionResult> DeleteBankBranch(int id)
+        {
+            try
+            {
+                var result = await _service.DeleteBankBranchAsync(id);
+                if (!result)
+                    return NotFound(ApiResponse<string>.Error("Branch not found", 404));
+                return Ok(ApiResponse<string>.Success("Branch deleted successfully", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        #endregion
+
+        #region Hub
+        [HttpGet("hubs")]
+        public async Task<IActionResult> GetAllHubs(int pageNumber = 1, int pageSize = 10, string? code = null, string? name = null)
+        {
+            try
+            {
+                var result = await _service.GetAllHubAsync(pageNumber, pageSize, code, name);
+                return Ok(ApiResponse<object>.Success(new
+                {
+                    items = result.Items,
+                    totalCount = result.TotalCount,
+                    pageNumber = result.PageNumber,
+                    pageSize = result.PageSize,
+                    totalPages = result.TotalPages
+                }, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpGet("HubById/{id:int}")]
+        public async Task<IActionResult> GetHubById(int id)
+        {
+            try
+            {
+                var hub = await _service.GetHubByIdAsync(id);
+                if (hub == null)
+                    return NotFound(ApiResponse<string>.Error("Hub not found", 404));
+                return Ok(ApiResponse<HubDTO>.Success(hub, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPost("CreateHub")]
+        public async Task<IActionResult> CreateHub([FromBody] HubDTO dto)
+        {
+            try
+            {
+                var created = await _service.CreateHubAsync(dto);
+                return Ok(ApiResponse<HubDTO>.Success(created, 201));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpPut("UpdateHub")]
+        public async Task<IActionResult> UpdateHub([FromBody] HubDTO dto)
+        {
+            try
+            {
+                var updated = await _service.UpdateHubAsync(dto);
+                if (updated == null)
+                    return NotFound(ApiResponse<string>.Error("Hub not found", 404));
+                return Ok(ApiResponse<HubDTO>.Success(updated, 200));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ApiResponse<string>.Error(ex.Message, 400));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpDelete("DeleteHub/{id:int}")]
+        public async Task<IActionResult> DeleteHub(int id)
+        {
+            try
+            {
+                var result = await _service.DeleteHubAsync(id);
+                if (!result)
+                    return NotFound(ApiResponse<string>.Error("Hub not found", 404));
+                return Ok(ApiResponse<string>.Success("Hub deleted successfully", 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+        #endregion
+        [HttpGet("hubs-dropdown")]
+        public async Task<IActionResult> GetHubsDropdown()
+        {
+            try
+            {
+                var result = await _service.GetHubsDropdownAsync();
+                return Ok(ApiResponse<object>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
+        [HttpGet("bankbranches-dropdown")]
+        public async Task<IActionResult> GetBankBranchesDropdown([FromQuery] List<string>? hubCodes = null)
+        {
+            try
+            {
+                var result = await _service.GetBankBranchesDropdownAsync(hubCodes);
+                return Ok(ApiResponse<object>.Success(result, 200));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+            }
+        }
+
     }
 }
