@@ -911,8 +911,13 @@ namespace TekRemittance.Repository.Implementations
             //var hub = await _context.Hub.FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
             //if (hub == null)
             //    throw new ArgumentException("Hub not found.");
+            //        var hub = await _context.Hub
+            //.FirstOrDefaultAsync(h => h.Name == dto.HubName && !h.IsDeleted);
+            //        if (hub == null)
+            //            throw new ArgumentException("Hub not found.");
             var hub = await _context.Hub
-    .FirstOrDefaultAsync(h => h.Name == dto.HubName && !h.IsDeleted);
+            .FirstOrDefaultAsync(h => h.Code == dto.HubCode && !h.IsDeleted);
+
             if (hub == null)
                 throw new ArgumentException("Hub not found.");
 
