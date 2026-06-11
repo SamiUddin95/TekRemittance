@@ -37,5 +37,7 @@ namespace TekRemittance.Web.Models.dto
         public int? StartIndex { get; set; }
         public int? Length { get; set; }
         public int? XPinMapCode { get; set; }
+        public decimal? RebateSharing { get; set; }
+
     }
 }

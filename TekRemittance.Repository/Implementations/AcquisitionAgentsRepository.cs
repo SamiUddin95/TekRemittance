@@ -75,7 +75,8 @@ namespace TekRemittance.Repository.Implementations
                     PercentSharing = a.PercentSharing,
                     StartIndex=a.StartIndex,
                     Length=a.Length,
-                    XPinMapCode=a.XPinMapCode
+                    XPinMapCode=a.XPinMapCode,
+                    RebateSharing=a.RebateSharing
                 })
                 .ToListAsync();
 
@@ -125,7 +126,8 @@ namespace TekRemittance.Repository.Implementations
                     PercentSharing = a.PercentSharing,
                     StartIndex = a.StartIndex,
                     Length = a.Length,
-                    XPinMapCode = a.XPinMapCode
+                    XPinMapCode = a.XPinMapCode,
+                    RebateSharing = a.RebateSharing
                 })
                 .FirstOrDefaultAsync();
         }
@@ -178,7 +180,8 @@ namespace TekRemittance.Repository.Implementations
                 PercentSharing = dto.PercentSharing,
                 StartIndex= dto.StartIndex,
                 Length= dto.Length,
-                XPinMapCode= dto.XPinMapCode
+                XPinMapCode= dto.XPinMapCode,
+                RebateSharing = dto.RebateSharing
             };
 
             await _context.AcquisitionAgents.AddAsync(entity);
@@ -240,6 +243,7 @@ namespace TekRemittance.Repository.Implementations
             existing.StartIndex = dto.StartIndex;
             existing.Length = dto.Length;
             existing.XPinMapCode = dto.XPinMapCode;
+            existing.RebateSharing = dto.RebateSharing;
 
             await _context.SaveChangesAsync();
 
@@ -276,7 +280,8 @@ namespace TekRemittance.Repository.Implementations
                 PercentSharing = existing.PercentSharing,
                 StartIndex= existing.StartIndex,
                 Length= existing.Length,
-                XPinMapCode= existing.XPinMapCode
+                XPinMapCode= existing.XPinMapCode,
+                RebateSharing = existing.RebateSharing
             };
         }
 
