@@ -645,6 +645,9 @@ namespace TekRemittance.Repository.Implementations
             }
             bool status = amount <= userLimit ;
 
+            remitInfo.PostingTime = DateTime.Now.ToString("dd/MM/yyyy");
+
+
             if (!status)
             {
                 remitInfo.Status = "U";
