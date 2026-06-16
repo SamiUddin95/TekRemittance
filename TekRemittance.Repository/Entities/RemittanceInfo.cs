@@ -35,5 +35,8 @@ namespace TekRemittance.Repository.Entities
         public bool? IsInquiry { get; set; }
 
         public string? EPRCCode { get; set; }
+        [Column(TypeName = "decimal(4,2)")]
+        public decimal? ForeignCurrencyAmount { get; set; }
+        public string? PostingTime { get; set; }
     }
 }

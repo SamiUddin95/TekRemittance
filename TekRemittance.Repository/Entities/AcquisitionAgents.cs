@@ -44,6 +44,7 @@ namespace TekRemittance.Repository.Entities
         public int? Length { get; set; }
         public int? XPinMapCode { get; set; }
 
+        public decimal? RebateSharing { get; set; }
 
     }
 }
