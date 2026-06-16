@@ -14,5 +14,8 @@ namespace TekRemittance.Repository.Models.dto
 
         public decimal ExchangeRateSAR { get; set; }
         public decimal ExchangeRateUSD { get; set; }
+
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
     }
 }

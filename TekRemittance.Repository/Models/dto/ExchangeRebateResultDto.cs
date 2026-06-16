@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Models.dto
 {
@@ -14,8 +15,10 @@ namespace TekRemittance.Repository.Models.dto
         public decimal TotalPKR { get; set; }
         public decimal ExchangeRateSAR { get; set; }
         public decimal ExchangeRateUSD { get; set; }
-        public List<ExchangeRebateItemDto> Items { get; set; } = new();
-       
+        //public List<ExchangeRebateItemDto> Items { get; set; } = new();
+        public PagedResult<ExchangeRebateItemDto> Items { get; set; } = new();
+
+
     }
 
     public class ExchangeRebateItemDto
