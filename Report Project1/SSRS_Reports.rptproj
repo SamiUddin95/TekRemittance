@@ -60,6 +60,8 @@
     <DataSource Include="DataSource2.rds" />
   </ItemGroup>
   <ItemGroup>
+    <Report Include="AuditCertificateReport.rdl" />
+    <Report Include="ClaimApplicationReport.rdl" />
     <Report Include="DailyRemittanceReport.rdl" />
     <Report Include="DailySettlement.rdl" />
     <Report Include="Lab Order.rdl" />
