@@ -1225,79 +1225,29 @@
 			<Width>17.0758in</Width>
 			<Page>
 				<PageHeader>
-					<Height>4cm</Height>
+					<Height>3.2cm</Height>
 					<PrintOnFirstPage>true</PrintOnFirstPage>
-					<PrintOnLastPage>true</PrintOnLastPage>
+					<PrintOnLastPage>false</PrintOnLastPage>
 					<ReportItems>
 						<Rectangle Name="HeaderRectangle">
 							<ReportItems>
-								<Textbox Name="ReportDate">
-									<CanGrow>true</CanGrow>
-									<KeepTogether>true</KeepTogether>
-									<Paragraphs>
-										<Paragraph>
-											<TextRuns>
-												<TextRun>
-													<Value>="Report Generated: " &amp; Format(Now(), "dd-MMM-yyyy HH:mm")</Value>
-													<Style>
-														<FontSize>8pt</FontSize>
-														<Color>#5d6d7e</Color>
-													</Style>
-												</TextRun>
-											</TextRuns>
-											<Style>
-												<TextAlign>Right</TextAlign>
-											</Style>
-										</Paragraph>
-									</Paragraphs>
-									<Top>2.1cm</Top>
-									<Height>0.5cm</Height>
-									<Width>43cm</Width>
+								<Image Name="ImgLogo">
+									<Source>Embedded</Source>
+									<Value>Albarakadownload</Value>
+									<Sizing>FitProportional</Sizing>
+									<Top>0.1cm</Top>
+									<Left>1.5875cm</Left>
+									<Height>1.2cm</Height>
+									<Width>6.5cm</Width>
+									<ZIndex>4</ZIndex>
 									<Style>
 										<Border>
 											<Style>None</Style>
 										</Border>
-										<PaddingLeft>2pt</PaddingLeft>
-										<PaddingRight>2pt</PaddingRight>
-										<PaddingTop>2pt</PaddingTop>
-										<PaddingBottom>2pt</PaddingBottom>
 									</Style>
-								</Textbox>
-								<Textbox Name="ReportSubtitle">
-									<CanGrow>true</CanGrow>
-									<KeepTogether>true</KeepTogether>
-									<Paragraphs>
-										<Paragraph>
-											<TextRuns>
-												<TextRun>
-													<Value>Agent Settlement Summary by Transaction Type</Value>
-													<Style>
-														<FontStyle>Italic</FontStyle>
-														<Color>#5d6d7e</Color>
-													</Style>
-												</TextRun>
-											</TextRuns>
-											<Style>
-												<TextAlign>Center</TextAlign>
-											</Style>
-										</Paragraph>
-									</Paragraphs>
-									<Top>1.3cm</Top>
-									<Height>0.6cm</Height>
-									<Width>43cm</Width>
-									<ZIndex>1</ZIndex>
-									<Style>
-										<Border>
-											<Style>None</Style>
-										</Border>
-										<PaddingLeft>2pt</PaddingLeft>
-										<PaddingRight>2pt</PaddingRight>
-										<PaddingTop>2pt</PaddingTop>
-										<PaddingBottom>2pt</PaddingBottom>
-									</Style>
-								</Textbox>
+								</Image>
 								<Textbox Name="ReportTitle">
-									<CanGrow>true</CanGrow>
+									<CanGrow>false</CanGrow>
 									<KeepTogether>true</KeepTogether>
 									<Paragraphs>
 										<Paragraph>
@@ -1315,10 +1265,43 @@
 											</Style>
 										</Paragraph>
 									</Paragraphs>
-									<Top>0.3cm</Top>
-									<Height>1cm</Height>
-									<Width>43cm</Width>
-									<ZIndex>2</ZIndex>
+									<Top>0.2cm</Top>
+									<Height>0.8cm</Height>
+									<Width>43.0cm</Width>
+									<ZIndex>5</ZIndex>
+									<Style>
+										<Border>
+											<Style>None</Style>
+										</Border>
+										<PaddingLeft>2pt</PaddingLeft>
+										<PaddingRight>2pt</PaddingRight>
+										<PaddingTop>2pt</PaddingTop>
+										<PaddingBottom>2pt</PaddingBottom>
+									</Style>
+								</Textbox>
+								<Textbox Name="ReportSubtitle">
+									<CanGrow>false</CanGrow>
+									<KeepTogether>true</KeepTogether>
+									<Paragraphs>
+										<Paragraph>
+											<TextRuns>
+												<TextRun>
+													<Value>Agent Settlement Summary by Transaction Type</Value>
+													<Style>
+														<FontStyle>Italic</FontStyle>
+														<Color>#5d6d7e</Color>
+													</Style>
+												</TextRun>
+											</TextRuns>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Paragraph>
+									</Paragraphs>
+									<Top>1.0cm</Top>
+									<Height>0.6cm</Height>
+									<Width>43.0cm</Width>
+									<ZIndex>3</ZIndex>
 									<Style>
 										<Border>
 											<Style>None</Style>
@@ -1330,13 +1313,13 @@
 									</Style>
 								</Textbox>
 								<Textbox Name="ParameterInfo">
-									<CanGrow>true</CanGrow>
+									<CanGrow>false</CanGrow>
 									<KeepTogether>true</KeepTogether>
 									<Paragraphs>
 										<Paragraph>
 											<TextRuns>
 												<TextRun>
-													<Value>="Settlement Date: " &amp; IIF(IsNothing(Parameters!SettlementDate.Value), "All", Format(Parameters!SettlementDate.Value, "dd-MMM-yyyy")) &amp; "  |  Agent: " &amp; IIF(IsNothing(Parameters!AgentId.Value) OR Parameters!AgentId.Value = "", "All Agents", Parameters!AgentId.Value)</Value>
+													<Value>="Date From: " &amp; IIF(IsNothing(Parameters!SettlementDate.Value), "All", Format(Parameters!SettlementDate.Value, "dd-MMM-yyyy")) &amp; "  |  " &amp; "Agent: " &amp; IIF(IsNothing(Parameters!AgentId.Value) OR Parameters!AgentId.Value = "", "All Agents", Parameters!AgentId.Value)</Value>
 													<Style>
 														<FontSize>9pt</FontSize>
 														<FontWeight>Bold</FontWeight>
@@ -1349,10 +1332,10 @@
 											</Style>
 										</Paragraph>
 									</Paragraphs>
-									<Top>2.7cm</Top>
-									<Height>0.6cm</Height>
-									<Width>43cm</Width>
-									<ZIndex>3</ZIndex>
+									<Top>1.6cm</Top>
+									<Height>0.5cm</Height>
+									<Width>43.0cm</Width>
+									<ZIndex>2</ZIndex>
 									<Style>
 										<Border>
 											<Style>None</Style>
@@ -1363,25 +1346,43 @@
 										<PaddingBottom>2pt</PaddingBottom>
 									</Style>
 								</Textbox>
-								<Image Name="ImgLogo">
-									<Source>Embedded</Source>
-									<Value>Albarakadownload</Value>
-									<Sizing>FitProportional</Sizing>
-									<Top>0.5325cm</Top>
-									<Left>1.5875cm</Left>
-									<Height>1.8cm</Height>
-									<Width>6.5cm</Width>
-									<ZIndex>4</ZIndex>
+								<Textbox Name="ReportDate">
+									<CanGrow>false</CanGrow>
+									<KeepTogether>true</KeepTogether>
+									<Paragraphs>
+										<Paragraph>
+											<TextRuns>
+												<TextRun>
+													<Value>="Report Generated: " &amp; Format(Now(), "dd-MMM-yyyy HH:mm")</Value>
+													<Style>
+														<FontSize>8pt</FontSize>
+														<Color>#5d6d7e</Color>
+													</Style>
+												</TextRun>
+											</TextRuns>
+											<Style>
+												<TextAlign>Center</TextAlign>
+											</Style>
+										</Paragraph>
+									</Paragraphs>
+									<Top>2.1cm</Top>
+									<Height>0.45cm</Height>
+									<Width>43.0cm</Width>
+									<ZIndex>6</ZIndex>
 									<Style>
 										<Border>
 											<Style>None</Style>
 										</Border>
+										<PaddingLeft>2pt</PaddingLeft>
+										<PaddingRight>2pt</PaddingRight>
+										<PaddingTop>2pt</PaddingTop>
+										<PaddingBottom>2pt</PaddingBottom>
 									</Style>
-								</Image>
+								</Textbox>
 							</ReportItems>
 							<KeepTogether>true</KeepTogether>
-							<Height>3.5cm</Height>
-							<Width>43cm</Width>
+							<Height>3.1cm</Height>
+							<Width>43.0cm</Width>
 							<Style>
 								<Border>
 									<Style>None</Style>
@@ -1398,7 +1399,7 @@
 				<PageFooter>
 					<Height>1.5cm</Height>
 					<PrintOnFirstPage>true</PrintOnFirstPage>
-					<PrintOnLastPage>true</PrintOnLastPage>
+					<PrintOnLastPage>false</PrintOnLastPage>
 					<ReportItems>
 						<Textbox Name="PageNumber">
 							<CanGrow>true</CanGrow>
@@ -1421,7 +1422,7 @@
 							</Paragraphs>
 							<Top>0.5cm</Top>
 							<Height>0.5cm</Height>
-							<Width>43cm</Width>
+							<Width>43.0cm</Width>
 							<Style>
 								<Border>
 									<Style>None</Style>
@@ -1440,7 +1441,7 @@
 					</Style>
 				</PageFooter>
 				<PageHeight>21cm</PageHeight>
-				<PageWidth>80cm</PageWidth>
+				<PageWidth>44.1cm</PageWidth>
 				<LeftMargin>0.5cm</LeftMargin>
 				<RightMargin>0.5cm</RightMargin>
 				<TopMargin>0.5cm</TopMargin>
@@ -2085,3 +2086,4 @@
 	<rd:ReportUnitType>Cm</rd:ReportUnitType>
 	<rd:ReportID>3e26cbc3-bbae-4397-884d-bd85ad5e0c84</rd:ReportID>
 </Report>
+  <!--<ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>>-->
