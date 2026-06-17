@@ -30,5 +30,23 @@ namespace TekRemittance.Web.Controllers
                 return StatusCode(500, ApiResponse<string>.Error(ex.Message));
             }
         }
+
+        [HttpGet("AgentRebateSharing")]
+        public async Task<IActionResult> GetAgentRebateSharing([FromQuery] ExchangeRebateRequestDTO request)
+
+        {
+            try
+            {
+                var result = await _service.GetAgentRebateSharingAsync(request);
+                return Ok(ApiResponse<AgentRebateSharingResultDto>.Success(result, 200));
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ApiResponse<string>.Error(ex.Message));
+
+
+            }
+        }
     }
 }

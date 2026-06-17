@@ -14,6 +14,10 @@
 			<DataType>String</DataType>
 			<Prompt>Total Transactions</Prompt>
 		</ReportParameter>
+		<ReportParameter Name="MonthName">
+			<DataType>String</DataType>
+			<Prompt>Month Name</Prompt>
+		</ReportParameter>
 	</ReportParameters>
 	<ReportSections>
 		<ReportSection>
@@ -136,7 +140,7 @@
 										</Style>
 									</TextRun>
 									<TextRun>
-										<Value>=Parameters!ReportDate.Value</Value>
+										<Value>=Parameters!MonthName.Value</Value>
 										<Style>
 											<FontFamily>Calibri</FontFamily>
 											<FontSize>11pt</FontSize>
@@ -173,10 +177,11 @@
 										</Style>
 									</TextRun>
 									<TextRun>
-										<Value>=Parameters!ReportDate.Value</Value>
+										<Value>=Parameters!MonthName.Value</Value>
 										<Style>
 											<FontFamily>Calibri</FontFamily>
 											<FontSize>11pt</FontSize>
+											<FontWeight>Bold</FontWeight>
 										</Style>
 									</TextRun>
 									<TextRun>
@@ -191,6 +196,7 @@
 										<Style>
 											<FontFamily>Calibri</FontFamily>
 											<FontSize>11pt</FontSize>
+											<FontWeight>Bold</FontWeight>
 										</Style>
 									</TextRun>
 									<TextRun>

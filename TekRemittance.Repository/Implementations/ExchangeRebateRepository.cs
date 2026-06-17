@@ -167,5 +167,144 @@ namespace TekRemittance.Repository.Implementations
             };
             }
 
+
+        public async Task<AgentRebateSharingResultDto> GetAgentRebateSharingAsync(ExchangeRebateRequestDTO request)
+        {
+            var usdLimit = await GetConfigValueAsync("USDlimit");
+            var sarLimit = await GetConfigValueAsync("SARlimit");
+
+            decimal usdAmountThreshold = (decimal)(request.ExchangeRateUSD * usdLimit);
+
+            var rows = await _context.RemittanceInfos
+                .AsNoTracking()
+                .Where(x =>
+                    x.Date >= request.FromDate &&
+                    x.Date <= request.ToDate.AddDays(1))
+                .Select(x => new
+                {
+                    x.AgentId,
+                    x.DataJson,
+                    x.Status,
+                    x.Date
+                })
+                .ToListAsync();
+
+            int totalTransactions = rows.Count;
+            int eligibleTransactionCount = 0;
+
+            foreach (var row in rows)
+            {
+                if (string.IsNullOrEmpty(row.DataJson))
+                    continue;
+
+                try
+                {
+                    using var doc = JsonDocument.Parse(row.DataJson);
+                    var root = doc.RootElement;
+
+                    if (!root.TryGetProperty("Amount", out var amountElement))
+                        continue;
+
+                    decimal amount = amountElement.GetDecimal();
+
+                    if (amount >= usdAmountThreshold)
+                    {
+                        eligibleTransactionCount++;
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+
+            decimal totalRebateSAR = eligibleTransactionCount * sarLimit;
+            decimal totalRebatePKR = totalRebateSAR * request.ExchangeRateSAR;
+
+            var agents = await _context.AcquisitionAgents
+                .AsNoTracking()
+                .Include(a => a.Country)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.AgentName,
+                    a.RebateSharing,
+                    CountryName = a.Country != null ? a.Country.CountryName : null
+                })
+                .ToListAsync();
+
+            int totalAgents = agents.Count;
+
+            var agentItems = new List<AgentRebateSharingItemDto>();
+
+            foreach (var agent in agents)
+            {
+                var agentRows = rows.Where(r => r.AgentId == agent.Id).ToList();
+
+                int agentTotalTransactions = agentRows.Count;
+                int agentEligibleCount = 0;
+                string agentStatus = null;
+                DateTime? latestDate = null;
+
+                foreach (var row in agentRows)
+                {
+                    if (string.IsNullOrEmpty(row.DataJson))
+                        continue;
+
+                    try
+                    {
+                        using var doc = JsonDocument.Parse(row.DataJson);
+                        var root = doc.RootElement;
+
+                        if (!root.TryGetProperty("Amount", out var amountElement))
+                            continue;
+
+                        decimal amount = amountElement.GetDecimal();
+
+                        if (amount >= usdAmountThreshold)
+                        {
+                            agentEligibleCount++;
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                
+                }
+
+                decimal agentRebateSAR = agentEligibleCount * sarLimit;
+                decimal agentRebatePKR = agentRebateSAR * request.ExchangeRateSAR;
+
+                agentItems.Add(new AgentRebateSharingItemDto
+                {
+                    AgentId = agent.Id,
+                    AgentName = agent.AgentName,
+                    CountryName = agent.CountryName,
+                    TotalTransactionCount = agentTotalTransactions,
+                    EligibleTransactionCount = agentEligibleCount,
+                    RebateSAR = agentRebateSAR,
+                    RebatePKR = agentRebatePKR,
+                    SharingPercentage = agent.RebateSharing ?? 0,
+                    AgentShare = agentRebatePKR * ((agent.RebateSharing ?? 0) / 100),
+                    
+                });
+            }
+
+            return new AgentRebateSharingResultDto
+            {
+                TotalTransactions = totalTransactions,
+                EligibleTransactionCount = eligibleTransactionCount,
+                TotalRebateSAR = totalRebateSAR,
+                TotalRebatePKR = totalRebatePKR,
+                TotalAgents = totalAgents,
+                Agents = agentItems
+            };
+        }
+
+
+
+
     }
 }

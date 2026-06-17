@@ -10,5 +10,7 @@ namespace TekRemittance.Repository.Interfaces
     public interface IExchangeRebateRepository
     {
         Task<ExchangeRebateResultDto> GetExchangeRebateAsync(ExchangeRebateRequestDTO request);
+        Task<AgentRebateSharingResultDto> GetAgentRebateSharingAsync(ExchangeRebateRequestDTO request);
+
     }
 }
