@@ -25,7 +25,9 @@ namespace TekRemittance.Repository.Models.dto
     {
         public string XPIN { get; set; }
         public string BeneficiaryName { get; set; }
+        public string AccountNumber { get; set; }
         public string BeneficiaryAccountNumber { get; set; }
+
         //public DateTime TransactionDate { get; set; }
         public string TransactionDate { get; set; }   // DD/MM/YYYY string
 

@@ -127,8 +127,8 @@ namespace TekRemittance.Repository.Implementations
                 var groupedByAccount = remaining
                     .Where(r => r.Date.HasValue
                                 && r.Date.Value.Date == DateTime.Today
-                                && !string.IsNullOrEmpty(r.Item.BeneficiaryAccountNumber))
-                    .GroupBy(r => r.Item.BeneficiaryAccountNumber)
+                                && !string.IsNullOrEmpty(r.Item.AccountNumber))
+                    .GroupBy(r => r.Item.AccountNumber)
                     .Where(g => g.Count() > 1 && g.Sum(x => x.Amount) >= usdAmountThreshold);
 
                 foreach (var group in groupedByAccount)
