@@ -12,7 +12,7 @@ namespace TekRemittance.Service.Interfaces
         Task<ExchangeRebateResultDto> GetExchangeRebateAsync(ExchangeRebateRequestDTO request);
 
         Task<AgentRebateSharingResultDto> GetAgentRebateSharingAsync(ExchangeRebateRequestDTO request);
-
+        Task<AgentRebateSharingDetailResultDto> GetAgentRebateSharingByIdAsync(Guid agentId, AgentRebateDetailRequestDTO request);
 
     }
 }

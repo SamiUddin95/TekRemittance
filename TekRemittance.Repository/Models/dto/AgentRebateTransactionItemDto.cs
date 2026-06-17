@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TekRemittance.Repository.Models.dto
+{
+    public class AgentRebateTransactionItemDto
+    {
+        public string xpin { get; set; }   
+        public string Date { get; set; } 
+        public string Beneficiary { get; set; }
+        public decimal AmountPKR { get; set; }
+        public decimal RebatePKR { get; set; }
+        public decimal AgentPKR { get; set; }
+    }
+
+    public class AgentRebateSharingDetailResultDto
+    {
+        public Guid AgentId { get; set; }
+        public string AgentName { get; set; }
+        public string CountryName { get; set; }
+
+        public List<AgentRebateTransactionItemDto> Transactions { get; set; } = new();
+
+        public decimal TotalAmountPKR { get; set; }
+        public decimal TotalRebatePKR { get; set; }
+        public decimal TotalAgentSharePKR { get; set; }
+    }
+}

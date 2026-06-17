@@ -303,7 +303,100 @@ namespace TekRemittance.Repository.Implementations
             };
         }
 
+        public async Task<AgentRebateSharingDetailResultDto> GetAgentRebateSharingByIdAsync(Guid agentId, AgentRebateDetailRequestDTO request)
+        {
+            var usdLimit = await GetConfigValueAsync("USDlimit");
+            var sarLimit = await GetConfigValueAsync("SARlimit");
 
+            decimal usdAmountThreshold = (decimal)(request.ExchangeRateUSD * usdLimit);
+
+      
+            var agent = await _context.AcquisitionAgents
+                .AsNoTracking()
+                .Include(a => a.Country)
+                .Where(a => a.Id == agentId)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.AgentName,
+                    a.RebateSharing,
+                    CountryName = a.Country != null ? a.Country.CountryName : null
+                })
+                .FirstOrDefaultAsync();
+
+            if (agent == null)
+                throw new InvalidOperationException("Agent not found.");
+
+            var rows = await _context.RemittanceInfos
+                .AsNoTracking()
+                .Where(x =>
+                    x.AgentId == agentId &&
+                    x.Date >= request.FromDate &&
+                    x.Date <= request.ToDate.AddDays(1))
+                .Select(x => new
+                {
+                    x.DataJson,
+                    x.Date
+                })
+                .ToListAsync();
+
+            var transactions = new List<AgentRebateTransactionItemDto>();
+
+            foreach (var row in rows)
+            {
+                if (string.IsNullOrEmpty(row.DataJson))
+                    continue;
+
+                try
+                {
+                    using var doc = JsonDocument.Parse(row.DataJson);
+                    var root = doc.RootElement;
+
+                    if (!root.TryGetProperty("Amount", out var amountElement))
+                        continue;
+
+                    decimal amount = amountElement.GetDecimal();
+
+                    if (amount < usdAmountThreshold)
+                        continue;
+
+                    string xpin = root.TryGetProperty("XPIN", out var xpinEl) ? xpinEl.GetString() : null;
+                    string beneficiaryName = root.TryGetProperty("BeneficiaryName", out var bnEl) ? bnEl.GetString() : null;
+
+                    decimal rebatePKR = sarLimit * request.ExchangeRateSAR;
+                    decimal agentSharePKR = rebatePKR * ((agent.RebateSharing ?? 0) / 100);
+
+                    transactions.Add(new AgentRebateTransactionItemDto
+                    {
+                        xpin = xpin,
+                        Date = row.Date.HasValue ? row.Date.Value.ToString("dd/MM/yyyy") : null,
+                        Beneficiary = beneficiaryName,
+                        AmountPKR = amount,
+                        RebatePKR = rebatePKR,
+                        AgentPKR = agentSharePKR
+                    });
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+
+            decimal totalAmountPKR = transactions.Sum(t => t.AmountPKR);
+            decimal totalRebatePKR = transactions.Sum(t => t.RebatePKR);
+            decimal totalAgentSharePKR = transactions.Sum(t => t.AgentPKR);
+
+            return new AgentRebateSharingDetailResultDto
+            {
+                AgentId = agent.Id,
+                AgentName = agent.AgentName,
+                CountryName = agent.CountryName,
+                Transactions = transactions,
+                TotalAmountPKR = totalAmountPKR,
+                TotalRebatePKR = totalRebatePKR,
+                TotalAgentSharePKR = totalAgentSharePKR
+            };
+        }
 
 
     }

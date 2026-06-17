@@ -24,5 +24,9 @@ namespace TekRemittance.Service.Implementations
         {
             return await _repository.GetAgentRebateSharingAsync(request);
         }
+        public async Task<AgentRebateSharingDetailResultDto> GetAgentRebateSharingByIdAsync(Guid agentId, AgentRebateDetailRequestDTO request)
+        {
+            return await _repository.GetAgentRebateSharingByIdAsync(agentId, request);
+        }
     }
 }
