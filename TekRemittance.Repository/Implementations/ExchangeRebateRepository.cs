@@ -373,7 +373,7 @@ namespace TekRemittance.Repository.Implementations
                         Beneficiary = beneficiaryName,
                         AmountPKR = amount,
                         RebatePKR = rebatePKR,
-                        AgentPKR = agentSharePKR
+                        agentshare = agentSharePKR
                     });
                 }
                 catch
@@ -384,7 +384,7 @@ namespace TekRemittance.Repository.Implementations
 
             decimal totalAmountPKR = transactions.Sum(t => t.AmountPKR);
             decimal totalRebatePKR = transactions.Sum(t => t.RebatePKR);
-            decimal totalAgentSharePKR = transactions.Sum(t => t.AgentPKR);
+            decimal totalAgentSharePKR = transactions.Sum(t => t.agentshare);
 
             return new AgentRebateSharingDetailResultDto
             {
@@ -394,7 +394,8 @@ namespace TekRemittance.Repository.Implementations
                 Transactions = transactions,
                 TotalAmountPKR = totalAmountPKR,
                 TotalRebatePKR = totalRebatePKR,
-                TotalAgentSharePKR = totalAgentSharePKR
+                TotalAgentSharePKR = totalAgentSharePKR,
+                SharingPercent = agent.RebateSharing ?? 0,
             };
         }
 

@@ -13,7 +13,10 @@ namespace TekRemittance.Repository.Models.dto
         public string Beneficiary { get; set; }
         public decimal AmountPKR { get; set; }
         public decimal RebatePKR { get; set; }
-        public decimal AgentPKR { get; set; }
+        public decimal agentshare { get; set; }
+
+
+        
     }
 
     public class AgentRebateSharingDetailResultDto
@@ -21,6 +24,7 @@ namespace TekRemittance.Repository.Models.dto
         public Guid AgentId { get; set; }
         public string AgentName { get; set; }
         public string CountryName { get; set; }
+        public decimal SharingPercent { get; set; }
 
         public List<AgentRebateTransactionItemDto> Transactions { get; set; } = new();
 
