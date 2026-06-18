@@ -179,7 +179,7 @@ namespace TekRemittance.Repository.Implementations
                 .AsNoTracking()
                 .Where(x =>
                     x.Date >= request.FromDate &&
-                    x.Date <= request.ToDate.AddDays(1))
+                    x.Date <= request.ToDate.AddDays(-1))
                 .Select(x => new
                 {
                     x.AgentId,
@@ -332,7 +332,7 @@ namespace TekRemittance.Repository.Implementations
                 .Where(x =>
                     x.AgentId == agentId &&
                     x.Date >= request.FromDate &&
-                    x.Date <= request.ToDate.AddDays(1))
+                    x.Date <= request.ToDate.AddDays(-1))
                 .Select(x => new
                 {
                     x.DataJson,

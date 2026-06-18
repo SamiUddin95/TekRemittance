@@ -123,7 +123,7 @@
 							<Paragraph>
 								<TextRuns>
 									<TextRun>
-										<Value>Subject: Audit Certificate for Reimbursement of T.T. Charges against Home Remittance for the Month of … </Value>
+										<Value>Subject: Audit Certificate for Reimbursement of T.T. Charges against Home Remittance for the Month of </Value>
 										<Style>
 											<FontFamily>Calibri</FontFamily>
 											<FontSize>11pt</FontSize>
@@ -551,7 +551,7 @@
 
 					<!-- Chief Internal Auditor signature line -->
 					<Line Name="LineChiefAuditor">
-						<Top>5.4in</Top>
+						<Top>6.1in</Top>
 						<Left>0.25in</Left>
 						<Height>0in</Height>
 						<Width>1.7in</Width>
@@ -580,7 +580,7 @@
 								</TextRuns>
 							</Paragraph>
 						</Paragraphs>
-						<Top>5.5in</Top>
+						<Top>6.2in</Top>
 						<Left>0.25in</Left>
 						<Height>0.25in</Height>
 						<Width>2.5in</Width>
@@ -593,7 +593,7 @@
 
 					<!-- Authorized Signatory 1 -->
 					<Line Name="LineAuthSig1">
-						<Top>6.4in</Top>
+						<Top>7.4in</Top>
 						<Left>0.25in</Left>
 						<Height>0in</Height>
 						<Width>1.7in</Width>
@@ -625,7 +625,7 @@
 								</Style>
 							</Paragraph>
 						</Paragraphs>
-						<Top>6.5in</Top>
+						<Top>7.5in</Top>
 						<Left>0.25in</Left>
 						<Height>0.25in</Height>
 						<Width>1.7in</Width>
@@ -638,7 +638,7 @@
 
 					<!-- Authorized Signatory 2 -->
 					<Line Name="LineAuthSig2">
-						<Top>6.4in</Top>
+						<Top>7.4in</Top>
 						<Left>4.55in</Left>
 						<Height>0in</Height>
 						<Width>1.7in</Width>
@@ -670,7 +670,7 @@
 								</Style>
 							</Paragraph>
 						</Paragraphs>
-						<Top>6.5in</Top>
+						<Top>7.5in</Top>
 						<Left>4.55in</Left>
 						<Height>0.25in</Height>
 						<Width>1.7in</Width>
@@ -682,7 +682,7 @@
 					</Textbox>
 
 				</ReportItems>
-				<Height>7in</Height>
+				<Height>8in</Height>
 				<Style>
 					<Border>
 						<Style>None</Style>
