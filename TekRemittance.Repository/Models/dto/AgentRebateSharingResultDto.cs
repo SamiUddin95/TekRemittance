@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Models.dto
 {
@@ -19,6 +20,7 @@ namespace TekRemittance.Repository.Models.dto
         public int TotalAgents { get; set; }
 
 
-        public List<AgentRebateSharingItemDto> Agents { get; set; }
+        public PagedResult<AgentRebateSharingItemDto> Agents { get; set; }
+
     }
 }

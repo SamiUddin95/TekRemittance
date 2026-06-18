@@ -179,7 +179,7 @@ namespace TekRemittance.Repository.Implementations
                 .AsNoTracking()
                 .Where(x =>
                     x.Date >= request.FromDate &&
-                    x.Date <= request.ToDate.AddDays(-1))
+                    x.Date <= request.ToDate.AddDays(1))
                 .Select(x => new
                 {
                     x.AgentId,
@@ -291,6 +291,14 @@ namespace TekRemittance.Repository.Implementations
                     
                 });
             }
+            int totalCount = agentItems.Count;
+            int pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
+            int pageSize = request.PageSize < 1 ? 10 : request.PageSize;
+
+            var pagedAgents = agentItems
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             return new AgentRebateSharingResultDto
             {
@@ -299,7 +307,14 @@ namespace TekRemittance.Repository.Implementations
                 TotalRebateSAR = totalRebateSAR,
                 TotalRebatePKR = totalRebatePKR,
                 TotalAgents = totalAgents,
-                Agents = agentItems
+                Agents = new PagedResult<AgentRebateSharingItemDto>
+                {
+                    Items = pagedAgents,
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                   
+                }
             };
         }
 
@@ -332,7 +347,7 @@ namespace TekRemittance.Repository.Implementations
                 .Where(x =>
                     x.AgentId == agentId &&
                     x.Date >= request.FromDate &&
-                    x.Date <= request.ToDate.AddDays(-1))
+                    x.Date <= request.ToDate.AddDays(1))
                 .Select(x => new
                 {
                     x.DataJson,
@@ -385,17 +400,31 @@ namespace TekRemittance.Repository.Implementations
             decimal totalAmountPKR = transactions.Sum(t => t.AmountPKR);
             decimal totalRebatePKR = transactions.Sum(t => t.RebatePKR);
             decimal totalAgentSharePKR = transactions.Sum(t => t.agentshare);
+            int totalCount = transactions.Count;
+            int pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
+            int pageSize = request.PageSize < 1 ? 10 : request.PageSize;
+
+            var pagedTransactions = transactions
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             return new AgentRebateSharingDetailResultDto
             {
                 AgentId = agent.Id,
                 AgentName = agent.AgentName,
                 CountryName = agent.CountryName,
-                Transactions = transactions,
                 TotalAmountPKR = totalAmountPKR,
                 TotalRebatePKR = totalRebatePKR,
                 TotalAgentSharePKR = totalAgentSharePKR,
                 SharingPercent = agent.RebateSharing ?? 0,
+                Transactions = new PagedResult<AgentRebateTransactionItemDto>
+                {
+                    Items = pagedTransactions,
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                }
             };
         }
 

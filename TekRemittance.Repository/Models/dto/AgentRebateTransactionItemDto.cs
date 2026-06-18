@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TekRemittance.Web.Models.dto;
 
 namespace TekRemittance.Repository.Models.dto
 {
@@ -26,7 +27,7 @@ namespace TekRemittance.Repository.Models.dto
         public string CountryName { get; set; }
         public decimal SharingPercent { get; set; }
 
-        public List<AgentRebateTransactionItemDto> Transactions { get; set; } = new();
+        public PagedResult<AgentRebateTransactionItemDto> Transactions { get; set; }
 
         public decimal TotalAmountPKR { get; set; }
         public decimal TotalRebatePKR { get; set; }
