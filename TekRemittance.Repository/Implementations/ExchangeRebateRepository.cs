@@ -289,8 +289,11 @@ namespace TekRemittance.Repository.Implementations
                     SharingPercentage = agent.RebateSharing ?? 0,
                     AgentShare = agentRebatePKR * ((agent.RebateSharing ?? 0) / 100),
                     
+                    
                 });
             }
+
+            decimal totalAgentShare = agentItems.Sum(a => a.AgentShare);
             int totalCount = agentItems.Count;
             int pageNumber = request.PageNumber < 1 ? 1 : request.PageNumber;
             int pageSize = request.PageSize < 1 ? 10 : request.PageSize;
@@ -307,6 +310,7 @@ namespace TekRemittance.Repository.Implementations
                 TotalRebateSAR = totalRebateSAR,
                 TotalRebatePKR = totalRebatePKR,
                 TotalAgents = totalAgents,
+                TotalAgentShare=totalAgentShare,
                 Agents = new PagedResult<AgentRebateSharingItemDto>
                 {
                     Items = pagedAgents,

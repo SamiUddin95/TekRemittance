@@ -18,6 +18,7 @@ namespace TekRemittance.Repository.Models.dto
         public decimal TotalRebatePKR { get; set; }
 
         public int TotalAgents { get; set; }
+        public decimal TotalAgentShare { get; set; }
 
 
         public PagedResult<AgentRebateSharingItemDto> Agents { get; set; }
