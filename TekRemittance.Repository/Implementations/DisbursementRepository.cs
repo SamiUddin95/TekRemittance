@@ -613,7 +613,8 @@ namespace TekRemittance.Repository.Implementations
 
 
             var remitInfo = await _context.RemittanceInfos
-                .FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
+                .FirstOrDefaultAsync(r => r.Xpin == xpin);
+                //.FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
@@ -662,8 +663,9 @@ namespace TekRemittance.Repository.Implementations
                 //        throw new ArgumentException("Invalid ModeOfTransaction value");
                 //    }
                 //}
-
+                var conn = _context.Database.GetConnectionString();
                 remitInfo.UpdatedOn = DateTime.Now;
+                _context.RemittanceInfos.Update(remitInfo);
                 await _context.SaveChangesAsync();
                 return (false, "Remittance unauthorized due to insufficient user limit.", xpin);
             }
@@ -733,7 +735,8 @@ namespace TekRemittance.Repository.Implementations
                 throw new ArgumentNullException(nameof(userId), "UserId cannot be null");
 
             var remitInfo = await _context.RemittanceInfos
-                .FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
+                .FirstOrDefaultAsync(r => r.Xpin == xpin);
+                //.FirstOrDefaultAsync(r => r.DataJson.Contains($"{xpin}"));
 
             if (remitInfo == null)
                 throw new InvalidOperationException("Remittance info not found for given XPin.");
