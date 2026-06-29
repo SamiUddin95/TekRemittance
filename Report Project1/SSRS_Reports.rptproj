@@ -49,6 +49,7 @@
     <Reports>@(Report)</Reports>
   </PropertyGroup>
   <ItemGroup>
+    <DataSet Include="AgentRebateSharing.rsd" />
     <DataSet Include="DailyRemittanceReport.rsd" />
     <DataSet Include="DailySettlement.rsd" />
     <DataSet Include="RemittanceStatusTracking.rsd" />
@@ -60,6 +61,7 @@
     <DataSource Include="DataSource2.rds" />
   </ItemGroup>
   <ItemGroup>
+    <Report Include="AgentRebateSharing.rdl" />
     <Report Include="AuditCertificateReport.rdl" />
     <Report Include="ClaimApplicationReport.rdl" />
     <Report Include="DailyRemittanceReport.rdl" />

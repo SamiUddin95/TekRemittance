@@ -2114,11 +2114,11 @@
 												</TextRun>
 											</TextRuns>
 											<Style>
-												<TextAlign>Right</TextAlign>
+												<TextAlign>Center</TextAlign>
 											</Style>
 										</Paragraph>
 									</Paragraphs>
-									<Top>0cm</Top>
+									<Top>2.6cm</Top>
 									<Height>0.5cm</Height>
 									<Width>70.83915cm</Width>
 									<Style>
@@ -2150,7 +2150,7 @@
 											</Style>
 										</Paragraph>
 									</Paragraphs>
-									<Top>1.3cm</Top>
+									<Top>1.4cm</Top>
 									<Height>0.6cm</Height>
 									<Width>70.83915cm</Width>
 									<ZIndex>1</ZIndex>
@@ -2183,7 +2183,7 @@
 											</Style>
 										</Paragraph>
 									</Paragraphs>
-									<Top>0.3cm</Top>
+									<Top>0.5cm</Top>
 									<Height>1cm</Height>
 									<Width>70.83915cm</Width>
 									<ZIndex>2</ZIndex>
@@ -2217,7 +2217,7 @@
 											</Style>
 										</Paragraph>
 									</Paragraphs>
-									<Top>2.7cm</Top>
+									<Top>2.0cm</Top>
 									<Height>0.6cm</Height>
 									<Width>70.83915cm</Width>
 									<ZIndex>3</ZIndex>
